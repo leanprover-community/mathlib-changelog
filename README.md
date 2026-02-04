@@ -1,8 +1,8 @@
 # mathlib-changelog
 
-[![cron](https://img.shields.io/github/actions/workflow/status/chanind/mathlib-changelog/crawl.yaml?label=cron&branch=main)](https://github.com/chanind/mathlib-changelog)
-[![ci](https://img.shields.io/github/actions/workflow/status/chanind/mathlib-changelog/ci.yaml?branch=main)](https://github.com/chanind/mathlib-changelog)
-[![website](https://img.shields.io/github/deployments/chanind/mathlib-changelog/production?label=website&logo=vercel)](https://mathlib-changelog.org)
+[![cron](https://img.shields.io/github/actions/workflow/status/leanprover-community/mathlib-changelog/crawl.yaml?label=cron&branch=main)](https://github.com/leanprover-community/mathlib-changelog)
+[![ci](https://img.shields.io/github/actions/workflow/status/leanprover-community/mathlib-changelog/ci.yaml?branch=main)](https://github.com/leanprover-community/mathlib-changelog)
+[![website](https://img.shields.io/github/deployments/leanprover-community/mathlib-changelog/production?label=website&logo=vercel)](https://mathlib-changelog.org)
 
 ### Explore the changelog at [mathlib-changelog.org](https://mathlib-changelog.org/)
 
@@ -12,8 +12,8 @@ Currently this pulls in git commit messages, and attempts to parse out the chang
 
 The full changelog in the following formats:
 
-- JSON is available in [CHANGELOG.v3.full.json](https://raw.githubusercontent.com/chanind/mathlib-changelog/main/CHANGELOG.v3.full.json) and [CHANGELOG.v4.full.json](https://raw.githubusercontent.com/chanind/mathlib-changelog/main/CHANGELOG.v4.full.json)
-- plaintext is available in [CHANGELOG.v3.full.txt](https://raw.githubusercontent.com/chanind/mathlib-changelog/main/CHANGELOG.v3.full.txt) and [CHANGELOG.v4.full.txt](https://raw.githubusercontent.com/chanind/mathlib-changelog/main/CHANGELOG.v4.full.txt)
+- JSON is available in [CHANGELOG.v3.full.json](https://raw.githubusercontent.com/leanprover-community/mathlib-changelog/main/CHANGELOG.v3.full.json) and [CHANGELOG.v4.full.json](https://raw.githubusercontent.com/leanprover-community/mathlib-changelog/main/CHANGELOG.v4.full.json)
+- plaintext is available in [CHANGELOG.v3.full.txt](https://raw.githubusercontent.com/leanprover-community/mathlib-changelog/main/CHANGELOG.v3.full.txt) and [CHANGELOG.v4.full.txt](https://raw.githubusercontent.com/leanprover-community/mathlib-changelog/main/CHANGELOG.v4.full.txt)
 - web is available at [mathlib-changelog.org/changelog](https://mathlib-changelog.org/changelog)
 
 ## Project structure
