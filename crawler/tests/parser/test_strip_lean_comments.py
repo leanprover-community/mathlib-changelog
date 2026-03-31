@@ -143,3 +143,34 @@ ok
 just some more code
     """.strip()
     assert strip_lean_comments(input) == expected
+
+
+def test_strip_lean_comments_ignores_delimiters_in_string_literals() -> None:
+    input = """
+def foo : IO Unit := do
+  if s.startsWith "/-" then
+    IO.println "found block comment start"
+  IO.println s!"delim is /-"
+    """.strip()
+    expected = """
+def foo : IO Unit := do
+  if s.startsWith "/-" then
+    IO.println "found block comment start"
+  IO.println s!"delim is /-"
+    """.strip()
+    assert strip_lean_comments(input) == expected
+
+
+def test_strip_lean_comments_handles_string_and_real_comment_together() -> None:
+    input = """
+/-- A doc comment -/
+def foo := "this has /- in it"
+/- real block comment -/
+def bar := 42
+    """.strip()
+    result = strip_lean_comments(input)
+    assert '"this has /- in it"' in result
+    assert "def foo" in result
+    assert "def bar := 42" in result
+    assert "A doc comment" not in result
+    assert "real block comment" not in result
