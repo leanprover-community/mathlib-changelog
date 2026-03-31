@@ -12,6 +12,32 @@ DELIM_R = "-/"
 LINE_DELIM = "--"
 
 
+def _find_outside_strings(txt: str, target: str) -> int:
+    """Find the first occurrence of target not inside a string literal.
+
+    Returns -1 if not found.
+    """
+    i = 0
+    n = len(txt)
+    target_len = len(target)
+    while i <= n - target_len:
+        if txt[i] == '"':
+            i += 1
+            while i < n:
+                if txt[i] == "\\" and i + 1 < n:
+                    i += 2
+                elif txt[i] == '"':
+                    i += 1
+                    break
+                else:
+                    i += 1
+            continue
+        if txt[i : i + target_len] == target:
+            return i
+        i += 1
+    return -1
+
+
 def has_nested_comment(txt_in_block: str) -> bool:
     if DELIM_L not in txt_in_block:
         return False
@@ -27,11 +53,17 @@ def has_nested_comment(txt_in_block: str) -> bool:
 def strip_single_comment_block(txt: str, strip_line_comments: bool = True) -> str:
     "Strips first nest of block comments"
     out = ""
-    next_line_comment_index = (
-        txt.index(LINE_DELIM) if LINE_DELIM in txt and strip_line_comments else None
-    )
-    if DELIM_L in txt:
-        block_start_index = txt.index(DELIM_L)
+    next_line_comment_index: int | None = None
+    if strip_line_comments:
+        # At top level: skip delimiters inside string literals
+        raw_line_idx = _find_outside_strings(txt, LINE_DELIM)
+        next_line_comment_index = raw_line_idx if raw_line_idx >= 0 else None
+        block_start_index = _find_outside_strings(txt, DELIM_L)
+    else:
+        # Inside a block comment: strings are not special
+        block_start_index = txt.index(DELIM_L) if DELIM_L in txt else -1
+
+    if block_start_index >= 0:
         # if we see a line comment before the start of the next block comment, remove it first
         # otherwise stuff like "-- this is /- irrelevant" will break the system
         if (
@@ -63,6 +95,6 @@ def strip_nested_block_comment(txt: str) -> str:
     "Strips nests of block comments"
     stripped_txt = txt
 
-    while DELIM_L in stripped_txt:
+    while _find_outside_strings(stripped_txt, DELIM_L) >= 0:
         stripped_txt = strip_single_comment_block(stripped_txt, True)
     return stripped_txt
