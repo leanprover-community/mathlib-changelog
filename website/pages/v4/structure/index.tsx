@@ -1,40 +1,15 @@
 import { NextPage } from "next";
-import { useEffect, useState } from "react";
-import ClientItemPage from "../../../components/ClientItemPage";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 import Layout from "../../../components/Layout";
 import Spinner from "../../../components/Spinner";
 
-const StructurePage: NextPage = () => {
-  const [name, setName] = useState<string | null>(null);
-  const [ready, setReady] = useState(false);
-
+const Shell: NextPage = () => {
+  const router = useRouter();
   useEffect(() => {
-    const parts = window.location.pathname.split("/");
-    if (parts.length >= 4 && parts[3]) {
-      setName(decodeURIComponent(parts[3]));
-    }
-    setReady(true);
-  }, []);
-
-  if (!ready) {
-    return (
-      <Layout version="v4">
-        <div className="flex justify-center py-12">
-          <Spinner size={10} />
-        </div>
-      </Layout>
-    );
-  }
-
-  if (!name) {
-    return (
-      <Layout version="v4">
-        <h1 className="text-xl">Structure not found</h1>
-      </Layout>
-    );
-  }
-
-  return <ClientItemPage version="v4" itemType="structure" name={name} />;
+    const name = window.location.pathname.split("/")[3];
+    if (name) router.replace(`/v4/structure/${name}`, undefined, { shallow: false });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  return <Layout version="v4"><div className="flex justify-center py-12"><Spinner size={10} /></div></Layout>;
 };
-
-export default StructurePage;
+export default Shell;

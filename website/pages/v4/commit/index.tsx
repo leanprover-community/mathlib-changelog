@@ -1,41 +1,33 @@
 import { NextPage } from "next";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 import ClientCommitPage from "../../../components/ClientCommitPage";
 import Layout from "../../../components/Layout";
 import Spinner from "../../../components/Spinner";
 
-const CommitPage: NextPage = () => {
-  const [sha, setSha] = useState<string | null>(null);
-  const [ready, setReady] = useState(false);
+// Shell page for direct URL access via _redirects SPA fallback.
+// When served at /v4/commit/abc123, reads SHA from the URL and renders.
+// Client-side <Link> navigation uses [sha].tsx instead.
 
+const CommitShell: NextPage = () => {
+  const router = useRouter();
+
+  // On direct access via _redirects, extract SHA from URL and let Next.js handle it
   useEffect(() => {
     const parts = window.location.pathname.split("/");
-    // /v4/commit/abc123 → ['', 'v4', 'commit', 'abc123']
-    if (parts.length >= 4 && parts[3]) {
-      setSha(decodeURIComponent(parts[3]));
+    const sha = parts[3];
+    if (sha) {
+      router.replace(`/v4/commit/${sha}`, undefined, { shallow: false });
     }
-    setReady(true);
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  if (!ready) {
-    return (
-      <Layout version="v4">
-        <div className="flex justify-center py-12">
-          <Spinner size={10} />
-        </div>
-      </Layout>
-    );
-  }
-
-  if (!sha) {
-    return (
-      <Layout version="v4">
-        <h1 className="text-xl">Commit not found</h1>
-      </Layout>
-    );
-  }
-
-  return <ClientCommitPage version="v4" sha={sha} />;
+  return (
+    <Layout version="v4">
+      <div className="flex justify-center py-12">
+        <Spinner size={10} />
+      </div>
+    </Layout>
+  );
 };
 
-export default CommitPage;
+export default CommitShell;
