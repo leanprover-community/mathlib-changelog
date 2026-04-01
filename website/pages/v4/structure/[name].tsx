@@ -1,8 +1,10 @@
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { ItemChangeHistory } from "../../../components/ItemChangeHistory";
 import Layout from "../../../components/Layout";
-import { getStructure } from "../../../data/database";
+import { getItemEdge } from "../../../data/edgeDatabase";
 import { ChangelogItemData } from "../../../data/extractDataFromChangelog";
+
+export const runtime = "experimental-edge";
 
 export const getStaticPaths: GetStaticPaths = () => ({
   paths: [],
@@ -13,11 +15,11 @@ interface StructureProps {
   structure: ChangelogItemData;
 }
 
-export const getStaticProps: GetStaticProps<StructureProps> = (context) => {
+export const getStaticProps: GetStaticProps<StructureProps> = async (context) => {
   if (!context.params?.name || Array.isArray(context.params.name)) {
     return { notFound: true };
   }
-  const structure = getStructure("v4", context.params.name);
+  const structure = await getItemEdge("v4", "structure", context.params.name);
   if (!structure) return { notFound: true };
   return { props: { structure } };
 };
