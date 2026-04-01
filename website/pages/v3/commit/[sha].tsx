@@ -3,9 +3,11 @@ import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Link from "next/link";
 import Layout from "../../../components/Layout";
 import MathlibGithubMarkdown from "../../../components/MathlibGithubMarkdown";
-import { getCommit } from "../../../data/database";
+import { getCommitEdge } from "../../../data/edgeDatabase";
 import { ChangeType, CommitData, DiffData } from "../../../data/types";
 import formatTimestamp from "../../../util/formatTimestamp";
+
+export const runtime = "experimental-edge";
 
 export const getStaticPaths: GetStaticPaths = () => ({
   paths: [],
@@ -16,11 +18,11 @@ interface CommitProps {
   commit: CommitData;
 }
 
-export const getStaticProps: GetStaticProps<CommitProps> = (context) => {
+export const getStaticProps: GetStaticProps<CommitProps> = async (context) => {
   if (!context.params?.sha || Array.isArray(context.params.sha)) {
     return { notFound: true };
   }
-  const commit = getCommit("v3", context.params.sha);
+  const commit = await getCommitEdge("v3", context.params.sha);
   if (!commit) return { notFound: true };
   return { props: { commit } };
 };
