@@ -1,8 +1,10 @@
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { ItemChangeHistory } from "../../../components/ItemChangeHistory";
 import Layout from "../../../components/Layout";
-import { getTheorem } from "../../../data/database";
+import { getItemEdge } from "../../../data/edgeDatabase";
 import { ChangelogItemData } from "../../../data/extractDataFromChangelog";
+
+export const runtime = "experimental-edge";
 
 export const getStaticPaths: GetStaticPaths = () => ({
   paths: [],
@@ -13,11 +15,11 @@ interface TheoremProps {
   theorem: ChangelogItemData;
 }
 
-export const getStaticProps: GetStaticProps<TheoremProps> = (context) => {
+export const getStaticProps: GetStaticProps<TheoremProps> = async (context) => {
   if (!context.params?.name || Array.isArray(context.params.name)) {
     return { notFound: true };
   }
-  const theorem = getTheorem("v3", context.params.name);
+  const theorem = await getItemEdge("v3", "theorem", context.params.name);
   if (!theorem) return { notFound: true };
   return { props: { theorem } };
 };
