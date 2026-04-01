@@ -17,6 +17,19 @@ def _find_outside_strings(txt: str, target: str) -> int:
 
     Returns -1 if not found.
     """
+    # Fast path: no string delimiters, use C-level search
+    if '"' not in txt:
+        return txt.find(target)
+
+    # Fast path: target appears before any quote
+    simple_idx = txt.find(target)
+    if simple_idx == -1:
+        return -1
+    first_quote = txt.find('"')
+    if first_quote > simple_idx:
+        return simple_idx
+
+    # Slow path: quotes appear before target, must scan through strings
     i = 0
     n = len(txt)
     target_len = len(target)
