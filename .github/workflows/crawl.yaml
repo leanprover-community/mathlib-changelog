@@ -2,12 +2,15 @@ name: crawl
 on:
   schedule:
     - cron: "35 03 * * *"
+  workflow_dispatch:
 jobs:
   update_changelogs:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.10"
       - name: Install Poetry
@@ -15,17 +18,12 @@ jobs:
       - name: Install dependencies
         run: poetry install --no-interaction
         working-directory: ./crawler
-      - name: load parse cache
-        uses: actions/cache@v3
-        env:
-          cache-version: 3
-        with:
-          path: crawler/parse_cache.*.pkl
-          key: ${{ runner.os }}-build-${{ env.cache-version }}
-      - name: crawl git repo to update changelog files
+      # Only commits newer than the latest one already in the changelog are
+      # crawled, so this stays fast without a persisted parse cache.
+      - name: crawl git repos to update changelog files
         run: poetry run python -m crawler.crawl
         working-directory: ./crawler
-      - uses: stefanzweifel/git-auto-commit-action@v4
+      - uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "Updating CHANGELOG"
           file_pattern: "CHANGELOG.v3.full.json CHANGELOG.v3.full.txt CHANGELOG.v4.full.json CHANGELOG.v4.full.txt"

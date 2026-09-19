@@ -1,113 +1,91 @@
 import re
+
 from .errors import LeanParseError
+
+# Characters that can change the lexer state at the top level of a file.
+# Alternation order matters for overlapping cases: "/--" must lex as "/-" "-",
+# and "--/" as "--" "/".
+_TOP_LEVEL_TOKEN_REGEX = re.compile(r'"|/-|--')
+# Inside a block comment only nesting delimiters matter, and "--/" must close
+# the block (the "-/" starts at the second dash), so "--" is not a token here.
+_BLOCK_TOKEN_REGEX = re.compile(r"/-|-/")
+# Inside a string literal: an escape sequence, or the closing quote.
+_STRING_TOKEN_REGEX = re.compile(r'\\.|"', re.DOTALL)
+_END_OF_LINE_REGEX = re.compile(r"[\r\n]")
 
 
 def strip_lean_comments(lean_contents: str) -> str:
-    processed = strip_nested_block_comment(lean_contents)
-    return re.sub(r"\-\-[^\n\r]*", "", processed, flags=re.MULTILINE)
-
-
-DELIM_L = "/-"
-DELIM_R = "-/"
-LINE_DELIM = "--"
-
-
-def _find_outside_strings(txt: str, target: str) -> int:
-    """Find the first occurrence of target not inside a string literal.
-
-    Returns -1 if not found.
     """
-    # Fast path: no string delimiters, use C-level search
-    if '"' not in txt:
-        return txt.find(target)
+    Remove `--` line comments and (nested) `/- ... -/` block comments,
+    including `/-- ... -/` and `/-! ... -/` doc comments. Comment delimiters
+    inside string literals are left alone.
 
-    # Fast path: target appears before any quote
-    simple_idx = txt.find(target)
-    if simple_idx == -1:
-        return -1
-    first_quote = txt.find('"')
-    if first_quote > simple_idx:
-        return simple_idx
+    This is a single linear pass. Regex searches jump between the few
+    characters that can change the lexer state, so the scanning happens in C
+    rather than one character at a time in Python.
+    """
+    out: list[str] = []
+    text_len = len(lean_contents)
+    keep_from = 0  # start of the text not yet copied to `out`
+    pos = 0  # where the next token search starts
+    depth = 0  # block comment nesting depth
 
-    # Slow path: quotes appear before target, must scan through strings
-    i = 0
-    n = len(txt)
-    target_len = len(target)
-    while i <= n - target_len:
-        if txt[i] == '"':
-            i += 1
-            while i < n:
-                if txt[i] == "\\" and i + 1 < n:
-                    i += 2
-                elif txt[i] == '"':
-                    i += 1
-                    break
-                else:
-                    i += 1
+    while pos < text_len:
+        if depth > 0:
+            match = _BLOCK_TOKEN_REGEX.search(lean_contents, pos)
+            if match is None:
+                break
+            if match.group() == "/-":
+                depth += 1
+            else:
+                depth -= 1
+                if depth == 0:
+                    keep_from = match.end()
+            pos = match.end()
             continue
-        if txt[i : i + target_len] == target:
-            return i
-        i += 1
-    return -1
+
+        match = _TOP_LEVEL_TOKEN_REGEX.search(lean_contents, pos)
+        if match is None:
+            break
+        token = match.group()
+        start = match.start()
+        if token == '"':
+            if _is_char_literal_quote(lean_contents, start):
+                pos = start + 2
+            else:
+                pos = _skip_string_literal(lean_contents, match.end())
+        elif token == "--":
+            out.append(lean_contents[keep_from:start])
+            eol = _END_OF_LINE_REGEX.search(lean_contents, start)
+            pos = keep_from = text_len if eol is None else eol.start()
+        else:  # "/-"
+            out.append(lean_contents[keep_from:start])
+            depth = 1
+            pos = match.end()
+
+    if depth > 0:
+        raise LeanParseError(
+            "Cannot find closing comment delimiter in " + lean_contents[keep_from:]
+        )
+    out.append(lean_contents[keep_from:])
+    return "".join(out)
 
 
-def has_nested_comment(txt_in_block: str) -> bool:
-    if DELIM_L not in txt_in_block:
-        return False
-    # this shouldn't happen - we should always have a DELIM_R if we're in a block
-    if DELIM_R not in txt_in_block:
-        return True
-    next_delim_l_index = txt_in_block.index(DELIM_L)
-    next_delim_r_index = txt_in_block.index(DELIM_R)
-    return next_delim_l_index < next_delim_r_index
+def _is_char_literal_quote(txt: str, quote_index: int) -> bool:
+    "True if the quote at quote_index is the character literal '\"'"
+    return (
+        quote_index > 0
+        and txt[quote_index - 1] == "'"
+        and txt[quote_index + 1 : quote_index + 2] == "'"
+    )
 
 
-# loosely based on https://www.rosettacode.org/wiki/Strip_block_comments#Python
-def strip_single_comment_block(txt: str, strip_line_comments: bool = True) -> str:
-    "Strips first nest of block comments"
-    out = ""
-    next_line_comment_index: int | None = None
-    if strip_line_comments:
-        # At top level: skip delimiters inside string literals
-        raw_line_idx = _find_outside_strings(txt, LINE_DELIM)
-        next_line_comment_index = raw_line_idx if raw_line_idx >= 0 else None
-        block_start_index = _find_outside_strings(txt, DELIM_L)
-    else:
-        # Inside a block comment: strings are not special
-        block_start_index = txt.index(DELIM_L) if DELIM_L in txt else -1
-
-    if block_start_index >= 0:
-        # if we see a line comment before the start of the next block comment, remove it first
-        # otherwise stuff like "-- this is /- irrelevant" will break the system
-        if (
-            next_line_comment_index is not None
-            and next_line_comment_index < block_start_index
-        ):
-            out += txt[:next_line_comment_index]
-            remaining = re.sub(
-                r"^.*$", "", txt[next_line_comment_index:], count=1, flags=re.MULTILINE
-            )
-            return out + strip_single_comment_block(remaining, True)
-
-        out += txt[:block_start_index]
-        remaining_txt = txt[block_start_index + len(DELIM_L) :]
-        if has_nested_comment(remaining_txt):
-            remaining_txt = strip_single_comment_block(remaining_txt, False)
-        if DELIM_R not in remaining_txt:
-            raise LeanParseError(
-                "Cannot find closing comment delimiter in " + remaining_txt
-            )
-        block_end_index = remaining_txt.index(DELIM_R)
-        out += remaining_txt[(block_end_index + len(DELIM_R)) :]
-    else:
-        out = txt
-    return out
-
-
-def strip_nested_block_comment(txt: str) -> str:
-    "Strips nests of block comments"
-    stripped_txt = txt
-
-    while _find_outside_strings(stripped_txt, DELIM_L) >= 0:
-        stripped_txt = strip_single_comment_block(stripped_txt, True)
-    return stripped_txt
+def _skip_string_literal(txt: str, pos: int) -> int:
+    "Return the index just past the string literal whose opening quote is before pos"
+    while True:
+        match = _STRING_TOKEN_REGEX.search(txt, pos)
+        if match is None:
+            return len(txt)
+        pos = match.end()
+        if match.group() == '"':
+            return pos

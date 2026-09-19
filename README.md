@@ -40,7 +40,7 @@ To use the crawler, change into the `crawler` directory. The crawler is a Python
 - To install dependencies, run `poetry install`
 - To run tests, run `poetry run pytest`
 - To run linting and type checks, run `poetry run flake8 .` and `poetry run mypy .`
-- To run the crawler, run `poetry run python -m crawler.crawl`
+- To run the crawler, run `poetry run python -m crawler.crawl`. By default only commits newer than the latest one already in the changelog are crawled and prepended to it; pass `--full` to re-crawl the whole history, and `--reuse-clone` to fetch into an existing `mathlib`/`mathlib4` clone instead of re-cloning.
 
 ## Contributing
 

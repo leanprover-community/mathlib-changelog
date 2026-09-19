@@ -1,3 +1,6 @@
+import pytest
+
+from crawler.parser.errors import LeanParseError
 from crawler.parser.strip_lean_comments import strip_lean_comments
 
 
@@ -174,3 +177,39 @@ def bar := 42
     assert "def bar := 42" in result
     assert "A doc comment" not in result
     assert "real block comment" not in result
+
+
+def test_strip_lean_comments_closes_block_on_double_dash_slash() -> None:
+    assert strip_lean_comments("/- a --/ def foo := 1") == " def foo := 1"
+
+
+def test_strip_lean_comments_handles_sibling_nested_comments() -> None:
+    input = "\n".join(
+        [
+            "/-! docs",
+            "```",
+            "/-- a -/",
+            "def a := 1",
+            "/-- b -/",
+            "def b := 2",
+            "```",
+            "-/",
+            "def c := 3",
+        ]
+    )
+    assert strip_lean_comments(input).strip() == "def c := 3"
+
+
+def test_strip_lean_comments_ignores_char_literal_quote() -> None:
+    input = "def q := '\"' -- comment\ndef r := 1"
+    assert strip_lean_comments(input) == "def q := '\"' \ndef r := 1"
+
+
+def test_strip_lean_comments_ignores_escaped_quotes_in_strings() -> None:
+    input = 'def s := "a \\" /- b" -- c\ndef t := 1'
+    assert strip_lean_comments(input) == 'def s := "a \\" /- b" \ndef t := 1'
+
+
+def test_strip_lean_comments_raises_on_unclosed_block_comment() -> None:
+    with pytest.raises(LeanParseError):
+        strip_lean_comments("def a := 1\n/- never closed")

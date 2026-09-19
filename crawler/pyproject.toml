@@ -24,3 +24,6 @@ build-backend = "poetry.core.masonry.api"
 testpaths = [
     "tests",
 ]
+
+[tool.black]
+extend-exclude = "^/mathlib4?/"
