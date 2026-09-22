@@ -1,8 +1,10 @@
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { ItemChangeHistory } from "../../../components/ItemChangeHistory";
 import Layout from "../../../components/Layout";
-import { getInductive } from "../../../data/database";
+import { getItemEdge } from "../../../data/edgeDatabase";
 import { ChangelogItemData } from "../../../data/extractDataFromChangelog";
+
+export const runtime = "experimental-edge";
 
 export const getStaticPaths: GetStaticPaths = () => ({
   paths: [],
@@ -13,11 +15,11 @@ interface InductiveProps {
   inductive: ChangelogItemData;
 }
 
-export const getStaticProps: GetStaticProps<InductiveProps> = (context) => {
+export const getStaticProps: GetStaticProps<InductiveProps> = async (context) => {
   if (!context.params?.name || Array.isArray(context.params.name)) {
     return { notFound: true };
   }
-  const inductive = getInductive("v4", context.params.name);
+  const inductive = await getItemEdge("v4", "inductive", context.params.name);
   if (!inductive) return { notFound: true };
   return { props: { inductive } };
 };
