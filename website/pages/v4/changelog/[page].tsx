@@ -11,10 +11,13 @@ import summarizeHeadline from "../../../util/summarizeHeadline";
 
 const PER_PAGE = 50;
 
-export const getStaticPaths: GetStaticPaths = () => ({
-  paths: [],
-  fallback: "blocking",
-});
+export const getStaticPaths: GetStaticPaths = () => {
+  const commitPages = getCommitPages("v4");
+  return {
+    paths: commitPages.map((_, i) => ({ params: { page: String(i + 1) } })),
+    fallback: false,
+  };
+};
 
 interface CommitSummary {
   headline: string;

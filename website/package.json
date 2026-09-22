@@ -4,11 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "ts-node scripts/buildStaticData.ts && ts-node scripts/buildSearchItems.ts",
     "build": "next build",
-    "postbuild": "yarn build:search && yarn build:sitemap",
+    "postbuild": "next-sitemap",
     "start": "next start",
     "lint": "next lint",
-    "export": "next export",
+    "build:data": "ts-node scripts/buildStaticData.ts",
     "build:sitemap": "next-sitemap",
     "build:search": "ts-node scripts/buildSearchItems.ts"
   },
