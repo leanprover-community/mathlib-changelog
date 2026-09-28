@@ -9,12 +9,12 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v6
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: "3.10"
       - name: Install Poetry
-        uses: snok/install-poetry@v1
+        uses: snok/install-poetry@a783c322200f0519c7926aa6faa857c4e23e9263 # v1
       - name: Install dependencies
         run: poetry install --no-interaction
         working-directory: ./crawler
@@ -23,7 +23,7 @@ jobs:
       - name: crawl git repos to update changelog files
         run: poetry run python -m crawler.crawl
         working-directory: ./crawler
-      - uses: stefanzweifel/git-auto-commit-action@v7
+      - uses: stefanzweifel/git-auto-commit-action@4a55954c782fc1ea30b9056cd3e7a2b40ca8887d # v7
         with:
           commit_message: "Updating CHANGELOG"
           file_pattern: "CHANGELOG.v3.full.json CHANGELOG.v3.full.txt CHANGELOG.v4.full.json CHANGELOG.v4.full.txt"
