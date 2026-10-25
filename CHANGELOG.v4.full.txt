@@ -1,3 +1,368 @@
+2026-10-24 20:48:14 10dc788
+
+feat(NumberTheory): `Decidable` instances for `Perfect`/`IsAlmostPrime`/`IsAtMostAlmostPrime` (#45004)
+
+ESTIMATED CHANGES
+Modified Mathlib/NumberTheory/AlmostPrime.lean
+
+Modified Mathlib/NumberTheory/Divisors.lean
+
+
+
+
+2026-10-24 16:27:32 1866f0f
+
+feat(Tactic/Linter/Header): profile the header linter (#45068)
+This PR puts the header linter (which is really a collection of linters) into its own profiling category.
+
+ESTIMATED CHANGES
+Modified Mathlib/Tactic/Linter/Header.lean
+
+
+
+
+2026-10-24 16:27:29 2d0ac23
+
+doc(AlgebraicGeometry/EffectiveEpi): add stacks tag `023Q` (#44346)
+Follow-up to #44313.
+
+ESTIMATED CHANGES
+Modified Mathlib/AlgebraicGeometry/EffectiveEpi.lean
+
+
+
+
+2026-10-24 16:27:27 9a4d487
+
+feat: add `CharZero`/`CharP` instances on `OrderDual` and `Lex` (#42541)
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Added Mathlib/Algebra/CharP/Synonym.lean
++ theorem Lex.ringChar_eq
++ theorem OrderDual.ringChar_eq
+
+
+
+2026-10-24 15:39:14 6235a5f
+
+feat: `membership` tactic (#42342)
+* Add `membership` tactic / `grind` ruleset for closing substructure membership goals.
+* Change tests for `aesop` `SetLike` ruleset into tests for the `membership` tactic.
+* Fix documentation formatting.
+This is a rewrite of the `aesop` `SetLike` ruleset for `grind`.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Algebra/NonUnitalSubalgebra.lean
+
+Modified Mathlib/Algebra/Algebra/Subalgebra/Basic.lean
+
+Modified Mathlib/Algebra/Algebra/Subalgebra/Lattice.lean
+
+Modified Mathlib/Algebra/Field/Subfield/Basic.lean
+
+Modified Mathlib/Algebra/Field/Subfield/Defs.lean
+
+Modified Mathlib/Algebra/Group/Subgroup/Defs.lean
+
+Modified Mathlib/Algebra/Group/Subgroup/Lattice.lean
+
+Modified Mathlib/Algebra/Group/Submonoid/Basic.lean
+
+Modified Mathlib/Algebra/Group/Submonoid/Defs.lean
+
+Modified Mathlib/Algebra/Group/Subsemigroup/Basic.lean
+
+Modified Mathlib/Algebra/Group/Subsemigroup/Defs.lean
+
+Modified Mathlib/Algebra/Order/Ring/Ordering/Basic.lean
+
+Modified Mathlib/Algebra/Order/Ring/Ordering/Defs.lean
+
+Modified Mathlib/Algebra/Ring/Subring/Basic.lean
+
+Modified Mathlib/Algebra/Ring/Subring/Defs.lean
+
+Modified Mathlib/Algebra/Ring/Subsemiring/Basic.lean
+
+Modified Mathlib/Algebra/Ring/Subsemiring/Defs.lean
+
+Modified Mathlib/Algebra/Star/Basic.lean
+
+Modified Mathlib/Algebra/Star/NonUnitalSubalgebra.lean
+
+Modified Mathlib/Algebra/Star/SelfAdjoint.lean
+
+Modified Mathlib/Algebra/Star/Subalgebra.lean
+
+Modified Mathlib/Basic/SetLike/Basic.lean
+
+Modified Mathlib/Data/Set/Insert.lean
+
+Modified Mathlib/FieldTheory/IntermediateField/Adjoin/Defs.lean
+
+Modified Mathlib/Geometry/Convex/Cone/Basic.lean
+
+Modified Mathlib/Geometry/Convex/Cone/Pointed.lean
+
+Modified Mathlib/GroupTheory/GroupAction/SubMulAction.lean
+
+Modified Mathlib/LinearAlgebra/Span/Defs.lean
+
+Modified Mathlib/Order/BooleanSubalgebra.lean
+
+Modified Mathlib/RingTheory/NonUnitalSubring/Basic.lean
+
+Modified Mathlib/RingTheory/NonUnitalSubsemiring/Basic.lean
+
+Modified Mathlib/RingTheory/NonUnitalSubsemiring/Defs.lean
+
+Modified Mathlib/Tactic/GrindAttrs.lean
+
+Modified Mathlib/Topology/Algebra/Algebra.lean
+
+Modified Mathlib/Topology/Algebra/NonUnitalAlgebra.lean
+
+Modified Mathlib/Topology/Algebra/NonUnitalStarAlgebra.lean
+
+Modified Mathlib/Topology/Algebra/StarSubalgebra.lean
+
+Modified MathlibTest/SetLike.lean
+
+
+
+
+2026-10-24 14:45:49 280e9fc
+
+fix(Tactic/FunProp): do not unfold semireducible definitions in the presence of projections (#35548)
+Currently, `fun_prop` incorrectly unfolds semireducible definitions when a projection or recursor is applied. This PR fixes this by switching to `whnfR` together with `Lean.Meta.withCanUnfoldPred` for the custom unfolding logic.
+Unfortunately, there are many proofs which rely on this bug. To avoid breaking proofs, the option `fun_prop.projDefaultTransparency` is added for locally restoring the previous behavior. Removing the uses of this option is left for future PRs.
+See [#mathlib4 > two fun_prop failures @ 💬](https://leanprover.zulipchat.com/#narrow/channel/287929-mathlib4/topic/two.20fun_prop.20failures/near/627268699) for an example where this bug caused issues in Physlib.
+
+ESTIMATED CHANGES
+Modified Mathlib/Analysis/Matrix/Normed.lean
+
+Modified Mathlib/Analysis/Normed/Lp/ProdLp.lean
+
+Modified Mathlib/Condensed/Light/TopCatAdjunction.lean
+
+Modified Mathlib/Condensed/TopCatAdjunction.lean
+
+Modified Mathlib/Geometry/Convex/ConvexSpace/PathConnectedSpaceStdSimplex.lean
+
+Modified Mathlib/NumberTheory/Harmonic/ZetaAsymp.lean
+
+Modified Mathlib/NumberTheory/ModularForms/Bounds.lean
+
+Modified Mathlib/Tactic/FunProp/Core.lean
+
+Modified Mathlib/Tactic/FunProp/FunctionData.lean
+
+Modified Mathlib/Tactic/FunProp/Mor.lean
+- def Mathlib.Meta.FunProp.Mor.whnf
+Modified Mathlib/Tactic/FunProp/Theorems.lean
+
+Modified Mathlib/Tactic/FunProp/Types.lean
+- def Mathlib.Meta.FunProp.defaultUnfoldPred
++ def Mathlib.Meta.FunProp.getUnfoldPred
+- def Mathlib.Meta.FunProp.unfoldNamePred
++ def Mathlib.Meta.FunProp.unfoldPred
+Modified Mathlib/Topology/Algebra/AffineSubspace.lean
+
+Modified Mathlib/Topology/Algebra/ConstMulAction.lean
+
+Modified Mathlib/Topology/Algebra/Constructions.lean
+
+Modified Mathlib/Topology/Algebra/ContinuousAffineEquiv.lean
+
+Modified Mathlib/Topology/Algebra/Field.lean
+
+Modified Mathlib/Topology/Algebra/Group/ContinuousDiv.lean
+
+Modified Mathlib/Topology/Algebra/Group/ContinuousInv.lean
+
+Modified Mathlib/Topology/Algebra/Group/Matrix.lean
+
+Modified Mathlib/Topology/Algebra/Group/Torsor.lean
+
+Modified Mathlib/Topology/Algebra/Group/Units.lean
+
+Modified Mathlib/Topology/Algebra/Module/ContinuousLinearMap/Positive.lean
+
+Modified Mathlib/Topology/Algebra/Module/Equiv/Basic.lean
+
+Modified Mathlib/Topology/Algebra/Module/Equiv/Prod.lean
+
+Modified Mathlib/Topology/Algebra/Module/Equiv/Submodule.lean
+
+Modified Mathlib/Topology/Algebra/Module/IsWeak.lean
+
+Modified Mathlib/Topology/Algebra/Module/Spaces/WeakBilin.lean
+
+Modified Mathlib/Topology/Category/TopCat/Limits/Basic.lean
+
+Modified Mathlib/Topology/Constructions/SumProd.lean
+
+Modified Mathlib/Topology/ContinuousMap/Algebra.lean
+
+Modified Mathlib/Topology/Homeomorph/Lemmas.lean
+
+Modified Mathlib/Topology/Semicontinuity/Michael.lean
+
+Modified MathlibTest/FunPropMinimal.lean
++ structure P
++ def myP
++ def semireducibleFun
+
+
+
+2026-10-24 14:19:45 2141ed6
+
+chore(CategoryTheory/Limits/Preserves/Basic): use `to_dual` (#44647)
+This PR uses `to_dual` for declarations about preserving limits and colimits.
+
+ESTIMATED CHANGES
+Modified Mathlib/CategoryTheory/Functor/ReflectsIso/Basic.lean
+
+Modified Mathlib/CategoryTheory/Limits/Preserves/Basic.lean
+- theorem CategoryTheory.Limits.PreservesColimit.mk'
+- def CategoryTheory.Limits.isColimitOfPreserves
+- def CategoryTheory.Limits.isColimitOfReflects
+- theorem CategoryTheory.Limits.preservesColimit_iff_isColimit_mapCocone
+- theorem CategoryTheory.Limits.preservesColimit_iff_of_iso_diagram
+- theorem CategoryTheory.Limits.preservesColimit_iff_of_natIso
+- theorem CategoryTheory.Limits.preservesColimit_of_iso_diagram
+- theorem CategoryTheory.Limits.preservesColimit_of_natIso
+- theorem CategoryTheory.Limits.preservesColimit_of_preserves_colimit_cocone
+- theorem CategoryTheory.Limits.preservesColimit_of_reflects_of_preserves
+- theorem CategoryTheory.Limits.preservesColimitsOfShape_iff_of_natIso
+- theorem CategoryTheory.Limits.preservesColimitsOfShape_of_equiv
+- theorem CategoryTheory.Limits.preservesColimitsOfShape_of_natIso
+- theorem CategoryTheory.Limits.preservesColimitsOfShape_of_reflects_of_preserves
+- theorem CategoryTheory.Limits.preservesColimitsOfSize_iff_of_natIso
+- theorem CategoryTheory.Limits.preservesColimitsOfSize_of_univLE
+- theorem CategoryTheory.Limits.preservesColimitsOfSize_shrink
+- theorem CategoryTheory.Limits.preservesColimits_of_natIso
+- theorem CategoryTheory.Limits.preservesColimits_of_reflects_of_preserves
+- theorem CategoryTheory.Limits.preservesSmallestColimits_of_preservesColimits
+- theorem CategoryTheory.Limits.reflectsColimit_of_iso_diagram
+- theorem CategoryTheory.Limits.reflectsColimit_of_natIso
+- theorem CategoryTheory.Limits.reflectsColimit_of_reflectsIsomorphisms
+- theorem CategoryTheory.Limits.reflectsColimitsOfShape_of_equiv
+- theorem CategoryTheory.Limits.reflectsColimitsOfShape_of_natIso
+- theorem CategoryTheory.Limits.reflectsColimitsOfShape_of_reflectsIsomorphisms
+- theorem CategoryTheory.Limits.reflectsColimitsOfSize_of_univLE
+- theorem CategoryTheory.Limits.reflectsColimitsOfSize_shrink
+- theorem CategoryTheory.Limits.reflectsColimits_of_natIso
+- theorem CategoryTheory.Limits.reflectsColimits_of_reflectsIsomorphisms
+- theorem CategoryTheory.Limits.reflectsSmallestColimits_of_reflectsColimits
+Modified Mathlib/CategoryTheory/NatTrans.lean
+
+
+
+
+2026-10-24 10:39:47 0b57f69
+
+fix(Tactic/Echelon): improve Zsqrtd model to return integer numerals when possible (#45021)
+This PR improves the Zsqrtd model of Echelon tactic to return integer numerals instead of the `⟨re, im⟩` form when `im = 0`. This saves a manual rewrite step in closing some determinant goals.
+
+ESTIMATED CHANGES
+Modified Mathlib/Tactic/Echelon/Zsqrtd.lean
+
+Modified MathlibTest/matrix.lean
+
+
+
+
+2026-10-24 09:52:36 fdc20e4
+
+feat: add Algebra.Polynomial.Laurent.Roots (#43264)
+We add `Mathlib/Algebra/Polynomial/Laurent/Roots.lean`, the analogue for Laurent polynomials of `Polynomial.eq_zero_of_infinite_isRoot`.
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Modified Mathlib/Algebra/Polynomial/Laurent.lean
++ theorem LaurentPolynomial.eval₂_eq_smeval
++ theorem LaurentPolynomial.eval₂_mapRingHom
+Added Mathlib/Algebra/Polynomial/Laurent/Roots.lean
++ theorem LaurentPolynomial.eq_of_infinite_smeval_eq
++ theorem LaurentPolynomial.eq_zero_of_infinite_smeval_eq_zero
+
+
+
+2026-10-24 08:53:45 351f018
+
+fix(Tactic/DeprecateTo): preserve whitespace (#44014)
+Make `#deprecate to` directly edit the original source file text, instead of extracting the syntax and then using the pretty-printer to convert it back into a string, which destroys the original whitespace.
+
+ESTIMATED CHANGES
+Modified Mathlib/Tactic/DeprecateTo.lean
++/- def Mathlib.Tactic.DeprecateTo.mkDeprecationStx
++/- def Mathlib.Tactic.DeprecateTo.renameTheorem
+Modified MathlibTest/DeprecateTo.lean
++ theorem add_odd_theorem
++ theorem originally_a_short_name.{has,
+
+
+
+2026-10-24 08:53:42 692d275
+
+fix: setting `pp.mdata` to true breaks `@[pp_with_univ]` (#43981)
+This PR fixes an issue where turning on `pp.mdata` causes constants tagged with `@[pp_with_univ]` to print as
+```
+[mdata pp.universes:true]
+  [mdata pp.universes:true]
+    [mdata pp.universes:true]
+      [mdata pp.universes:true]
+        [mdata pp.universes:true]
+          [mdata pp.universes:true] [mdata pp.universes:true] [mdata pp.universes:true] [mdata pp.universes:true] ⋯
+```
+When `pp.mdata` is set to true, expressions with mdata are printed by first printing the mdata and the printing the bare expression underneath. This breaks `@[pp_with_univ]` which works by applying mdata setting `pp.universes` to true onto the constant name, and then redelaborating the new expression containing mdata. This causes an infinite loop the the delaborator since `@[pp_with_univ]` applies the mdata, and then since `pp.mdata` is true the mdata is removed before delaborating the constant, which then has mdata applied again, and so on. We fix the issue by instead having the implementation of `@[pp_with_univ]` directly set the `pp.universes` option, instead of delegating it to `delabMData` with a metadata.
+
+ESTIMATED CHANGES
+Modified Mathlib/Tactic/PPWithUniv.lean
+
+Added MathlibTest/Delab/PPWithUniv.lean
++ def Bar
++ def Foo
+
+
+
+2026-10-24 08:15:09 8b0c051
+
+feat(Abel): warn about planned deprecation of transparency controls (#44501)
+Warn whenever a bang form of `abel`, `abel1`, or `abel_nf` is used, and whenever the `red` configuration field of `abel_nf` is set explicitly or has a non-default value.
+The warning says that these controls will be deprecated soon, directs users with a genuine use case to the dedicated [Zulip discussion](https://leanprover.zulipchat.com/#narrow/with/629213120), and documents `set_option warn.abelTransparency false` as an opt-out. Tests cover the warning and the opt-out.
+
+ESTIMATED CHANGES
+Modified Mathlib/Tactic/Abel.lean
+
+Modified MathlibTest/Linter/Flexible/ImportHeavy.lean
+
+Modified MathlibTest/Tactic/Abel.lean
+
+
+
+
+2026-10-24 04:16:11 7b5414d
+
+fix(build): let the toolchain select Lake linkage (#45209)
+Remove the explicit `-lLake` overrides from `mk_all` and `lint-style`. On Windows, I found both executables to otherwise fail when loading a Lake workspace, with message:
+```text
+error: invalid environment extension, 'Lake.packageAttr' has already been used
+uncaught exception: failed to load Lake workspace
+```
+The Lean toolchain specified in Mathlib’s `lean-toolchain` file already supplies `-lLake -lLeanExport` for static linking and `-lLake_shared` for shared linking ([source](https://github.com/leanprover/lean4/blob/c9afcddf514a6772bd4d649f7cfc04eff0b9f15e/src/CMakeLists.txt#L508-L514)). Removing the overrides lets Lake select the matching static or shared libraries.
+The regression came from [Lean #14885](https://github.com/leanprover/lean4/pull/14885), which added a `LeanExport` dependency to Lake. With the explicit static `-lLake`, unresolved `LeanExport` initializers are taken from `libLake_shared.dll`, loading a second copy of Lake and duplicating initialization. Previously the unused DLL was omitted. [Lean #14963](https://github.com/leanprover/lean4/pull/14963) added `-lLeanExport` to the automatic static flags, but Windows interpreter executables use the shared flags, so Mathlib's explicit override still causes this mixture. The old overrides originated in [Mathlib #13850](https://github.com/leanprover-community/mathlib4/pull/13850).
+
+ESTIMATED CHANGES
+Modified lakefile.lean
+
+
+
+
 2026-10-23 17:08:42 4dc4384
 
 feat(NumberTheory/RamificationInertia): degrees of decomposition and inertia rings (#44283)
