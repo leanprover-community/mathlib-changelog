@@ -1,3 +1,235 @@
+2026-10-26 02:42:56 aa1c06c
+
+chore(Order/GameAdd): fix recursor argument names (#45285)
+Name the motive `motive` and name the minor premises according to their contents.
+
+ESTIMATED CHANGES
+Modified Mathlib/Order/GameAdd.lean
++/- def Prod.GameAdd.recursion
++/- theorem Prod.GameAdd.recursion_eq
++/- def Sym2.GameAdd.recursion
++/- theorem Sym2.GameAdd.recursion_eq
+Modified Mathlib/SetTheory/ZFC/Ordinal.lean
+
+
+
+
+2026-10-25 19:07:05 957aaac
+
+feat(CategoryTheory): the category of inserters (#45273)
+Given `F G : C ⥤ D`, we define `Inserter F G` as the category of morphisms `F.obj X ⟶ G.obj X` for some object `X` in `C`. We also give the bare minimum API for this category: 
+- the projection functor `Inserter F G ⥤ C` with a `ReflectsIsomorphism` and `Faithful` instance;
+- a constructor for isomorphisms;
+- a bundling of the structure map as a natural transformation `proj F G ⋙ F ⟶ proj F G ⋙ G`.
+Inserters form a basic building block for a class of bicategorical limits (PIE-limits). By showing that categories of inserts are accessible when `C` and `D` and `F` and `G` are accessible, one can show that (co)-algebras for endofunctors (which are special cases of inserters) are also accessible.
+This PR is part of a series of PR that formalizes the fact that one can induce accessibility (and later on local presentability) along accessible monadic right adjoints with an accessible codomain.
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Added Mathlib/CategoryTheory/Inserter/Basic.lean
++ structure CategoryTheory.Inserter.Hom
++ theorem CategoryTheory.Inserter.comm
++ theorem CategoryTheory.Inserter.comp_hom
++ theorem CategoryTheory.Inserter.hom_ext
++ theorem CategoryTheory.Inserter.inv_hom
++ theorem CategoryTheory.Inserter.isIso_iff
++ def CategoryTheory.Inserter.mkIso
++ def CategoryTheory.Inserter.proj
++ def CategoryTheory.Inserter.τ
++ structure CategoryTheory.Inserter
+
+
+
+2026-10-25 18:28:32 c5945d8
+
+feat(CategoryTheory): relate equivalences and skeletons (#42802)
+This PR supersedes the previously closed PR #42789.
+It adds several related characterizations of equivalences of categories, together with an API showing that an equivalence induces an isomorphism between the corresponding skeletons.
+<!-- Your PR title will become the first line of the commit message.
+In this box, the text above the `---` (if not empty) will be appended
+to the commit message, and can be used to give additional context or
+details. Please leave a blank newline before the `---`, otherwise GitHub
+will format the text above it as a title.
+For details on the "pull request lifecycle" in mathlib, please see:
+https://leanprover-community.github.io/contribute/index.html
+In particular, note that most reviewers will only notice your PR
+if it passes the continuous integration checks.
+Please ask for help on https://leanprover.zulipchat.com if needed.
+When merging, all the commits will be squashed into a single commit
+listing all co-authors.
+Co-authors in the squash commit are gathered from two sources:
+First, all authors of commits to this PR branch are included. Thus,
+one way to add co-authors is to include at least one commit authored by
+each co-author among the commits in the pull request. If necessary, you
+may create empty commits to indicate co-authorship, using commands like so:
+git commit --author="Author Name <author@email.com>" --allow-empty -m "add Author Name as coauthor"
+Second, co-authors can also be listed in lines at the very bottom of
+the commit message (that is, directly before the `---`) using the following format:
+If you are moving or deleting declarations, please include these lines
+at the bottom of the commit message (before the `---`, and also before
+any "Co-authored-by" lines) using the following format:
+Moves:
+- Vector.* -> List.Vector.*
+- ...
+Deletions:
+- Nat.bit1_add_bit1
+- ...
+Any other comments you want to keep out of the PR commit should go
+below the `---`, and placed outside this HTML comment, or else they
+will be invisible to reviewers.
+If this PR depends on other PRs, please list them below this comment,
+using the following format:
+- [ ] depends on: #abc [optional extra text]
+- [ ] depends on: #xyz [optional extra text]
+-->
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/from-referrer/)
+
+ESTIMATED CHANGES
+Modified Mathlib/CategoryTheory/EssentiallySmall.lean
+
+Modified Mathlib/CategoryTheory/Skeletal.lean
++ theorem CategoryTheory.Functor.isEquivalence_iff_isIso_mapSkeleton
++ theorem CategoryTheory.Functor.isEquivalence_iff_isIso_of_skeletal
+
+
+
+2026-10-25 17:10:17 d875a8d
+
+feat(rm_set_option): scan for options of any value (#45085)
+Allow any value passed to a `set_option` command (except for options set to a string value using quotes, which should hopefully never occur in practice).
+In return, we remove the configurability of the script: it will now always look for every possible option value.
+
+ESTIMATED CHANGES
+Modified scripts/README.md
+
+Modified scripts/add_module_set_option.py
+
+Modified scripts/rm_set_option.py
+
+Modified scripts/set_option_utils.py
+
+
+
+
+2026-10-25 14:37:36 36a503d
+
+ci: push style fixes automatically and remove `bot fix style` (#44573)
+This PR merges `pre-commit.yml` into `lint_and_suggest_pr.yml` so that all automatic style fixes are pushed to the PR by pre-commit.ci lite, and removes the `bot fix style` command, which has not worked since 2025.
+On every PR, including drafts, the job now runs `lint-style-action` in its new `fix-worktree` mode (leanprover-community/lint-style-action#13: `mk_all`, `lint-style --fix` and `lint-bib.sh`, with the results left in the working tree), then the `pre-commit` hooks, and then `pre-commit-ci/lite-action`. Both sets of fixes arrive as a single `[pre-commit.ci lite]` commit, which replaces the reviewdog suggestions. Its message names the commands that changed something, such as `[pre-commit.ci lite] lake exe mk_all; lake exe lint-style --fix`, so that contributors can see how to make the same fixes locally.
+Other changes:
+- A per-PR concurrency group, with the lite action on `success() || failure()` rather than `always()`, so that a run superseded by a newer push cannot push stale fixes.
+- The workflow's token is read-only, since the job builds code from the PR and nothing in it needs to write any more.
+- The `.lean`/`.md` file-extension check moves to its own job, so that its failure cannot stop the fixes from being pushed.
+- `pre-commit.yml`'s `push` trigger goes away, because the lite action only acts on `pull_request`.
+- `bot_fix_style.yaml` is deleted. It was the last user of `lint-style-action`'s `fix` mode, which was removed upstream in leanprover-community/lint-style-action#12. It also started a no-op run on every comment and review in the repository.
+- `style_lint` in `build_template.yml` moves to the same `lint-style-action` version, so the repository has a single pin and nothing uses the `mathlib4-compat` branch any more. `actions/checkout` v7 refuses fork PR code under `pull_request_target`, and the action's own checkout has no way to opt in. So the job now checks out `pr_branch_ref` itself, the same way `post_steps` does (`allow-unsafe-pr-checkout`, no persisted credentials), and passes `checkout: false`.
+The commit messages have the details, including the evidence that `bot fix style` has been broken since lint-style-action 5f18958.
+
+ESTIMATED CHANGES
+Deleted .github/workflows/bot_fix_style.yaml
+
+Modified .github/workflows/build_template.yml
+
+Modified .github/workflows/lint_and_suggest_pr.yml
+
+Deleted .github/workflows/pre-commit.yml
+
+Modified docs/workflows.md
+
+
+
+
+2026-10-25 14:37:32 8645613
+
+feat(Algebra/Order): `NNRat.cast_sub` (#38716)
+From AddCombi
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Order/Field/Rat.lean
++ theorem NNRat.cast_sub
+Modified Mathlib/Data/NNRat/Defs.lean
+
+
+
+
+2026-10-25 14:25:35 0035ae1
+
+feat(Algebra/Module): minimal generators of module over local ring (#40922)
+In this PR, we proved for fg module over local ring, "two set of minimal generators can be transported by an invertible matrix", implemented as the commuting morphism between the source of the two surjection must be bijective.
+(The last lemma is for transport between Koszul complex form two set of generators)
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Added Mathlib/Algebra/Module/MinimalGenerators.lean
++ theorem LinearEquiv.exists_of_length_eq_spanRank
++ theorem LinearMap.baseChange_bijective_of_surjective_of_rank_eq
++ theorem LinearMap.baseChange_bijective_of_surjective_of_spanFinrank_eq
++ theorem LinearMap.bijective_of_rank_eq_of_of_comp_eq
++ theorem LinearMap.bijective_of_surjective_of_rank_eq_of_of_comp_eq
+
+
+
+2026-10-25 13:31:03 f32f0e9
+
+feat(LinearAlgebra/Dimension/DivisionRing): add `finrank_span_eq_finrank_iff` (#44360)
+This is a criterion for the reverse inequality of `finrank_span_le_finrank` in terms of linearly independent subsets. This criterion will be used in the upcoming lattice refactor, see the [zulip discussion](https://leanprover.zulipchat.com/#narrow/channel/116395-maths/topic/Definitions.20of.20lattices/with/620086310).
+As was already noted in the docstring, we also have `Submodule.finrank_span_eq_finrank` which works in a different setting and I don't think one can be deduced from the other. I've moved the docstring note to the new equality lemma.
+- [x] depends on: #44359
+
+ESTIMATED CHANGES
+Modified Mathlib/LinearAlgebra/Dimension/DivisionRing.lean
++ theorem Submodule.finrank_span_eq_finrank_iff
++ theorem Submodule.finrank_span_eq_finrank_of_linearIndepOn
++ theorem Submodule.linearIndepOn_of_finrank_le_finrank_span
++ theorem Submodule.rank_span_eq_rank_of_linearIndepOn
+Modified Mathlib/LinearAlgebra/LinearIndependent/Basic.lean
++ theorem disjoint_span_of_linearIndepOn_id_union
+
+
+
+2026-10-25 11:58:36 a88727a
+
+feat(Algebra/Homology/Embedding): more API for the stupid truncations (#44124)
+We define the monomorphism `K.stupidTrunc e ⟶ K` when the embedding of complex shapes `e` satisfies `e.IsTruncGE`. (We also proceed to the dual definition.)
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Homology/Embedding/Restriction.lean
+
+Modified Mathlib/Algebra/Homology/Embedding/StupidTrunc.lean
++ theorem HomologicalComplex.IsStrictlySupportedOutside.stupidTrunc
++ theorem HomologicalComplex.congr_stupidTruncXIso
++ theorem HomologicalComplex.isIso_ιStupidTrunc_f
++ theorem HomologicalComplex.isIso_ιStupidTrunc_iff
++ theorem HomologicalComplex.isIso_πStupidTrunc_f
++ theorem HomologicalComplex.isIso_πStupidTrunc_iff
++ theorem HomologicalComplex.stupidTruncXIso_rfl
++ theorem HomologicalComplex.ιStupidTrunc_f_naturality
++ theorem HomologicalComplex.ιStupidTrunc_naturality
++ theorem HomologicalComplex.ιStupidTruncf'_eq
++ theorem HomologicalComplex.ιStupidTruncf_eq
++ theorem HomologicalComplex.πStupidTrunc_f_naturality
++ theorem HomologicalComplex.πStupidTrunc_naturality
++ theorem HomologicalComplex.πStupidTruncf_eq'
++ theorem HomologicalComplex.πStupidTruncf_eq
+
+
+
+2026-10-25 10:42:45 90fc5d6
+
+refactor(Geometry/Convex): make `StdSimplex` extend `Finsupp` (#43309)
+Among other things, this lets users write `w.support` for `w : StdSimplex _ _` instead of `w.weights.support`. It prints the same, however.
+From the Polytopes in Berlin workshop, where participants requested that they could write `w.support` instead of `w.weights.support`.
+
+ESTIMATED CHANGES
+Modified Mathlib/Geometry/Convex/ConvexSpace/Barycenter.lean
+
+Modified Mathlib/Geometry/Convex/ConvexSpace/Defs.lean
++/- structure Convexity.StdSimplex
+
+
+
 2026-10-24 20:48:14 10dc788
 
 feat(NumberTheory): `Decidable` instances for `Perfect`/`IsAlmostPrime`/`IsAtMostAlmostPrime` (#45004)
