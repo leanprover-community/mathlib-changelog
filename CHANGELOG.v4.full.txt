@@ -1,3 +1,2253 @@
+2026-10-28 01:56:01 ba2e6f0
+
+chore(Order/OmegaCompletePartialOrder): automated extraction from #44363 (#45299)
+This PR was automatically created from PR #44363 by @Parcly-Taxel via a [review comment](https://github.com/leanprover-community/mathlib4/pull/44363#discussion_r4375032856) by @grunweg.
+
+ESTIMATED CHANGES
+Modified Mathlib/Order/OmegaCompletePartialOrder.lean
+
+
+
+
+2026-10-28 01:55:58 7e72250
+
+feat(Data/Nat/Prime): add divisibility lemma and golf proof (#45283)
+Add `Nat.exists_prime_dvd_and_dvd_div`: if `m ∣ n` and `m ≠ n`, then there is a prime number `p ∣ n` such that `m ∣ n / p`. This is used to golf the proof of `orderOf_eq_of_pow_and_pow_div_prime` and to remove the unnecessary hypothesis `hn : 0 < n`. Two callers are updated accordingly.  The file `OrderOfElement.lean` is now under 1500 lines, so the `longFile` linter override is removed. 
+I used Claude to help me debug the initial CI failure (`longFile` linter being the culprit) and I also incorporated some golfing suggestions made by it.
+
+ESTIMATED CHANGES
+Modified Mathlib/Data/Nat/Prime/Defs.lean
++ theorem Nat.exists_prime_and_dvd_and_dvd_div
+Modified Mathlib/GroupTheory/OrderOfElement.lean
++/- theorem orderOf_eq_of_pow_and_pow_div_prime
+Modified Mathlib/NumberTheory/LucasPrimality.lean
+
+
+
+
+2026-10-28 01:55:56 acea49d
+
+chore(Analysis/Normed/Ring/WithAbs): avoid instance diamond at implicit transparency (#45144)
+Found by the linter in #38781.
+
+ESTIMATED CHANGES
+Modified Mathlib/Analysis/Normed/Ring/WithAbs.lean
+
+
+
+
+2026-10-28 01:55:53 d1f7aaf
+
+feat(Analysis/Gamma): bound `‖Gamma s‖ ≤ ‖Gamma (s + n)‖` (#45103)
+
+ESTIMATED CHANGES
+Modified Mathlib/Analysis/SpecialFunctions/Gamma/Beta.lean
++ theorem Complex.norm_Gamma_le_norm_Gamma_add_of_one_le_re
++ theorem Complex.norm_Gamma_le_norm_Gamma_add_one
++ theorem Complex.norm_Gamma_le_norm_Gamma_add_one_iff
+
+
+
+2026-10-28 01:55:50 04a3376
+
+chore: fix mergewithgrind exceptions (#45037)
+This fixes the warnings from the `mergeWithGrind` linter, as reported [here]([#mathlib4 > Weekly linting log @ 💬](https://leanprover.zulipchat.com/#narrow/channel/287929-mathlib4/topic/Weekly.20linting.20log/near/632946433)) by @SnirBroshi.
+Some files become a bit slower, see radar output below, but nothing significant IMO.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/MvPolynomial/Variables.lean
+
+Modified Mathlib/Algebra/Notation/Support.lean
+
+Modified Mathlib/Algebra/QuadraticAlgebra/Discriminant.lean
+
+Modified Mathlib/Algebra/Star/NonUnitalSubalgebra.lean
+
+Modified Mathlib/AlgebraicTopology/SimplexCategory/ToMkOne.lean
+
+Modified Mathlib/AlgebraicTopology/SimplicialObject/ChainHomotopy.lean
+
+Modified Mathlib/Analysis/Asymptotics/Lemmas.lean
+
+Modified Mathlib/Analysis/CStarAlgebra/ContinuousFunctionalCalculus/Order.lean
+
+Modified Mathlib/Analysis/Calculus/Taylor.lean
+
+Modified Mathlib/Analysis/SpecialFunctions/ContinuousFunctionalCalculus/Rpow/RingInverseOrder.lean
+
+Modified Mathlib/Analysis/SpecialFunctions/Integrability/Basic.lean
+
+Modified Mathlib/Combinatorics/SimpleGraph/Acyclic.lean
+
+Modified Mathlib/Combinatorics/SimpleGraph/Maps.lean
+
+Modified Mathlib/Combinatorics/SimpleGraph/Tutte.lean
+
+Modified Mathlib/Data/Finsupp/Pointwise.lean
+
+Modified Mathlib/Data/List/Nodup.lean
++/- theorem List.nodup_iff_count_eq_one
+Modified Mathlib/Data/Multiset/Find.lean
+
+Modified Mathlib/Data/PFun.lean
+
+Modified Mathlib/Geometry/Manifold/Instances/Real.lean
+
+Modified Mathlib/LinearAlgebra/AffineSpace/Simplex/Basic.lean
+
+Modified Mathlib/LinearAlgebra/RootSystem/Base.lean
+
+Modified Mathlib/MeasureTheory/VectorMeasure/IntegrationByParts.lean
+
+Modified Mathlib/NumberTheory/FundamentalDiscriminant.lean
+
+Modified Mathlib/NumberTheory/Height/EllipticCurve.lean
+
+Modified Mathlib/NumberTheory/LucasLehmer.lean
+
+Modified Mathlib/Order/Interval/Finset/Gaps.lean
+
+Modified Mathlib/Topology/Instances/AddCircle/Defs.lean
+
+
+
+
+2026-10-28 01:55:47 d170374
+
+chore(Order/Setoid): fix defeq in `Setoid.gi` (#44999)
+Make the `choice` field of `Setoid.gi` actually have the correct defeq, which is the entire point of the `choice` field, instead of just using `EqvGen.setoid`.
+
+ESTIMATED CHANGES
+Modified Mathlib/Order/Setoid/Basic.lean
+
+
+
+
+2026-10-28 01:55:45 3828452
+
+refactor: rename `Subgroup.isCyclic_iff_exists_zpowers_eq_top` → `Subgroup.isCyclic_iff_exists_zpowers_eq` (#44956)
+This is a copy-paste error from the theorem above, nothing in this statement talks about `⊤`.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Order/Group/Cyclic.lean
+
+Modified Mathlib/GroupTheory/ArchimedeanDensely.lean
+
+Modified Mathlib/GroupTheory/SpecificGroups/Cyclic/Subgroup.lean
+
+Modified Mathlib/NumberTheory/ModularForms/Cusps.lean
+
+Modified Mathlib/Topology/Algebra/Order/ArchimedeanDiscrete.lean
+
+Modified Mathlib/Topology/Instances/AddCircle/DenseSubgroup.lean
+
+
+
+
+2026-10-28 01:55:42 b3d41e8
+
+feat(ClickSuggestions): use a `cdot` to focus the tactic when appropriate (#44936)
+This PR changes the tactic script generated by `#click_suggestions` to include a focus dot (`·`) if either
+- There are multiple goals and the user selected the first one.
+- There is only one goal but the preceding tactic is a tactic sequence that was focused with a `·`.
+This is to conform to the style that mathlib proofs typically have.
+Unfortunately, it's not possible to add a test for the second condition, because the "preceding tactic" depends on the user's cursor position.
+
+ESTIMATED CHANGES
+Modified Mathlib/Tactic/ClickSuggestions.lean
+
+Modified Mathlib/Tactic/ClickSuggestions/Util.lean
+
+Modified MathlibTest/ClickSuggestions/Test.lean
+
+Modified MathlibTest/ClickSuggestions/TestImpl.lean
+
+
+
+
+2026-10-28 01:55:39 64b3f2e
+
+fix(linter): ignore declaration names in flexible linter (#44934)
+Skip the declaration name when collecting stained locations from `letIdDecl`. This prevents `simp at h; let h := 3` (and the corresponding `have`) from being reported as a use of the old `h`, while preserving warnings for references in the declaration type or right-hand side.
+Addresses the third example in #32257. Includes six regression cases.
+
+ESTIMATED CHANGES
+Modified Mathlib/Tactic/Linter/FlexibleLinter.lean
+
+Modified MathlibTest/Linter/Flexible/Basic.lean
+
+
+
+
+2026-10-28 01:55:37 ad49fad
+
+feat(Matrix): add trace identity for positive powers of matrix products (#44917)
+
+ESTIMATED CHANGES
+Modified Mathlib/LinearAlgebra/Matrix/Trace.lean
++ theorem Matrix.trace_mul_pow_comm
++ theorem Matrix.trace_mul_pow_comm_of_ne_zero
+
+
+
+2026-10-28 01:55:32 ce8caa4
+
+chore: rename ContDiffAt.hasStrict(F)DerivAt to hasStrict(F)DerivAt_(… (#44840)
+Currently, mathlib has both `ContDiffAt.hasStrict(F)DerivAt` and `ContDiffAt.hasStrict(F)DerivAt'`: avoid the primed names by
+- renaming `ContDiffAt.hasStrict(F)DerivAt` to `ContDiffAt.hasStrict(F)DerivAt_(f)deriv` (which describes their statement more faithfully), and
+- renaming `ContDiffAt.hasStrict(F)DerivAt'` to `ContDiffAt.hasStrict(F)DerivAt`
+Because this is a cyclic rename, we can only generate deprecations for half of these.
+
+ESTIMATED CHANGES
+Modified Mathlib/Analysis/Calculus/ContDiff/RCLike.lean
+- theorem ContDiffAt.hasStrictDerivAt'
++/- theorem ContDiffAt.hasStrictDerivAt
++ theorem ContDiffAt.hasStrictDerivAt_deriv
+- theorem ContDiffAt.hasStrictFDerivAt'
++/- theorem ContDiffAt.hasStrictFDerivAt
++ theorem ContDiffAt.hasStrictFDerivAt_fderiv
+Modified Mathlib/Analysis/Calculus/ImplicitContDiff.lean
+
+Modified Mathlib/Analysis/Calculus/InverseFunctionTheorem/ContDiff.lean
+
+Modified Mathlib/Analysis/SpecialFunctions/ExpDeriv.lean
+
+Modified Mathlib/Analysis/SpecialFunctions/Pow/Deriv.lean
+
+
+
+
+2026-10-28 01:55:29 55911a1
+
+refactor(Analysis/Normed): generalize scalar distance and diameter lemmas (#44829)
+Generalize scalar distance and diameter lemmas to `NormedRing`, and drop the nonzero assumption from `infDist_smul₀`.
+
+ESTIMATED CHANGES
+Modified Mathlib/Analysis/Normed/Group/AddCircle.lean
+
+Modified Mathlib/Analysis/Normed/Module/Ball/Pointwise.lean
++/- theorem infDist_smul₀
++ theorem infEDist_smul_of_nonempty₀
+
+
+
+2026-10-28 01:55:27 0eb5a97
+
+feat(SetTheory/Cardinal/Finite): simp lemmas for `[E]Nat.card` (#44408)
+- `ENat.toNat (ENat.card α) = Nat.card α`
+- `Cardinal.toNat (Cardinal.mk α) = Nat.card α`
+- `Cardinal.toENat (Cardinal.mk α) = ENat.card α`
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Group/Pointwise/Set/Card.lean
+
+Modified Mathlib/Data/Set/Card.lean
++ theorem Set.encard_ofPred
++ theorem Set.ncard_ofPred
++/- theorem Set.toENat_cardinalMk
+Modified Mathlib/Data/Sym/Sym2/Card.lean
+
+Modified Mathlib/LinearAlgebra/Matrix/Rank.lean
+
+Modified Mathlib/SetTheory/Cardinal/Finite.lean
++ theorem Cardinal.toENat_mk
++ theorem Cardinal.toNat_mk
++/- theorem ENat.card_eq_top
++/- theorem ENat.card_lt_top
++/- theorem ENat.card_lt_top_of_finite
++ theorem ENat.toNat_card
+
+
+
+2026-10-28 01:55:23 af9bba6
+
+feat(LinearAlgebra/Matrix/GeneralLinearGroup/Defs): add `MulEquiv` for `GL` (#43945)
+Following the API in Data/Matrix/Basic I add : 
+-  the `MulEquiv`  : `GL n R ≃* GL n S`induced by a `RingEquiv`
+- the `MulEquiv`  : `GL n R ≃* (GL n R)\mop `
+- the `MulEquiv` : `GL n (ULift.{w} R) ≃* GL n R` 
+- the `MulEquiv` : `GL m R ≃* GL n R` for `m ≃ n` 
+- the `MulEquiv` :  `GL n (Π i, R i) ≃* Π i, GL n (R i)`
+
+ESTIMATED CHANGES
+Modified Mathlib/LinearAlgebra/Matrix/GeneralLinearGroup/Defs.lean
++ theorem Matrix.GeneralLinearGroup.coe_mapEquiv_apply
++ theorem Matrix.GeneralLinearGroup.coe_unop_transposeMulEquiv
++ def Matrix.GeneralLinearGroup.mapEquiv
++ theorem Matrix.GeneralLinearGroup.mapEquiv_refl
++ theorem Matrix.GeneralLinearGroup.mapEquiv_trans_mapEquiv
++ def Matrix.GeneralLinearGroup.piEquiv
++ def Matrix.GeneralLinearGroup.reindex
++ theorem Matrix.GeneralLinearGroup.reindexMulEquiv_refl
++ theorem Matrix.GeneralLinearGroup.reindexMulEquiv_trans_reindexMulEquiv
++ theorem Matrix.GeneralLinearGroup.symm_mapEquiv
++ theorem Matrix.GeneralLinearGroup.symm_reindexMulEquiv
++ theorem Matrix.GeneralLinearGroup.toMonoidHom_mapEquiv
++ def Matrix.GeneralLinearGroup.transposeMulEquiv
++ theorem Matrix.GeneralLinearGroup.transposeMulEquiv_symm_apply_op
++ def Matrix.GeneralLinearGroup.uliftMulEquiv
++ theorem Matrix.GeneralLinearGroup.uliftMulEquiv_apply
++ theorem Matrix.GeneralLinearGroup.uliftMulEquiv_symm
+
+
+
+2026-10-28 01:55:20 730ef8e
+
+feat(Analysis/Complex/CauchyIntegral): add Cauchy formula at interior points (#43100)
+This generalizes the higher-order Cauchy integral formula from the center of a disc to an arbitrary point in its interior, and closes the TODO.
+
+ESTIMATED CHANGES
+Modified Mathlib/Analysis/Complex/CauchyIntegral.lean
++ theorem Complex.circleIntegral_one_div_sub_pow_smul_of_differentiable_on_off_countable
++ theorem DiffContOnCl.circleIntegral_one_div_sub_pow_smul
++ theorem DifferentiableOn.circleIntegral_one_div_sub_pow_smul
+
+
+
+2026-10-28 01:05:26 3aae103
+
+chore: replace `irreducible_def` with `no_expose` (#45063)
+The `no_expose` attribute can be used in place of `irreducible_def`, and leads to easier proofs because the definition can be unfolded the file containing the definition.
+Another difference is that by using `no_expose`, the definition value is not exported at all, so in downstream modules it cannot be unfolded with e.g. `rw [foo]` or `rw [foo_def]`. Instead, a public lemma like `foo_def` needs to be added explicitly. This PR does that where necessary. If there is no such lemma, but you still need access to the definition value, `import all` can be used as a workaround.
+Since mathlib now enforces downstream users to use the `module` system, we don't need to worry about downstream users that don't see the effects of `no_expose`.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/BigOperators/Finprod.lean
+
+Modified Mathlib/Algebra/FreeAlgebra.lean
++/- theorem FreeAlgebra.quot_mk_eq_ι
++ def FreeAlgebra.ι
+Modified Mathlib/Algebra/Homology/HomotopyCategory/KInjective.lean
+
+Modified Mathlib/Algebra/Homology/HomotopyCategory/KProjective.lean
+
+Modified Mathlib/Algebra/Module/SpanRank.lean
+
+Modified Mathlib/Algebra/Polynomial/Basic.lean
++ def Polynomial.erase
++/- theorem Polynomial.toFinsupp_erase
+Modified Mathlib/Algebra/Polynomial/Eval/Coeff.lean
+
+Modified Mathlib/Algebra/Polynomial/Eval/Defs.lean
++ def Polynomial.eval₂
++/- theorem Polynomial.eval₂_eq_sum
+Modified Mathlib/Algebra/Polynomial/Eval/Degree.lean
+
+Modified Mathlib/Algebra/Polynomial/Smeval.lean
++ def Polynomial.smeval
++/- theorem Polynomial.smeval_eq_sum
+Modified Mathlib/Algebra/RingQuot.lean
++ def RingQuot.lift
++ def RingQuot.liftAlgHom
++ def RingQuot.mkAlgHom
++/- theorem RingQuot.mkAlgHom_coe
++ def RingQuot.mkRingHom
++ def RingQuot.preLift
++ def RingQuot.preLiftAlgHom
+Modified Mathlib/Analysis/Asymptotics/Arith.lean
+
+Modified Mathlib/Analysis/Asymptotics/AsymptoticEquivalent.lean
+
+Modified Mathlib/Analysis/Asymptotics/Basic.lean
++/- theorem Asymptotics.IsBigOWith.isBigO
+Modified Mathlib/Analysis/Asymptotics/Defs.lean
++ def Asymptotics.IsBigO
++ def Asymptotics.IsBigOWith
++ def Asymptotics.IsLittleO
++/- theorem Asymptotics.isBigOWith_iff
++/- theorem Asymptotics.isBigO_iff
++/- theorem Asymptotics.isBigO_iff_isBigOWith
++/- theorem Asymptotics.isLittleO_iff
++/- theorem Asymptotics.isLittleO_iff_forall_isBigOWith
+Modified Mathlib/Analysis/Asymptotics/Lemmas.lean
+
+Modified Mathlib/Analysis/Asymptotics/Prod.lean
+
+Modified Mathlib/Analysis/Asymptotics/Ring.lean
+
+Modified Mathlib/Analysis/Asymptotics/SpecificAsymptotics.lean
+
+Modified Mathlib/Analysis/CStarAlgebra/ContinuousFunctionalCalculus/NonUnital.lean
++ theorem cfcₙ_def
+Modified Mathlib/Analysis/CStarAlgebra/ContinuousFunctionalCalculus/Unital.lean
+
+Modified Mathlib/Analysis/Calculus/FDeriv/Add.lean
+
+Modified Mathlib/Analysis/Calculus/FDeriv/Basic.lean
+
+Modified Mathlib/Analysis/Calculus/FDeriv/Congr.lean
+
+Modified Mathlib/Analysis/Calculus/FDeriv/Const.lean
+
+Modified Mathlib/Analysis/Calculus/FDeriv/Defs.lean
++ def fderiv
++ def fderivWithin
+Modified Mathlib/Analysis/Calculus/FDeriv/Equiv.lean
+
+Modified Mathlib/Analysis/Calculus/FDeriv/Symmetric.lean
+
+Modified Mathlib/Analysis/Calculus/LineDeriv/IntegrationByParts.lean
+
+Modified Mathlib/Analysis/Calculus/ParametricIntegral.lean
+
+Modified Mathlib/Analysis/Calculus/TangentCone/Basic.lean
+
+Modified Mathlib/Analysis/Calculus/TangentCone/Defs.lean
++ def tangentConeAt
+Modified Mathlib/Analysis/Calculus/VectorField.lean
+
+Modified Mathlib/Analysis/Complex/CauchyIntegral.lean
+
+Modified Mathlib/Analysis/Complex/Exponential.lean
++ def Complex.exp
+Modified Mathlib/Analysis/Complex/HasPrimitives.lean
+
+Modified Mathlib/Analysis/Convex/Combination.lean
+
+Modified Mathlib/Analysis/Distribution/SchwartzSpace/Basic.lean
+
+Modified Mathlib/Analysis/Fourier/FourierTransform.lean
+
+Modified Mathlib/Analysis/Fourier/FourierTransformDeriv.lean
+
+Modified Mathlib/Analysis/Fourier/PoissonSummation.lean
+
+Modified Mathlib/Analysis/FunctionalSpaces/SobolevInequality.lean
++ def MeasureTheory.SNormLESNormFDerivOfEqConst
++ def MeasureTheory.eLpNormLESNormFDerivOfLeConst
++ def MeasureTheory.eLpNormLESNormFDerivOneConst
++ def MeasureTheory.lintegralPowLePowLIntegralFDerivConst
+Modified Mathlib/Analysis/InnerProductSpace/Orientation.lean
++ def Orientation.volumeForm
+Modified Mathlib/Analysis/InnerProductSpace/PiL2.lean
++ def DirectSum.IsInternal.sigmaOrthonormalBasisIndexEquiv
++ def DirectSum.IsInternal.subordinateOrthonormalBasis
++ def DirectSum.IsInternal.subordinateOrthonormalBasisIndex
++ def stdOrthonormalBasis
+Modified Mathlib/Analysis/InnerProductSpace/Spectrum.lean
+
+Modified Mathlib/Analysis/InnerProductSpace/TwoDim.lean
++ def Orientation.areaForm
++ def Orientation.rightAngleRotation
++ def Orientation.rightAngleRotationAux₁
+Modified Mathlib/Analysis/MellinTransform.lean
+
+Modified Mathlib/Analysis/Normed/Algebra/Exponential.lean
+
+Modified Mathlib/Analysis/Normed/Algebra/Logarithm.lean
+
+Modified Mathlib/Analysis/Normed/Module/FiniteDimension.lean
++ def lipschitzExtensionConstant
+Modified Mathlib/Analysis/Normed/Operator/Banach.lean
+
+Modified Mathlib/Analysis/Normed/Ring/Units.lean
+
+Modified Mathlib/Analysis/SpecialFunctions/ContinuousFunctionalCalculus/Rpow/Basic.lean
+
+Modified Mathlib/Analysis/SpecialFunctions/Exponential.lean
+
+Modified Mathlib/Basic/Real/Basic.lean
++/- theorem Real.cauchy_add
++/- theorem Real.cauchy_inv
++/- theorem Real.cauchy_mul
++/- theorem Real.cauchy_neg
++/- theorem Real.cauchy_one
++/- theorem Real.cauchy_sub
++/- theorem Real.cauchy_zero
++/- theorem Real.lt_cauchy
++/- theorem Real.mk_add
++/- theorem Real.mk_lt
++/- theorem Real.mk_mul
++/- theorem Real.mk_neg
++/- theorem Real.mk_one
++/- theorem Real.mk_zero
++/- theorem Real.ofCauchy_add
++/- theorem Real.ofCauchy_inf
++/- theorem Real.ofCauchy_inv
++/- theorem Real.ofCauchy_mul
++/- theorem Real.ofCauchy_neg
++/- theorem Real.ofCauchy_one
++/- theorem Real.ofCauchy_sup
++/- theorem Real.ofCauchy_zero
+Modified Mathlib/CategoryTheory/Abelian/Injective/Resolution.lean
++ def CategoryTheory.InjectiveResolution.of
+Modified Mathlib/CategoryTheory/Abelian/Projective/Resolution.lean
++ def CategoryTheory.ProjectiveResolution.of
+Modified Mathlib/CategoryTheory/Localization/LocallySmall.lean
+
+Modified Mathlib/Combinatorics/Extremal/RuzsaSzemeredi.lean
+
+Modified Mathlib/Combinatorics/SimpleGraph/Copy.lean
+
+Modified Mathlib/Computability/AkraBazzi/SumTransform.lean
+
+Modified Mathlib/FieldTheory/IsSepClosed.lean
+
+Modified Mathlib/FieldTheory/RatFunc/Basic.lean
++/- theorem RatFunc.ofFractionRing_one
++/- theorem RatFunc.ofFractionRing_zero
+Modified Mathlib/FieldTheory/RatFunc/Defs.lean
++ theorem RatFunc.liftOn'_def
+Modified Mathlib/Geometry/Manifold/Instances/Icc.lean
++ def oneTangentSpaceIcc
+Modified Mathlib/Geometry/Manifold/MFDeriv/Basic.lean
+
+Modified Mathlib/Geometry/Manifold/Riemannian/Basic.lean
+
+Modified Mathlib/Geometry/Manifold/Riemannian/PathELength.lean
++ def Manifold.pathELength
++ theorem Manifold.riemannianEDist_def
+Modified Mathlib/GroupTheory/FreeGroup/IsFreeGroup.lean
++ def IsFreeGroup.mulEquiv
+Modified Mathlib/InformationTheory/KullbackLeibler/Basic.lean
++/- theorem InformationTheory.klDiv_of_not_ac
++/- theorem InformationTheory.klDiv_of_not_integrable
+Modified Mathlib/LinearAlgebra/Determinant.lean
++ def LinearMap.detAux
++ theorem LinearMap.det_def
+Modified Mathlib/LinearAlgebra/Dimension/Basic.lean
+
+Modified Mathlib/LinearAlgebra/Dimension/Localization.lean
+
+Modified Mathlib/LinearAlgebra/Dimension/Subsingleton.lean
+
+Modified Mathlib/LinearAlgebra/Dimension/Torsion/Basic.lean
+
+Modified Mathlib/LinearAlgebra/Finsupp/LinearCombination.lean
++ def Span.repr
+Modified Mathlib/LinearAlgebra/FreeProduct/Basic.lean
++ def LinearAlgebra.FreeProduct.of
++ def LinearAlgebra.FreeProduct.ι
+Modified Mathlib/LinearAlgebra/TensorAlgebra/Basic.lean
++ def TensorAlgebra.ι
+Modified Mathlib/LinearAlgebra/TensorProduct/Graded/External.lean
+
+Modified Mathlib/MeasureTheory/Constructions/BorelSpace/Basic.lean
+
+Modified Mathlib/MeasureTheory/Constructions/Pi.lean
+
+Modified Mathlib/MeasureTheory/Constructions/Polish/Basic.lean
++ def MeasureTheory.AnalyticSet
+Modified Mathlib/MeasureTheory/Covering/DensityTheorem.lean
++ def IsUnifLocDoublingMeasure.vitaliFamily
+Modified Mathlib/MeasureTheory/Function/ConditionalExpectation/Basic.lean
+
+Modified Mathlib/MeasureTheory/Function/ConditionalLExpectation.lean
+
+Modified Mathlib/MeasureTheory/Integral/Bochner/Basic.lean
++ def MeasureTheory.integral
+Modified Mathlib/MeasureTheory/Integral/Bochner/ContinuousLinearMap.lean
+
+Modified Mathlib/MeasureTheory/Integral/Bochner/L1.lean
++ def MeasureTheory.L1.integral
+Modified Mathlib/MeasureTheory/Integral/Bochner/Set.lean
+
+Modified Mathlib/MeasureTheory/Integral/CurveIntegral/Basic.lean
+
+Modified Mathlib/MeasureTheory/Integral/DivergenceTheorem.lean
+
+Modified Mathlib/MeasureTheory/Integral/DominatedConvergence.lean
+
+Modified Mathlib/MeasureTheory/Integral/IntegralEqImproper.lean
+
+Modified Mathlib/MeasureTheory/Integral/IntervalIntegral/DistLEIntegral.lean
+
+Modified Mathlib/MeasureTheory/Integral/IntervalIntegral/FundThmCalculus.lean
+
+Modified Mathlib/MeasureTheory/Integral/IntervalIntegral/IntegrationByParts.lean
+
+Modified Mathlib/MeasureTheory/Integral/Lebesgue/Add.lean
+
+Modified Mathlib/MeasureTheory/Integral/Lebesgue/Basic.lean
+
+Modified Mathlib/MeasureTheory/Integral/Lebesgue/Map.lean
+
+Modified Mathlib/MeasureTheory/Integral/Prod.lean
+
+Modified Mathlib/MeasureTheory/Measure/Decomposition/Lebesgue.lean
+
+Modified Mathlib/MeasureTheory/Measure/Haar/InnerProductSpace.lean
+
+Modified Mathlib/MeasureTheory/Measure/Haar/NormedSpace.lean
+
+Modified Mathlib/MeasureTheory/Measure/Haar/OfBasis.lean
++ def Module.Basis.addHaar
++ theorem Module.Basis.addHaar_def
++/- theorem Module.Basis.addHaar_self
+Modified Mathlib/MeasureTheory/Measure/Lebesgue/Basic.lean
+
+Modified Mathlib/MeasureTheory/Measure/Lebesgue/Complex.lean
+
+Modified Mathlib/MeasureTheory/Measure/Lebesgue/EqHaar.lean
+
+Modified Mathlib/MeasureTheory/Measure/Map.lean
++ def MeasureTheory.Measure.map
++ theorem MeasureTheory.Measure.nonempty_of_not_aemeasurable
+Modified Mathlib/MeasureTheory/Measure/MeasureSpaceDef.lean
++ def MeasureTheory.toMeasurable
+Modified Mathlib/MeasureTheory/Measure/Prod.lean
++ theorem MeasureTheory.Measure.prod_eq_zero_of_not_sfinite
+Modified Mathlib/MeasureTheory/Measure/Stieltjes.lean
+
+Modified Mathlib/MeasureTheory/Measure/Typeclasses/Finite.lean
+
+Modified Mathlib/MeasureTheory/Measure/Typeclasses/Probability.lean
+
+Modified Mathlib/MeasureTheory/Measure/Typeclasses/SFinite.lean
+
+Modified Mathlib/NumberTheory/LSeries/AbstractFuncEq.lean
+
+Modified Mathlib/NumberTheory/ModularForms/Bounds.lean
+
+Modified Mathlib/NumberTheory/ModularForms/JacobiTheta/OneVariable.lean
+
+Modified Mathlib/Probability/Independence/Integration.lean
+
+Modified Mathlib/Probability/Kernel/Composition/CompProd.lean
+
+Modified Mathlib/Probability/Kernel/Composition/IntegralCompProd.lean
+
+Modified Mathlib/Probability/Kernel/Composition/ParallelComp.lean
++ def ProbabilityTheory.Kernel.parallelComp
+Modified Mathlib/Probability/Kernel/CondDistrib.lean
+
+Modified Mathlib/Probability/Kernel/Condexp.lean
+
+Modified Mathlib/Probability/Kernel/Disintegration/MeasurableStieltjes.lean
+- theorem ProbabilityTheory.IsMeasurableRatCDF.stieltjesFunctionAux_def'
++ theorem ProbabilityTheory.IsMeasurableRatCDF.stieltjesFunctionAux_def
+Modified Mathlib/Probability/Kernel/Disintegration/StandardBorel.lean
++ def MeasureTheory.Measure.condKernel
++ def ProbabilityTheory.Kernel.condKernel
+Modified Mathlib/Probability/Kernel/MeasurableIntegral.lean
+
+Modified Mathlib/Probability/Kernel/RadonNikodym.lean
++ def ProbabilityTheory.Kernel.rnDeriv
++ def ProbabilityTheory.Kernel.singularPart
+Modified Mathlib/Probability/Process/Filtration.lean
+
+Modified Mathlib/RingTheory/ClassGroup/Basic.lean
++ def toPrincipalIdeal
+Modified Mathlib/RingTheory/FractionalIdeal/Basic.lean
++ def FractionalIdeal.mul
+Modified Mathlib/RingTheory/FractionalIdeal/Operations.lean
+
+Modified Mathlib/RingTheory/Localization/FractionRing.lean
+
+Modified Mathlib/RingTheory/Norm/Defs.lean
+
+Modified Mathlib/Tactic/ComputeAsymptotics/Multiseries/Corecursion.lean
+
+Modified Mathlib/Topology/Algebra/InfiniteSum/Defs.lean
+
+Modified Mathlib/Topology/Defs/Filter.lean
++ def nhds
+Modified Mathlib/Topology/FiberBundle/Constructions.lean
+
+Modified Mathlib/Topology/MetricSpace/Closeds.lean
+
+Modified Mathlib/Topology/MetricSpace/HausdorffDistance.lean
++ def Metric.hausdorffEDist
+Modified Mathlib/Topology/MetricSpace/PiNat.lean
++ def PiNat.firstDiff
++ theorem PiNat.firstDiff_def
+Modified MathlibTest/Tactic/Recall/Basic.lean
+
+
+
+
+2026-10-27 23:51:39 88126f7
+
+feat: import `Counterexamples` in the check-yaml script (#45378)
+Also allow declarations from `Counterexamples` in `100(0).yaml`.
+
+ESTIMATED CHANGES
+Modified scripts/check-yaml.lean
+
+
+
+
+2026-10-27 23:51:35 ffc84c2
+
+feat(Geometry/Group): additivize `Group.Generators`, `wordProd` and word metric (#45359)
+This PR additivizes the following files:
+* Mathlib/Geometry/Group/WordMetric.lean
+* Mathlib/Geometry/Group/WordProd.lean
+* Mathlib/GroupTheory/Generators.lean
+
+ESTIMATED CHANGES
+Modified Mathlib/Geometry/Group/WordMetric.lean
+
+Modified Mathlib/Geometry/Group/WordProd.lean
+
+Modified Mathlib/GroupTheory/Generators.lean
++ structure AddGroup.Generators
+
+
+
+2026-10-27 23:51:31 e20b4f3
+
+feat: valuative extensions preserve `=ᵥ` relation (#45320)
+Also make the arguments of `vle_iff_vle` implicit, matching most other iff statements.
+
+ESTIMATED CHANGES
+Modified Mathlib/RingTheory/Valuation/ValuativeRel/Basic.lean
++ theorem ValuativeExtension.veq_iff_veq
++/- theorem ValuativeExtension.vlt_iff_vlt
+Modified Mathlib/Topology/Algebra/ValuativeRel/Completion.lean
+
+
+
+
+2026-10-27 23:51:27 e9db86d
+
+chore(Tactic/Ring/Common): remove superfluous instance (#45147)
+This instance is derived five lines above.
+Found by the linter in #38781.
+
+ESTIMATED CHANGES
+Modified Mathlib/Tactic/Ring/Common.lean
+
+
+
+
+2026-10-27 23:51:23 6955275
+
+chore(Data/Nat/Init): rename recursor arguments (#43848)
+Name the motive `motive` and name the minor premises according to their contents.
+
+ESTIMATED CHANGES
+Modified Archive/Imo/Imo1981Q3.lean
+
+Modified Archive/Imo/Imo2024Q3.lean
+
+Modified Mathlib/Algebra/ContinuedFractions/Euler.lean
+
+Modified Mathlib/Algebra/Polynomial/Sequence.lean
+
+Modified Mathlib/Analysis/Calculus/ContDiff/Bounds.lean
+
+Modified Mathlib/Analysis/Hofer.lean
+
+Modified Mathlib/Combinatorics/Enumerative/Catalan/Tree.lean
+
+Modified Mathlib/Data/Fin/Basic.lean
+
+Modified Mathlib/Data/Nat/Init.lean
++/- def Nat.decreasingInduction'
++/- theorem Nat.diag_induction
++/- def Nat.leRecOn
++/- theorem Nat.leRecOn_self
++/- theorem Nat.leRecOn_succ'
++/- theorem Nat.leRecOn_succ
++/- theorem Nat.leRecOn_succ_left
++/- theorem Nat.leRecOn_trans
++/- theorem Nat.le_induction
++/- def Nat.pincerRecursion
++/- theorem Nat.rec_add_one
++/- theorem Nat.rec_one
++/- theorem Nat.rec_zero
++/- def Nat.strongSubRecursion
+Modified Mathlib/FieldTheory/IsRealClosed/Basic.lean
+
+Modified Mathlib/GroupTheory/GroupAction/Jordan.lean
+
+Modified Mathlib/GroupTheory/Nilpotent.lean
+
+Modified Mathlib/LinearAlgebra/Eigenspace/Triangularizable.lean
+
+Modified Mathlib/LinearAlgebra/Finsupp/Pi.lean
+
+Modified Mathlib/LinearAlgebra/Multilinear/Basic.lean
+
+Modified Mathlib/NumberTheory/DiophantineApproximation/Basic.lean
+
+Modified Mathlib/NumberTheory/FLT/Polynomial.lean
+
+Modified Mathlib/NumberTheory/ModularForms/LevelOne/DimensionFormula.lean
+
+Modified Mathlib/NumberTheory/Pell.lean
+
+Modified Mathlib/NumberTheory/Primorial.lean
+
+Modified Mathlib/NumberTheory/RamificationInertia/Basic.lean
+
+Modified Mathlib/Order/KrullDimension.lean
+
+Modified Mathlib/Probability/Kernel/IonescuTulcea/Traj.lean
+
+Modified Mathlib/RingTheory/Adjoin/PowerBasis.lean
+
+Modified Mathlib/RingTheory/AdjoinRoot.lean
+
+Modified Mathlib/RingTheory/Etale/QuasiFinite.lean
+
+Modified Mathlib/RingTheory/Ideal/KrullsHeightTheorem.lean
+
+Modified Mathlib/RingTheory/IntegralClosure/IsIntegral/AlmostIntegral.lean
+
+Modified Mathlib/RingTheory/Polynomial/Eisenstein/IsIntegral.lean
+
+Modified Mathlib/RingTheory/Polynomial/IsIntegral.lean
+
+Modified Mathlib/RingTheory/Polynomial/Resultant/Basic.lean
+
+Modified Mathlib/RingTheory/WittVector/Defs.lean
+
+Modified Mathlib/RingTheory/WittVector/StructurePolynomial.lean
+
+Modified Mathlib/RingTheory/ZariskisMainTheorem.lean
+
+Modified Mathlib/Topology/CWComplex/Classical/Basic.lean
+
+Modified Mathlib/Topology/Metrizable/Uniformity.lean
+
+
+
+
+2026-10-27 23:51:19 c63d9df
+
+feat: tag `Metric.closedBall_subset_ball` with `@[gcongr strict]` (#43419)
+This PR uses `@[gcongr strict]` on `Metric.closedBall_subset_ball` so that it can be used by `gcongr` and `grw`. This means that we will be able to rewrite with a strict inequality to turn a closed ball into an open ball or vice versa.
+I golfed away some uses of `Metric.closedBall_subset_ball` using `grw`. To aid this, I also added some more `@[gcongr]` attributes.
+
+ESTIMATED CHANGES
+Modified Mathlib/Analysis/BoxIntegral/Basic.lean
+
+Modified Mathlib/Analysis/CStarAlgebra/SpecialFunctions/PosPart.lean
+
+Modified Mathlib/Analysis/Calculus/FDeriv/Basic.lean
+
+Modified Mathlib/Analysis/Complex/Harmonic/MeanValue.lean
+
+Modified Mathlib/Analysis/Complex/Harmonic/Poisson.lean
+
+Modified Mathlib/Analysis/Complex/Schwarz.lean
+
+Modified Mathlib/Analysis/Complex/TaylorSeries.lean
+
+Modified Mathlib/Analysis/Convex/Gauge.lean
++/- theorem gauge_mono
+Modified Mathlib/Analysis/InnerProductSpace/Harmonic/Basic.lean
+
+Modified Mathlib/Analysis/InnerProductSpace/Harmonic/HarmonicContOnCl.lean
+
+Modified Mathlib/Analysis/ODE/PicardLindelof.lean
+
+Modified Mathlib/MeasureTheory/Covering/Besicovitch.lean
+
+Modified Mathlib/MeasureTheory/Group/AddCircle.lean
+
+Modified Mathlib/MeasureTheory/Measure/Doubling.lean
+
+Modified Mathlib/MeasureTheory/Measure/Lebesgue/EqHaar.lean
+
+Modified Mathlib/MeasureTheory/Measure/Prokhorov.lean
+
+Modified Mathlib/Topology/Algebra/Valued/LocallyCompact.lean
+
+Modified Mathlib/Topology/EMetricSpace/Lipschitz.lean
+
+Modified Mathlib/Topology/MetricSpace/Bounded.lean
+
+Modified Mathlib/Topology/MetricSpace/HausdorffDistance.lean
+
+Modified Mathlib/Topology/MetricSpace/ProperSpace/Lemmas.lean
+
+Modified Mathlib/Topology/MetricSpace/Pseudo/Defs.lean
+
+
+
+
+2026-10-27 23:51:15 68c0d2c
+
+feat(NumberTheory/RamificationInertia/Unramified): generalize `IsUnramifiedAt.of_liesOver` to flat algebras (#42919)
+This PR generalizes `IsUnramifiedAt.of_liesOver` to flat algebras and deprecates the technical auxiliary lemma `IsUnramifiedAt.of_liesOver_of_ne_bot` for the previous proof.
+This also avoids the usage of the old `Ideal.ramificationIdx'` in the proof of `IsUnramifiedAt.of_liesOver_of_ne_bot`.
+
+ESTIMATED CHANGES
+Modified Mathlib/NumberTheory/RamificationInertia/Unramified.lean
+
+Modified Mathlib/RingTheory/Flat/FaithfullyFlat/Algebra.lean
+
+Modified Mathlib/RingTheory/Ideal/GoingDown.lean
+
+Modified Mathlib/RingTheory/Unramified/LocalRing.lean
++ theorem Algebra.IsUnramifiedAt.map_eq
+
+
+
+2026-10-27 22:36:03 0d3fb85
+
+chore(GCongr): don't import `IsTrans` (#45373)
+This PR changes `gcongr`/`grw` so that they use `Trans` instead of `IsTrans`. This is useful because importing `IsTrans` imports other stuff including `to_additive`/`to_dual`. This reduces the size of the longest pole.
+This makes gcongr generate slightly different proof terms --- which assume a `Trans` instance (instead of an `IsTrans` once), thus allowing for reducing imports. Other than that, there will be no functionality change.
+
+ESTIMATED CHANGES
+Modified Mathlib/Data/Nat/Basic.lean
+
+Modified Mathlib/Tactic/GCongr/Core.lean
+
+
+
+
+2026-10-27 22:35:59 f397d19
+
+chore(CategoryTheory): remove some backward options (#45370)
+This PR removes backward options from some basic category theory files, by using `implicit_reducible`.
+
+ESTIMATED CHANGES
+Modified Mathlib/CategoryTheory/Adjunction/Basic.lean
+
+Modified Mathlib/CategoryTheory/Core.lean
+
+Modified Mathlib/CategoryTheory/Functor/Basic.lean
+
+Modified Mathlib/CategoryTheory/Functor/Hom.lean
+
+Modified Mathlib/CategoryTheory/Groupoid.lean
+
+Modified Mathlib/CategoryTheory/Limits/Cones.lean
+
+Modified Mathlib/CategoryTheory/RepresentedBy.lean
+
+Modified Mathlib/CategoryTheory/Types/Basic.lean
+
+Modified Mathlib/CategoryTheory/Whiskering.lean
+
+Modified Mathlib/CategoryTheory/Yoneda.lean
+
+
+
+
+2026-10-27 22:35:56 8c2622f
+
+chore(Data/Set): restore `subset_image_symmDiff` (#45216)
+This lemma was accidentally deleted in #40184.
+
+ESTIMATED CHANGES
+Modified Mathlib/Data/Set/Image.lean
++ theorem Set.subset_image_symmDiff
+
+
+
+2026-10-27 22:35:52 9a6dc97
+
+chore: remove some early `Aesop` imports (#45043)
+This PR removes some `import Aesop` from files that are early in the import hierarchy by refactoring the `aesop` proofs.
+This shortens the long pole, as `Mathlib.Data.Set.Operations` used to be part of the long pole, and now isn't anymore.
+This makes use of `attribute [local grind norm] Prod.forall`. It might be useful to add this option globally. Note that this was recently added for `Subtype.forall` and `Subtype.exists` in https://github.com/leanprover/lean4/pull/15748
+
+ESTIMATED CHANGES
+Modified Mathlib/Data/Part.lean
+
+Modified Mathlib/Data/Set/Insert.lean
+
+Modified Mathlib/Data/Set/Operations.lean
+
+Modified Mathlib/Data/Set/Subsingleton.lean
+
+Modified Mathlib/Data/SubtypeNeLift.lean
+
+
+
+
+2026-10-27 22:35:48 9ecce23
+
+chore: rename check_title_labels in kebap-case (#44306)
+This matches general conventions for such tools, as discussed on Zulip: https://leanprover.zulipchat.com/#narrow/channel/287929-mathlib4/topic/Naming.20convention/near/451072858
+
+ESTIMATED CHANGES
+Modified .github/workflows/build_template.yml
+
+Modified .github/workflows/check_pr_titles.yaml
+
+Modified lakefile.lean
+
+Modified scripts/README.md
+
+Added scripts/check-title-labels.lean
++ def checkTitleLabels
++ def checkTitleLabelsCLI
++ def main
+Modified scripts/check_title_labels.lean
+
+
+
+
+2026-10-27 22:35:44 3b9b4b8
+
+feat: `direction` of `AffineSubspace.comap` (#43446)
+
+ESTIMATED CHANGES
+Modified Mathlib/LinearAlgebra/AffineSpace/AffineSubspace/Basic.lean
++ theorem AffineMap.vectorSpan_preimage_le
++ theorem AffineSubspace.direction_comap
++ theorem AffineSubspace.direction_comap_le
+
+
+
+2026-10-27 22:35:40 bdf84ef
+
+feat: intervals `Ici`/`Ioi` are cofinal/closed under directed suprema (#39747)
+
+ESTIMATED CHANGES
+Modified Mathlib/Order/Cofinal.lean
++ theorem IsCofinal.inter_of_isUpperSet_left
++ theorem IsCofinal.inter_of_isUpperSet_right
++ theorem IsUpperSet.isCofinal
+Modified Mathlib/Order/DirSupClosed.lean
+
+Modified Mathlib/Order/Interval/Set/Basic.lean
+
+Modified Mathlib/Order/UpperLower/Basic.lean
+
+
+
+
+2026-10-27 22:35:36 641aafa
+
+feat(Analysis/Calculus): parametric integrals over smooth functions are smooth (#31141)
+Show that for any smooth function `f : H × ℝ → E`, the parametric integral `fun x ↦ ∫ t in a..b, f (x, t) ∂μ` is smooth too.
+The argument proceeds inductively, using the fact that derivatives of parametric integrals can themselves be computed as parametric integrals. The necessary lemmas on derivatives of parametric integrals already existed, but took some work to apply due to their generality; we state some convenient special cases.
+
+ESTIMATED CHANGES
+Modified Mathlib/Analysis/Calculus/ContDiff/Comp.lean
++ theorem ContDiffOn.fderiv_left
++ theorem ContDiffOn.fderiv_right
+Modified Mathlib/Analysis/Calculus/ParametricIntegral.lean
++ theorem ContDiff.parametric_integral
++ theorem ContDiffOn.parametric_integral
++ theorem hasFDerivAt_integral_of_contDiffOn
++ theorem hasFDerivAt_integral_of_continuousOn_fderiv
++ theorem hasFDerivAt_integral_of_continuousOn_fderiv_of_t2Space
++ theorem hasFTaylorSeriesUpToOn_integral_of_le_bound
++ theorem hasFTaylorSeriesUpToOn_setIntegral_of_le_const
+Modified Mathlib/Analysis/Calculus/ParametricIntervalIntegral.lean
++ theorem ContDiff.parametric_intervalIntegral
++ theorem ContDiffOn.parametric_intervalIntegral
++ theorem intervalIntegral.hasFDerivAt_integral_of_contDiffOn
++ theorem intervalIntegral.hasFDerivAt_integral_of_continuousOn_fderiv
+Modified Mathlib/Topology/NhdsWithin.lean
++ theorem mem_nhdsSetWithin_iff_forall
+Modified Mathlib/Topology/Separation/Regular.lean
++ theorem continuousOn_closure_inter_setOf
+
+
+
+2026-10-27 21:34:08 9d581df
+
+chore: bump toolchain to v4.36.0-rc2 (#45383)
+
+ESTIMATED CHANGES
+Modified lake-manifest.json
+
+Modified lean-toolchain
+
+
+
+
+2026-10-27 21:34:05 be69e0d
+
+ci: skip the inputRev check on bump branches and PRs into them (#45382)
+`bump/*` branches now live in `mathlib4` rather than `mathlib4-nightly-testing`. PRs into them, such as the `downstream-lean4` export in #45345, depend on the `nightly-testing` branches of our dependencies. The "validate lake-manifest.json inputRevs" step in `build_template.yml` runs on these branches and fails them, though it used to be skipped when the branches were in the nightly-testing repo.
+This PR skips the validation step when either of these starts with `bump/`:
+- `github.ref_name`: pushes to `bump/*` branches, including the automation's `bump/nightly-*` branches.
+- `github.base_ref`: PRs into a `bump/*` branch, from any repo.
+(Note that `head_ref` is not read, so a PR from a branch starting with `bump/` can't get around this.)
+Not covered: a non-`bump/*` branch pushed to mathlib4 with a PR into a bump branch. Push builds can't see the PR's base, so the check still runs there. (No one should be creating such branches and we have branch protection rules against this.)
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+ESTIMATED CHANGES
+Modified .github/workflows/build_template.yml
+
+
+
+
+2026-10-27 21:34:02 c4d1a41
+
+chore: remove `simp` and `norm_cast` tags from `pow_eq_iterate` lemmas (#45377)
+Remove `simp` and `norm_cast` tags from `pow_apply_eq_iterate` and `FunLike.coe_pow_eq_iterate`.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Group/IsApply.lean
+
+
+
+
+2026-10-27 21:33:59 de6b295
+
+chore(Combinatorics/SimpleGraph/Hamiltonian): golf `IsHamiltonian.connected` (#45118)
+using the new `Walk.reachable_of_mem_support`
+
+ESTIMATED CHANGES
+Modified Mathlib/Combinatorics/SimpleGraph/Hamiltonian.lean
+
+
+
+
+2026-10-27 21:33:56 a97099f
+
+feat: prove `x.card ≤ ℵ_ y` iff `x < ω_ (y + 1)` (#45106)
+
+ESTIMATED CHANGES
+Modified Mathlib/SetTheory/Cardinal/Aleph.lean
++ theorem Ordinal.card_le_aleph_iff
++ theorem Ordinal.card_le_preAleph_iff
+
+
+
+2026-10-27 21:33:53 14c4e53
+
+feat: `x ≤ 1` implies `x ^ y ≤ 1` on ordinals (#45104)
+Used in CGT.
+
+ESTIMATED CHANGES
+Modified Mathlib/SetTheory/Ordinal/Exponential.lean
++ theorem Ordinal.opow_le_one
+
+
+
+2026-10-27 21:33:50 afcc9cd
+
+chore: use `IsApply` for `CauSeq` (#45101)
+I had to fix some defeq abuse in `CauSeq` along the way.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Order/CauSeq/Basic.lean
+- theorem CauSeq.add_apply
++/- theorem CauSeq.ext
++ def CauSeq.mk
++ theorem CauSeq.mk_apply
+- theorem CauSeq.mul_apply
+- theorem CauSeq.neg_apply
+- theorem CauSeq.one_apply
+- theorem CauSeq.pow_apply
+- theorem CauSeq.smul_apply
+- theorem CauSeq.sub_apply
+- theorem CauSeq.zero_apply
+Modified Mathlib/Algebra/Order/CauSeq/Completion.lean
+
+Modified Mathlib/Analysis/Complex/Exponential.lean
+
+Modified Mathlib/Analysis/Complex/Norm.lean
++ theorem Complex.cauSeqConj_apply
++ theorem Complex.cauSeqIm_apply
++ theorem Complex.cauSeqNorm_apply
++ theorem Complex.cauSeqRe_apply
+Modified Mathlib/Analysis/Fourier/PoissonSummation.lean
+
+Modified Mathlib/NumberTheory/DirichletCharacter/GaussSum.lean
+
+Modified Mathlib/NumberTheory/Padics/PadicNumbers.lean
+
+Modified Mathlib/NumberTheory/Padics/RingHoms.lean
+
+Modified Mathlib/Topology/MetricSpace/CauSeqFilter.lean
+
+Modified MathlibTest/InstanceDiamonds.lean
+
+
+
+
+2026-10-27 21:33:47 76d1a67
+
+doc(TensorProduct): correct a few typos in docstrings (#45018)
+While reading this file I saw a few places where it's written 
+```
+For a surjective `f : N → P`
+```
+when it should be
+```
+For a surjective `g : N → P`
+```
+which was confusing, so I corrected them as well as a few other docstrings.
+(The short exact sequence in question is `variable {f : M →ₗ[R] N} {g : N →ₗ[R] P}`)
+
+ESTIMATED CHANGES
+Modified Mathlib/LinearAlgebra/TensorProduct/RightExactness.lean
+
+
+
+
+2026-10-27 21:33:44 89b5898
+
+feat: prove `ofNat(n) ^ ω = ω` (#44989)
+From CGT.
+
+ESTIMATED CHANGES
+Modified Mathlib/SetTheory/Ordinal/Principal.lean
++ theorem Ordinal.ofNat_opow_omega0
+
+
+
+2026-10-27 21:33:41 57567b9
+
+doc(workflows): remove stale cross-reference list (#44817)
+The idea is to centralize references to just the main doc page for cross-references, as opposed to having to maintain the list of external databases up to date in many places. This has already been implemented in other docs / module headers. 
+Part of a sequence of PRs about CI for cross-references.
+
+ESTIMATED CHANGES
+Modified docs/workflows.md
+
+
+
+
+2026-10-27 21:33:32 49cd7a7
+
+chore(SetTheory/Cardinal/Divisibility): golf file (#44013)
+We also move a few theorems about divisibility to an earlier file, and perform some renames.
+
+ESTIMATED CHANGES
+Modified Mathlib/SetTheory/Cardinal/Arithmetic.lean
++ theorem Cardinal.dvd_of_le_of_aleph0_le
++ theorem Cardinal.le_of_dvd
++ theorem Cardinal.natCast_dvd_iff
+Modified Mathlib/SetTheory/Cardinal/Basic.lean
++ theorem Cardinal.aleph0_ne_one
++/- theorem Cardinal.one_le_aleph0
++/- theorem Cardinal.one_lt_aleph0
+Modified Mathlib/SetTheory/Cardinal/Defs.lean
+
+Modified Mathlib/SetTheory/Cardinal/Divisibility.lean
+- theorem Cardinal.dvd_of_le_of_aleph0_le
+- theorem Cardinal.isUnit_iff
+- theorem Cardinal.is_prime_iff
+- theorem Cardinal.le_of_dvd
+- theorem Cardinal.natCast_dvd_natCast
+- theorem Cardinal.nat_is_prime_iff
++ theorem Cardinal.prime_iff
++ theorem Cardinal.prime_natCast_iff
+
+
+
+2026-10-27 21:33:24 256f051
+
+feat(Data/Finsupp/Weight): add `degree_strictMono` (#43916)
+
+ESTIMATED CHANGES
+Modified Mathlib/Data/Finsupp/Weight.lean
++ theorem Finsupp.degree_strictMono
+
+
+
+2026-10-27 21:33:13 1a8688c
+
+feat(Geometry/Euclidean): two formula for area of a triangle (#41220)
+This PR proves two basic formulas for triangle area: `s = 1/2 * h * b = 1/2 * a * b * sin C`
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Modified Mathlib/Geometry/Euclidean/Angle/Unoriented/Affine.lean
++ theorem Collinear.sin_angle_eq_left
++ theorem Collinear.sin_angle_eq_right
+Modified Mathlib/Geometry/Euclidean/Angle/Unoriented/Projection.lean
++ theorem EuclideanGeometry.dist_orthogonalProjection_eq_sin_mul_dist
++ theorem EuclideanGeometry.dist_orthogonalProjection_eq_sin_mul_dist_of_collinear
+Modified Mathlib/Geometry/Euclidean/Triangle.lean
++ theorem Affine.Triangle.height_eq_sin_mul_dist
+Added Mathlib/Geometry/Euclidean/Volume/Triangle.lean
++ theorem Affine.Triangle.volume_eq_height_mul
++ theorem Affine.Triangle.volume_eq_mul_sin
+
+
+
+2026-10-27 21:33:10 7ed8b09
+
+feat(Topology/Algebra/InfiniteSum): Deprecate generalized ENNReal lemmas (#38193)
+Following the PR #38489, this PR add deprecated tags to the original `ENNReal` lemmas and change the transitive children files to use the generalized lemmas rather than the deprecated lemmas.
+Related Zulip thread: [#Is there code for X? > Summing `ENat`s without topology](https://leanprover.zulipchat.com/#narrow/channel/217875-Is-there-code-for-X.3F/topic/Summing.20.60ENat.60s.20without.20topology/with/588756615)
+
+ESTIMATED CHANGES
+Modified Mathlib/Analysis/Normed/Group/InfiniteSum.lean
+
+Modified Mathlib/Analysis/PSeries.lean
+
+Modified Mathlib/Analysis/SpecificLimits/Basic.lean
+
+Modified Mathlib/MeasureTheory/Constructions/BorelSpace/Real.lean
+
+Modified Mathlib/MeasureTheory/Covering/Besicovitch.lean
+
+Modified Mathlib/MeasureTheory/Covering/Differentiation.lean
+
+Modified Mathlib/MeasureTheory/Covering/Vitali.lean
+
+Modified Mathlib/MeasureTheory/Function/AEMeasurableOrder.lean
+
+Modified Mathlib/MeasureTheory/Function/BorelGrowth.lean
+
+Modified Mathlib/MeasureTheory/Function/ConvergenceInMeasure.lean
+
+Modified Mathlib/MeasureTheory/Function/Egorov.lean
+
+Modified Mathlib/MeasureTheory/Function/Jacobian.lean
+
+Modified Mathlib/MeasureTheory/Function/LpSpace/Complete.lean
+
+Modified Mathlib/MeasureTheory/Function/LpSpace/InfiniteSum.lean
+
+Modified Mathlib/MeasureTheory/Function/SimpleFunc.lean
+
+Modified Mathlib/MeasureTheory/Integral/Bochner/VitaliCaratheodory.lean
+
+Modified Mathlib/MeasureTheory/Integral/Lebesgue/Add.lean
+
+Modified Mathlib/MeasureTheory/Integral/Lebesgue/Basic.lean
+
+Modified Mathlib/MeasureTheory/Integral/Lebesgue/Countable.lean
+
+Modified Mathlib/MeasureTheory/Measure/AbsolutelyContinuous.lean
+
+Modified Mathlib/MeasureTheory/Measure/AddContent.lean
+
+Modified Mathlib/MeasureTheory/Measure/Basic.lean
+
+Modified Mathlib/MeasureTheory/Measure/CompleteLattice.lean
+
+Modified Mathlib/MeasureTheory/Measure/Content.lean
+
+Modified Mathlib/MeasureTheory/Measure/Continuity.lean
+
+Modified Mathlib/MeasureTheory/Measure/Count.lean
+
+Modified Mathlib/MeasureTheory/Measure/Hausdorff.lean
+
+Modified Mathlib/MeasureTheory/Measure/MeasuredSets.lean
+
+Modified Mathlib/MeasureTheory/Measure/Module.lean
+
+Modified Mathlib/MeasureTheory/Measure/MutuallySingular.lean
+
+Modified Mathlib/MeasureTheory/Measure/PreVariation.lean
+
+Modified Mathlib/MeasureTheory/Measure/Prokhorov.lean
+
+Modified Mathlib/MeasureTheory/Measure/Regular.lean
+
+Modified Mathlib/MeasureTheory/Measure/RegularityCompacts.lean
+
+Modified Mathlib/MeasureTheory/Measure/Restrict.lean
+
+Modified Mathlib/MeasureTheory/Measure/Stieltjes.lean
+
+Modified Mathlib/MeasureTheory/Measure/Sum.lean
+
+Modified Mathlib/MeasureTheory/Measure/Typeclasses/SFinite.lean
+
+Modified Mathlib/MeasureTheory/Measure/WithDensity.lean
+
+Modified Mathlib/MeasureTheory/OuterMeasure/Caratheodory.lean
+
+Modified Mathlib/MeasureTheory/OuterMeasure/Induced.lean
+
+Modified Mathlib/MeasureTheory/OuterMeasure/OfAddContent.lean
+
+Modified Mathlib/MeasureTheory/OuterMeasure/OfFunction.lean
+
+Modified Mathlib/MeasureTheory/OuterMeasure/Operations.lean
+
+Modified Mathlib/MeasureTheory/VectorMeasure/Operations.lean
+
+Modified Mathlib/NumberTheory/Transcendental/Liouville/Measure.lean
+
+Modified Mathlib/Probability/Kernel/Defs.lean
+
+Modified Mathlib/Probability/Kernel/WithDensity.lean
+
+Modified Mathlib/Probability/ProbabilityMassFunction/Basic.lean
+
+Modified Mathlib/Probability/ProbabilityMassFunction/Constructions.lean
+
+Modified Mathlib/Probability/ProbabilityMassFunction/Monad.lean
+
+Modified Mathlib/Probability/Process/LocalProperty.lean
+
+Modified Mathlib/Topology/Algebra/InfiniteSum/ENNReal.lean
+- theorem ENNReal.tsum_biUnion_le
+- theorem ENNReal.tsum_biUnion_le_tsum
+- theorem ENNReal.tsum_comp_le_tsum_of_injective
+- theorem ENNReal.tsum_eq_add_tsum_ite
+- theorem ENNReal.tsum_fiberwise
+- theorem ENNReal.tsum_iUnion_le
+- theorem ENNReal.tsum_iUnion_le_tsum
+- theorem ENNReal.tsum_le_tsum_comp_of_surjective
+- theorem ENNReal.tsum_mono_subtype
+- theorem ENNReal.tsum_union_le
++/- theorem Summable.countable_support_ennreal
+Modified Mathlib/Topology/Algebra/InfiniteSum/Order.lean
++/- theorem CompleteLattice.summable
+Modified Mathlib/Topology/MetricSpace/PiNat.lean
+
+Modified Mathlib/Topology/Semicontinuity/Basic.lean
+
+
+
+
+2026-10-27 18:16:54 59109b9
+
+chore(RingTheory/PowerSeries): simplify coeff_inv_aux (#42265)
+Golf the proof of `coeff_inv_aux` by rewriting with `lt_iff_le_not_ge` so that the simp lemma `Finsupp.single_le_iff` can fire in the subsequent simp call.
+
+ESTIMATED CHANGES
+Modified Mathlib/RingTheory/PowerSeries/Inverse.lean
+
+
+
+
+2026-10-27 18:16:51 ea056ba
+
+feat(Topology/Order): separability is hereditary for linearly ordered topological spaces (#41918)
+In this PR we prove that
+1. `isTopologicalBasis_isOpen_ordConnected`: in a linearly ordered topological space, every point of an open set `U` has an open `Set.OrdConnected` neighbourhood contained in `U`.
+2. `countable_setOf_isolated_subtype`: in a separable linearly ordered topological space, the points of a subset `s` that are isolated in the subspace `s` form a countable set.
+3. A subset of a separable linearly ordered topological space is separable in the subspace topology. This is proved as an instance.
+The material was developed for showing the measurability of the pathwise variation of a continuous stochastic process in https://github.com/RemyDegenne/brownian-motion/pull/494. Created with the help of Claude Code, carefully reviewed and golfed by myself.
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Modified Mathlib/Topology/Closure.lean
++ theorem Dense.mem_of_isOpen_singleton
+Added Mathlib/Topology/Order/Separable.lean
++ theorem countable_ofPred_isolated_subtype
++ theorem countable_ofPred_isolated_within
++ theorem exists_isOpen_ordConnected_mem_subset
++ theorem isTopologicalBasis_isOpen_ordConnected
++ theorem nhds_basis_isOpen_ordConnected
+
+
+
+2026-10-27 18:16:47 452a125
+
+feat(Topology/Connected): connected subsets of finite one-dimensional Hausdorff measure (#41839)
+This PR proves some properties of preconnected subsets of an extended metric space in terms of their Hausdorff measure.
+- The extended diameter of a preconnected set is at most its one-dimensional Hausdorff measure
+- A preconnected set with finite `d`-dimensional Hausdorff measure for some `d < 1` is a subsingleton, so any set with finite such measure is totally disconnected
+- A preconnected set with finite one-dimensional Hausdorff measure is totally bounded.
+The main tool is that the distance from a fixed base point is `1`-Lipschitz (we define it by `x => (edist a x).toReal` and `ENNReal.toReal` is necessary because `ℝ≥0∞` is not an EMetric space and blocks me from using `LipschitzOnWith`, this is also the reason why I proved some weird lemmas like `isClopen_setOf_edist_ne_top` and `IsPreconnected.edist_ne_top`), so it does not increase Hausdorff measures, and the image of a preconnected set under it is an interval whose one-dimensional Hausdorff measure is its length. Comparing the two turns distances inside the set into lower bounds for its measure.
+Some of these lemmas probably should belong to a different space. Feel free to give me some suggestions on this.
+In the future, I would also like to use results in this PR to prove that a preconnected, compact subset with finite one-dimensional Hausdorff measure is path-connected, and this is included in TODO.
+Created with the help of Claude Code, carefully reviewed and golfed by myself.
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Added Mathlib/Topology/Connected/HausdorffMeasure.lean
++ theorem IsPreconnected.ediam_le_hausdorffMeasure
++ theorem IsPreconnected.edist_le_hausdorffMeasure
++ theorem IsPreconnected.edist_ne_top
++ theorem IsPreconnected.isCompact_of_hausdorffMeasure_lt_top_isComplete
++ theorem IsPreconnected.le_hausdorffMeasure_of_le_edist
++ theorem IsPreconnected.subset_boundedComponent
++ theorem IsPreconnected.subsingleton_of_hausdorffMeasure_lt_top
++ theorem IsPreconnected.totallyBounded_of_hausdorffMeasure_lt_top
++ theorem isTotallyDisconnected_of_hausdorffMeasure_lt_top
++ theorem lipschitzOnWith_toReal_edist
+Modified Mathlib/Topology/EMetricSpace/Defs.lean
++ def Metric.boundedComponent
++ theorem Metric.boundedComponent_eq
++ theorem Metric.isClopen_eball_top
++ theorem Metric.mem_boundedComponent_iff
+Modified Mathlib/Topology/MetricSpace/Pseudo/Defs.lean
+
+
+
+
+2026-10-27 18:16:43 252e565
+
+feat(LinearAlgebra/Dimension): tower law for algebraic extensions (#40448)
+We generalise the tower law for `Module.rank` to the situation of a module over an algebraic extension of domains.
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Modified Mathlib/Algebra/Group/Action/Faithful.lean
++/- theorem FaithfulSMul.tower_bot
+Added Mathlib/LinearAlgebra/Dimension/Domain.lean
++ theorem Algebra.IsAlgebraic.finrank_mul_finrank
++ theorem Algebra.IsAlgebraic.lift_rank_mul_lift_rank
++ theorem Algebra.IsAlgebraic.rank_mul_rank
++ theorem Module.IsTorsionFree.erank_mul_erank
++ theorem Module.IsTorsionFree.finrank_mul_finrank
++ theorem Module.finrank_mul_finrank_of_field_isLocalization
++ theorem Module.finrank_mul_finrank_of_isFractionRing_isLocalization
++ theorem Module.lift_rank_mul_lift_rank_of_field_isLocalization
++ theorem Module.lift_rank_mul_lift_rank_of_isFractionRing_isLocalization
++ theorem Module.rank_mul_rank_of_field_isLocalization
++ theorem Module.rank_mul_rank_of_isFractionRing_isLocalization
+Modified Mathlib/LinearAlgebra/Dimension/Free.lean
+
+Modified Mathlib/NumberTheory/RamificationInertia/HilbertTheory.lean
+
+Modified Mathlib/RingTheory/Algebraic/Integral.lean
+
+Modified Mathlib/RingTheory/Localization/FractionRing.lean
++ theorem IsFractionRing.of_semifield_isLocalization
+
+
+
+2026-10-27 18:16:38 1a22a59
+
+feat(Analysis/Complex/CauchyIntegral): Cauchy–Goursat for Unbounded Rectangles (#26479)
+In this PR, we prove versions of the Cauchy-Goursat theorem where the contours in question are rectangular and unbounded (ie, where the contours look like the $\bigsqcup$ symbol). I am not sure if I have formalised these in the best way, or if `Analysis.Complex.CauchyIntegral` is the best place for them (it might be prudent to reorganise the file into multiple files at some point), but I believe this is a useful result. Suggestions welcome.
+
+ESTIMATED CHANGES
+Modified Mathlib/Analysis/Complex/CauchyIntegral.lean
++ theorem Complex.integral_boundary_unbounded_rect_eq_zero_of_differentiable_on_off_countable'
++ theorem Complex.integral_boundary_unbounded_rect_eq_zero_of_differentiable_on_off_countable
++ theorem Complex.integral_boundary_unbounded_rect_eq_zero_of_differentiable_on_off_countable_of_integrable_on
++ theorem Complex.tendsto_integral_atTop_nhds_zero_of_tendsto_im_atTop_nhds_zero
++ theorem Complex.tendsto_integral_atTop_nhds_zero_of_tendsto_unif_im_atTop_nhds_zero
++ theorem Complex.tendsto_integral_boundary_unbounded_rect_one_side_atTop_nhds_sum_other_two_sides
+
+
+
+2026-10-27 17:06:47 02b1c3b
+
+chore(Linter): reduce imports (#45368)
+This PR removes some unused imports from the overlapping instances linter and unused instances in type linter. This reduces the longest pole.
+
+ESTIMATED CHANGES
+Modified Mathlib/Tactic/Linter/DirectoryDependency.lean
+
+Modified Mathlib/Tactic/Linter/OverlappingInstances.lean
+
+Modified Mathlib/Tactic/Linter/UnusedInstancesInType.lean
+
+
+
+
+2026-10-27 17:06:44 6fbd9b4
+
+chore: fix misspellings with wrong letters in comments (#45367)
+This fixes misspellings in comments and docstrings that have a wrong letter, such as `commatative`, `seperate` and `superceded`.
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Group/FunLike.lean
+
+Modified Mathlib/Algebra/HierarchyDesign.lean
+
+Modified Mathlib/Algebra/SkewPolynomial/Basic.lean
+
+Modified Mathlib/Geometry/Group/WordMetric.lean
+
+Modified Mathlib/LinearAlgebra/ExteriorAlgebra/Product.lean
+
+Modified Mathlib/MeasureTheory/Covering/BesicovitchVectorSpace.lean
+
+Modified Mathlib/Tactic/ClickSuggestions/GRewrite.lean
+
+Modified Mathlib/Tactic/ClickSuggestions/TryPremises.lean
+
+Modified Mathlib/Tactic/GCongr/Core.lean
+
+Modified Mathlib/Tactic/Inclusion/Core/DiscrTreeExt.lean
+
+Modified Mathlib/Tactic/Inclusion/Core/Elab.lean
+
+Modified Mathlib/Tactic/Inclusion/Core/ToSet.lean
+
+Modified Mathlib/Testing/Plausible/Functions.lean
+
+
+
+
+2026-10-27 17:06:40 ebf274c
+
+chore: fix misspellings with extra letters in comments (#45366)
+This fixes misspellings in comments and docstrings that have an extra letter, such as `auxilliary`, `crystrallographic` and `somethimes`.
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Order/Antidiag/Tendsto.lean
+
+Modified Mathlib/AlgebraicTopology/DoldKan/SplitSimplicialObject.lean
+
+Modified Mathlib/Analysis/Complex/ValueDistribution/Proximity/Basic.lean
+
+Modified Mathlib/Analysis/Meromorphic/RCLike.lean
+
+Modified Mathlib/Analysis/Normed/Module/PiTensorProduct/ProjectiveSeminorm.lean
+
+Modified Mathlib/CategoryTheory/Functor/KanExtension/AdjunctionPreserves.lean
+
+Modified Mathlib/FieldTheory/PolynomialGaloisGroup.lean
+
+Modified Mathlib/Geometry/Convex/Cone/Face/Lattice.lean
+
+Modified Mathlib/Geometry/Convex/ConvexSpace/Topology.lean
+
+Modified Mathlib/LinearAlgebra/Matrix/Cartan/Realisation.lean
+
+Modified Mathlib/MeasureTheory/Function/LpSeminorm/Defs.lean
+
+Modified Mathlib/MeasureTheory/VectorMeasure/AddContent.lean
+
+Modified Mathlib/Topology/Perfect.lean
+
+
+
+
+2026-10-27 17:06:37 ad15194
+
+chore: fix misspellings with missing letters in comments (#45365)
+This fixes misspellings in comments and docstrings that are missing a letter, such as `assumtions`, `coefficents` and `isomophism`.
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Homology/Factorizations/CM5a.lean
+
+Modified Mathlib/Algebra/Lie/Basis/Prod.lean
+
+Modified Mathlib/AlgebraicTopology/SimplicialSet/Homology/HomotopyInvariance.lean
+
+Modified Mathlib/AlgebraicTopology/SimplicialSet/ProdStdSimplexOne.lean
+
+Modified Mathlib/AlgebraicTopology/SimplicialSet/SSetPair.lean
+
+Modified Mathlib/CategoryTheory/Bicategory/RetractArrow.lean
+
+Modified Mathlib/CategoryTheory/Galois/FullSubcategory.lean
+
+Modified Mathlib/CategoryTheory/Limits/Preserves/SigmaConst.lean
+
+Modified Mathlib/CategoryTheory/PathCategory/MorphismProperty.lean
+
+Modified Mathlib/CategoryTheory/Sites/SheafCohomology/ExactSequences.lean
+
+Modified Mathlib/Combinatorics/Matroid/Rank/Cardinal.lean
+
+Modified Mathlib/Combinatorics/SimpleGraph/Extremal/ErdosStoneSimonovits.lean
+
+Modified Mathlib/LinearAlgebra/AffineSpace/Dimension.lean
+
+Modified Mathlib/LinearAlgebra/Matrix/Cartan/Realisation.lean
+
+Modified Mathlib/NumberTheory/Height/NumberField.lean
+
+Modified Mathlib/NumberTheory/ModularForms/LFunction.lean
+
+Modified Mathlib/NumberTheory/ModularForms/QExpansion.lean
+
+Modified Mathlib/RingTheory/Extension/ExtendScalars.lean
+
+Modified Mathlib/Tactic/Simps/Basic.lean
+
+Modified Mathlib/Topology/Algebra/Module/Complement.lean
+
+
+
+
+2026-10-27 17:06:34 19af265
+
+feat(Tactic/Inclusion): add an `exp` extension to the `dyadic_interval` tactic (#45178)
+This PR adds a `Real.exp` extension for `dyadic_interval`.
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Modified Mathlib/Tactic.lean
+
+Modified Mathlib/Tactic/Inclusion/Extension/IntervalDyadicReal/Basic.lean
++ theorem Inclusion.IntervalDyadicReal.mem_roundOut_iff
++ def Inclusion.IntervalDyadicReal.roundOut
++ theorem Inclusion.IntervalDyadicReal.roundOut_mem
+Added Mathlib/Tactic/Inclusion/Extension/IntervalDyadicReal/Exp.lean
++ def Inclusion.IntervalDyadicReal.exp
++ def Inclusion.IntervalDyadicReal.expPartialSumNum
++ theorem Inclusion.IntervalDyadicReal.expPartialSumNum_div
++ def Inclusion.IntervalDyadicReal.expPoint
++ theorem Inclusion.IntervalDyadicReal.expPoint_mem
++ def Inclusion.IntervalDyadicReal.expRatTaylor
++ theorem Inclusion.IntervalDyadicReal.expRatTaylor_mem
++ theorem Inclusion.IntervalDyadicReal.exp_mem
+Modified Mathlib/Tactic/Inclusion/Extension/IntervalDyadicReal/Rational.lean
++ def Inclusion.IntervalDyadicReal.ratBall
++ theorem Inclusion.IntervalDyadicReal.ratBall_mem
+Added MathlibTest/Tactic/Inclusion/Exp.lean
+
+
+
+
+2026-10-27 17:06:31 e5d1656
+
+chore(RingTheory): tidy markdown headers (#43029)
+This PR:
+- ensures all files in `Mathlib/RingTheory` have one and only one H1 header,
+- better aligns some H2 headers with the style guide.
+For files missing a module header, new headers were authored by Claude Opus 5.
+
+ESTIMATED CHANGES
+Modified Mathlib/RingTheory/AdicCompletion/LocalRing.lean
+
+Modified Mathlib/RingTheory/Algebraic/StronglyTranscendental.lean
+
+Modified Mathlib/RingTheory/DedekindDomain/GaussLemma.lean
+
+Modified Mathlib/RingTheory/Flat/IsBaseChange.lean
+
+Modified Mathlib/RingTheory/GradedAlgebra/Radical.lean
+
+Modified Mathlib/RingTheory/HopkinsLevitzki.lean
+
+Modified Mathlib/RingTheory/Ideal/IdempotentFG.lean
+
+Modified Mathlib/RingTheory/Jacobson/Radical.lean
+
+Modified Mathlib/RingTheory/Kaehler/JacobiZariski.lean
+
+Modified Mathlib/RingTheory/LocalRing/Quotient.lean
+
+Modified Mathlib/RingTheory/Localization/Away/AdjoinRoot.lean
+
+Modified Mathlib/RingTheory/MvPolynomial/MonomialOrder.lean
+
+Modified Mathlib/RingTheory/MvPowerSeries/Expand.lean
+
+Modified Mathlib/RingTheory/MvPowerSeries/LinearTopology.lean
+
+Modified Mathlib/RingTheory/NoetherNormalization.lean
+
+Modified Mathlib/RingTheory/Perfectoid/BDeRham.lean
+
+Modified Mathlib/RingTheory/Perfectoid/FontaineTheta.lean
+
+Modified Mathlib/RingTheory/Perfectoid/Untilt.lean
+
+Modified Mathlib/RingTheory/Polynomial/ShiftedLegendre.lean
+
+Modified Mathlib/RingTheory/PowerSeries/Expand.lean
+
+Modified Mathlib/RingTheory/RegularLocalRing/Defs.lean
+
+Modified Mathlib/RingTheory/SimpleModule/InjectiveProjective.lean
+
+Modified Mathlib/RingTheory/SimpleRing/DivisionRing.lean
+
+Modified Mathlib/RingTheory/SimpleRing/Matrix.lean
+
+Modified Mathlib/RingTheory/Spectrum/Prime/IsOpenComapC.lean
+
+Modified Mathlib/RingTheory/TensorProduct/IsBaseChangeRightExact.lean
+
+Modified Mathlib/RingTheory/TensorProduct/MvPolynomial.lean
+
+Modified Mathlib/RingTheory/Trace/Quotient.lean
+
+Modified Mathlib/RingTheory/WittVector/Frobenius.lean
+
+Modified Mathlib/RingTheory/WittVector/Identities.lean
+
+Modified Mathlib/RingTheory/WittVector/Isocrystal.lean
+
+Modified Mathlib/RingTheory/WittVector/MulP.lean
+
+Modified Mathlib/RingTheory/WittVector/Verschiebung.lean
+
+
+
+
+2026-10-27 17:06:27 c25faa1
+
+feat(Topology/MetricSpace): a Gδ subset of a Polish space is Polish (#42693)
+Adds `IsGδ.polishSpace`: a Gδ subset of a Polish space is Polish, which strengthens the existing IsOpen.polishSpace.
+The proof follows the outline in Anush Tserunyan's descriptive set theory notes, https://www.math.mcgill.ca/atserunyan/Teaching_notes/dst_lectures.pdf where it is attributed to A. Bernshteyn. The "usual" approach (as in Kechris's Classical Descriptive Set Theory) constructs a complete compatible metric (the "Alexandrov metric"). The approach taken here is snappier to formalize - the idea is to give a closed embeddding from the G\delta set into another Polish space, and appeal to the fact closed subsets of Polish spaces are Polish. [Note the Alexandrov metric is recoverable from the embedding via the induced complete metrics on the product topology.]
+
+ESTIMATED CHANGES
+Modified Mathlib/Topology/MetricSpace/Polish.lean
++ theorem GδEmbedding.continuous_gδEmbedding
++ def GδEmbedding.gδEmbedding
++ theorem GδEmbedding.inv_infEDist_compl_ne_top
++ theorem GδEmbedding.isClosedEmbedding_gδEmbedding
++ theorem GδEmbedding.range_gδEmbedding
++ theorem IsGδ.isCompletelyMetrizableSpace
++ theorem IsGδ.polishSpace
++ theorem IsOpen.isCompletelyMetrizableSpace
+
+
+
+2026-10-27 17:06:24 1b5a647
+
+feat(Algebra/Group): mulOpposite equivs for submonoid and subgroup (#41459)
+Add MulOpposite monoid equivalences for submonoids and subgroups, and remove the corresponding TODOs in `Subsemiring/MulOpposite.lean`.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Group/Subgroup/MulOpposite.lean
++ def Subgroup.mopMulEquivOp
++ def Subgroup.mulEquivOp
++ def Subgroup.mulEquivOpMop
+Modified Mathlib/Algebra/Group/Submonoid/MulOpposite.lean
++ def Submonoid.mopMulEquivOp
++ def Submonoid.mulEquivOp
++ def Submonoid.mulEquivOpMop
+Modified Mathlib/Algebra/Ring/Subsemiring/MulOpposite.lean
+
+
+
+
+2026-10-27 15:40:29 9d4a3c9
+
+chore: update Mathlib dependencies 2026-10-27 (#45358)
+This PR updates the Mathlib dependencies.
+It is not merged automatically: a maintainer should look at what the new
+dependency revisions bring in before sending it to bors.
+
+ESTIMATED CHANGES
+Modified lake-manifest.json
+
+
+
+
+2026-10-27 15:40:25 0fd13cc
+
+feat(Algebra/QuadraticAlgebra): trace and norm lemmas (#45281)
+Add some lemmas about the trace and the norm in `QuadraticAlgebra R a b`: the norm of `r • z` is `r ^ 2 * norm z`, and four times the norm of `z` is `trace z ^ 2 - discr a b * z.im ^ 2`. Also add that the discriminant of integer parameters is `0` or `1` modulo `4`, and a characterisation of `IsIntegralClosure A R B` when `A` acts faithfully on `B`.
+These are used in a later PR to determine when `QuadraticAlgebra ℤ a b` is the integral closure of `ℤ` in `QuadraticAlgebra ℚ a b`.
+Prepared with Claude Code 🤖
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/QuadraticAlgebra/Basic.lean
++ theorem QuadraticAlgebra.norm_smul
+Modified Mathlib/Algebra/QuadraticAlgebra/Discriminant.lean
++ theorem QuadraticAlgebra.discr_emod_four_eq_zero_or_one
++ theorem QuadraticAlgebra.four_mul_norm_eq
++ theorem QuadraticAlgebra.four_mul_norm_smul_one_add_omega
+Modified Mathlib/RingTheory/IntegralClosure/IsIntegralClosure/Basic.lean
++ theorem isIntegralClosure_iff
+
+
+
+2026-10-27 14:54:46 104616c
+
+chore: decapitalize `True`/`False` in theorem names (#45349)
+According to the naming convention, `True` and `False` need to be decapitalized in theorem names. This PR ensures this rule is followed in mathlib.
+
+ESTIMATED CHANGES
+Modified Mathlib/Data/Multiset/Count.lean
+- theorem Multiset.countP_True
++ theorem Multiset.countP_true
+Modified Mathlib/Data/Multiset/Filter.lean
+- theorem Multiset.map_count_True_eq_filter_card
++ theorem Multiset.map_count_true_eq_filter_card
+Modified Mathlib/Data/Nat/Periodic.lean
+
+Modified Mathlib/Order/Interval/Set/Basic.lean
+- theorem Set.Ici_False
+- theorem Set.Ici_True
++ theorem Set.Ici_false
++ theorem Set.Ici_true
+- theorem Set.Iic_False
+- theorem Set.Iic_True
++ theorem Set.Iic_false
++ theorem Set.Iic_true
+- theorem Set.Iio_False
+- theorem Set.Iio_True
++ theorem Set.Iio_false
++ theorem Set.Iio_true
+- theorem Set.Ioi_False
+- theorem Set.Ioi_True
++ theorem Set.Ioi_false
++ theorem Set.Ioi_true
+
+
+
+2026-10-27 14:54:42 7351fe1
+
+ci: stop using the Actions cache (#45322)
+This PR stops using the Actions cache in this repository, and adds a check to `actionlint.yml` that keeps it that way. Entries in the Actions cache saved by runs on the default branch potentially affect runs on every other ref that fall back to them. GitHub already stops runs of low-trust triggers such as `pull_request_target` from saving such entries, unless a workflow asks for `cache-mode: write`. But the two jobs that still restored from the cache open or push to pull requests, so it's simpler for them not to depend on it at all.
+- `rm_set_option.yml` now uses an artifact instead. The restore step takes it only from earlier runs of this workflow on master started by the schedule or by hand, since pull requests can also start runs of this workflow file and upload artifacts from them.
+- `lint_and_suggest_pr.yml` no longer caches pre-commit's hook environments, which only take a few seconds to set up anyways.
+- `rm_set_option.yml`, the autofix job of `lint_and_suggest_pr.yml`, and the `report` job of `olean_report.yaml`, which handles PR content, set `cache-mode: none`. GitHub then refuses them any cache access, even from actions that use the cache internally.
+- The new `no-actions-cache` job fails if anything under `.github/` uses `actions/cache`, turns on an action's `cache` input, uses `leanprover/lean-action` without `use-github-cache: false`, or asks for any `cache-mode` other than `read` or `none`.
+- `.github/actionlint.yml` now also ignores the unknown `cache-mode` key in `.yaml` workflows, and `docs/workflows.md` mentions the new check.
+
+ESTIMATED CHANGES
+Modified .github/actionlint.yml
+
+Modified .github/workflows/actionlint.yml
+
+Modified .github/workflows/lint_and_suggest_pr.yml
+
+Modified .github/workflows/olean_report.yaml
+
+Modified .github/workflows/rm_set_option.yml
+
+Modified docs/workflows.md
+
+
+
+
+2026-10-27 14:54:38 82d7866
+
+ci: check the triggering run in `workflow_run` workflows (#45321)
+This PR tightens the checks in the workflows triggered by `workflow_run`, so that they now also check the triggering run's event and repository.
+`export_crossrefs.yml`, `nightly_detect_failure.yml` and `update_dependencies_zulip.yml` now act only on runs for pushes to this repository. `export_telemetry.yaml` also follows the fork CI, whose runs come from other repositories, so it accepts runs for `push` and `pull_request_target` events only, the two events our CI workflows use.
+The concurrency groups of `export_crossrefs.yml` and `nightly_detect_failure.yml` now include the head repository. Runs that these workflows skip then never share a group with the real ones, so they can't cancel them.
+`export_crossrefs.yml` also checks that the built commit is on the master **branch** and not a merely a tag named `master`. It is also split into 3 jobs, like `update_dependencies.yml` in #44881:
+- `export` runs the Lean code with only `contents: read` and no cache access, and uploads `crossrefs.json` as an artifact.
+- `publish` gets the `crossref-exports` environment and the app token, and runs no code from the checkout.
+- `report_failure` posts the Zulip message when either job fails.
+`update_dependencies_zulip.yml` now passes the `parse_changes` output to its scripts through `env` instead of writing it into the script text. `monitor-success` also gets the same repository check as `monitor-failures`.
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+ESTIMATED CHANGES
+Modified .github/workflows/export_crossrefs.yml
+
+Modified .github/workflows/export_telemetry.yaml
+
+Modified .github/workflows/nightly_detect_failure.yml
+
+Modified .github/workflows/update_dependencies_zulip.yml
+
+
+
+
+2026-10-27 14:54:31 b7c691f
+
+feat(RingTheory/DedekindDomain/Factorization): coprime representatives of ideal classes (#45217)
+In a Dedekind domain, every ideal class contains an integral ideal coprime to a given nonzero ideal.
+:robot: This PR was extracted from the [SKW project](https://github.com/xroblot/SKW) by Claude.
+
+ESTIMATED CHANGES
+Modified Mathlib/RingTheory/DedekindDomain/Factorization.lean
++ theorem ClassGroup.exists_mk0_eq_and_isCoprime
+
+
+
+2026-10-27 14:08:47 6dfce88
+
+ci: post the batteries-pr-testing comment from its own job (#45356)
+This PR moves the batteries-pr-testing status comment out of `test_lint` into a new `batteries_pr_comment` job, together with the `mathlib-nightly-testing` App token that posts it, to keep credentials out of the build and test jobs.
+- `batteries_pr_comment` `needs: [build, test_lint]`, runs on `ubuntu-latest` with `contents: read`, checks out only this workflow's own local actions, and reads every build/test/lint outcome from the two jobs' outputs.
+- It posts only when `test_lint` succeeded or failed. A run cancelled before `test_lint` starts records that job as `cancelled`, not `skipped`, so a looser condition would post a comment and reset the labels on every superseded run.
+- The token is limited to `pull-requests: write`, which is all the labels and the comment need.
+- The mathlib-ci checkout only provided the comment script, so it moves to the new job too, and `test_lint` no longer needs it.
+
+ESTIMATED CHANGES
+Modified .github/workflows/build_template.yml
+
+
+
+
+2026-10-27 14:08:44 e481b90
+
+chore: fix misspellings in comments (#45355)
+This fixes misspellings in comments and docstrings, such as `coerssion`, `namescape` and `nonarchemidean`.
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+ESTIMATED CHANGES
+Modified Mathlib/Analysis/Complex/JensenFormula.lean
+
+Modified Mathlib/Analysis/InnerProductSpace/Reproducing/Operations.lean
+
+Modified Mathlib/CategoryTheory/Presentable/Comma.lean
+
+Modified Mathlib/FieldTheory/RatFunc/Valuation.lean
+
+Modified Mathlib/InformationTheory/KullbackLeibler/ChainRule.lean
+
+Modified Mathlib/Lean/Meta/RefinedDiscrTree.lean
+
+Modified Mathlib/LinearAlgebra/Matrix/Cartan/Realisation.lean
+
+Modified Mathlib/LinearAlgebra/Matrix/SpecialLinearGroup.lean
+
+Modified Mathlib/MeasureTheory/Constructions/Pi.lean
+
+Modified Mathlib/Tactic/Algebra/Basic.lean
+
+Modified Mathlib/Topology/Algebra/ValuativeRel/ValuativeTopology.lean
+
+Modified Mathlib/Topology/ContinuousMap/ZeroAtInftyUnitization.lean
+
+
+
+
+2026-10-27 14:08:41 fa1f3b7
+
+chore: fix unbalanced backticks in docstrings (#45354)
+This fixes code spans in docstrings with a missing or misplaced backtick.
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Homology/Embedding/Extend.lean
+
+Modified Mathlib/AlgebraicGeometry/Modules/Sheaf.lean
+
+Modified Mathlib/AlgebraicTopology/SimplexCategory/ToMkOne.lean
+
+Modified Mathlib/Analysis/SpecialFunctions/ContinuousFunctionalCalculus/Rpow/RingInverseOrder.lean
+
+Modified Mathlib/Geometry/Manifold/Submersion.lean
+
+Modified Mathlib/LinearAlgebra/Projection.lean
+
+Modified Mathlib/LinearAlgebra/Trace.lean
+
+Modified Mathlib/RingTheory/Grassmannian.lean
+
+Modified Mathlib/RingTheory/Nilpotent/GeometricallyReduced.lean
+
+Modified Mathlib/Tactic/Determinant/Bird/Meta.lean
+
+
+
+
+2026-10-27 14:08:37 4083960
+
+chore: fix doubled "the the" in comments (#45352)
+This removes a repeated "the" from comments and docstrings.
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Homology/LocalCohomology.lean
+
+Modified Mathlib/CategoryTheory/Monoidal/PushoutProduct.lean
+
+Modified Mathlib/CategoryTheory/Triangulated/TStructure/Heart.lean
+
+Modified Mathlib/Probability/Kernel/IonescuTulcea/PartialTraj.lean
+
+Modified Mathlib/Probability/Kernel/IonescuTulcea/Traj.lean
+
+Modified Mathlib/RingTheory/MvPowerSeries/Order.lean
+
+Modified Mathlib/Tactic/ClickSuggestions/TryPremises.lean
+
+Modified Mathlib/Topology/Algebra/Module/IsWeak.lean
+
+
+
+
+2026-10-27 14:08:33 8951f3e
+
+refactor(RingTheory/Ideal/Norm/AbsNorm): state the absNorm finiteness lemmas for rings with finite quotients (#45255)
+Several lemmas about the absolute norm of an ideal exists in two copies: one for a finite `ℤ`-module, and a primed version for a ring with finite quotients, the first one being a restatement of the second. In this PR, the primed versions are kept, under the unprimed names, and the duplicates are deprecated. 
+Three finiteness results that had no primed version but were restatements of lemmas in the `Ring.HasFiniteQuotients` namespace are deprecated in favor of those lemmas, and their uses updated. 
+Note that the lemmas now require `Ring.HasFiniteQuotients R` rather than `Module.Finite ℤ R`. Where only the latter is available, the missing instance can be supplied by `Ring.HasFiniteQuotients.of_module_finite`.
+The module docstring now advertises `Ring.HasFiniteQuotients.finite_cardQuot_le`, which is the result the finiteness statements rest on, rather than `finite_absNorm_le`, as suggested in #42790.
+Prepared with Claude Code 🤖
+
+ESTIMATED CHANGES
+Modified Mathlib/NumberTheory/NumberField/Completion/FinitePlace.lean
+
+Modified Mathlib/NumberTheory/NumberField/DedekindZeta.lean
+
+Modified Mathlib/NumberTheory/NumberField/Ideal/Asymptotics.lean
+
+Modified Mathlib/NumberTheory/NumberField/Units/DirichletTheorem.lean
+
+Modified Mathlib/RingTheory/FractionalIdeal/Norm.lean
+
+Modified Mathlib/RingTheory/Ideal/Norm/AbsNorm.lean
+- theorem Ideal.absNorm_eq_zero_iff'
++/- theorem Ideal.absNorm_eq_zero_iff
+- theorem Ideal.absNorm_ne_zero_iff_mem_nonZeroDivisors'
+- theorem Ideal.absNorm_ne_zero_of_nonZeroDivisors'
+- theorem Ideal.absNorm_pos_iff_mem_nonZeroDivisors'
+- theorem Ideal.absNorm_pos_of_nonZeroDivisors'
+- theorem Ideal.card_norm_le_eq_card_norm_le_add_one'
+- theorem Ideal.finiteIndex
+- theorem Ideal.finite_setOfPred_absNorm_eq
+- theorem Ideal.finite_setOfPred_absNorm_le
+- theorem Ideal.finite_setOfPred_absNorm_le₀
+- theorem Ideal.isFiniteRelIndex
+Modified Mathlib/RingTheory/Ideal/Quotient/HasFiniteQuotients/Basic.lean
+- theorem Ideal.finiteIndex'
++ theorem Ideal.finiteIndex
+- theorem Ideal.isFiniteRelIndex'
++ theorem Ideal.isFiniteRelIndex
+
+
+
+2026-10-27 13:03:02 efe3f1e
+
+chore: fix doubled words in comments (#45353)
+This removes repeated words, such as "category category" and "will will", from comments and docstrings.
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/AffineMonoid/Irreducible.lean
+
+Modified Mathlib/Algebra/Group/Finsupp.lean
+
+Modified Mathlib/Algebra/Group/Hom/Defs.lean
+
+Modified Mathlib/Algebra/Homology/HomotopyCategory/Plus.lean
+
+Modified Mathlib/Algebra/Homology/SpectralObject/Basic.lean
+
+Modified Mathlib/Algebra/Order/Antidiag/Tendsto.lean
+
+Modified Mathlib/AlgebraicGeometry/Modules/Tilde.lean
+
+Modified Mathlib/AlgebraicGeometry/Morphisms/Flat.lean
+
+Modified Mathlib/AlgebraicTopology/ExtraDegeneracy.lean
+
+Modified Mathlib/AlgebraicTopology/ModelCategory/PathObject.lean
+
+Modified Mathlib/Analysis/Calculus/LagrangeMultipliers.lean
+
+Modified Mathlib/Analysis/Convex/Approximation.lean
+
+Modified Mathlib/Analysis/Normed/Lp/PiLp.lean
+
+Modified Mathlib/CategoryTheory/Sites/Point/OfIsCofiltered.lean
+
+Modified Mathlib/Geometry/Manifold/IsManifold/InteriorBoundary.lean
+
+Modified Mathlib/MeasureTheory/Measure/Typeclasses/Finite.lean
+
+Modified Mathlib/Probability/ProductMeasure.lean
+
+Modified Mathlib/RingTheory/DividedPowerAlgebra/Init.lean
+
+Modified Mathlib/Tactic/Algebra/AlgebraNF.lean
+
+Modified Mathlib/Tactic/ComputeAsymptotics/Multiseries/Basis.lean
+
+Modified Mathlib/Tactic/SetNotationForOrder.lean
+
+Modified Mathlib/Tactic/Translate/ToAdditive.lean
+
+Modified Mathlib/Topology/Algebra/Module/ModuleTopology.lean
+
+Modified Mathlib/Topology/LocallyFinsupp.lean
+
+Modified Mathlib/Topology/UniformSpace/Closeds.lean
+
+
+
+
+2026-10-27 12:01:09 0383cdf
+
+chore: make `Finset.prod_apply` protected (#45337)
+This is to avoid conflicts with [prod_apply](https://leanprover-community.github.io/mathlib4_docs/Mathlib/Algebra/BigOperators/Pi.html#prod_apply) which will be used often as `Is*Apply` instances are added.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/BigOperators/Pi.lean
+- theorem Finset.prod_apply
+- theorem Fintype.prod_apply
+Modified Mathlib/Algebra/Group/ForwardDiff.lean
+
+Modified Mathlib/FieldTheory/Fixed.lean
+
+Modified Mathlib/MeasureTheory/Group/Arithmetic.lean
+
+
+
+
+2026-10-27 12:01:06 b5e5938
+
+chore(Algebra/PEmptyInstances): deprecate module (#45301)
+This module has a single declaration, which can be trivially moved to its singular import.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Category/Semigrp/Basic.lean
+
+Modified Mathlib/Algebra/Group/Semigroup.lean
+
+Modified Mathlib/Algebra/PEmptyInstances.lean
+
+
+
+
+2026-10-27 12:01:02 c6257e9
+
+chore: rename `coe_int` lemmas to `intCast` (#44826)
+This renames Lean 3 style `coe_int` in lemma names about `Int.cast` to `intCast`.
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+ESTIMATED CHANGES
+Modified Mathlib/Data/Rat/Defs.lean
+- theorem Rat.coe_int_num_of_den_eq_one
++ theorem Rat.intCast_num_of_den_eq_one
+Modified Mathlib/Data/ZMod/Units.lean
+- theorem ZMod.coe_int_inv_mul_eq_one
+- theorem ZMod.coe_int_isUnit_iff_isCoprime
+- theorem ZMod.coe_int_mul_inv_eq_one
+- theorem ZMod.coe_int_mul_val_inv
+- theorem ZMod.coe_int_val_inv_mul
++ theorem ZMod.intCast_inv_mul_eq_one
++ theorem ZMod.intCast_mul_inv_eq_one
++ theorem ZMod.intCast_mul_val_inv
++ theorem ZMod.intCast_val_inv_mul
++ theorem ZMod.isUnit_intCast_iff_isCoprime
+Modified Mathlib/NumberTheory/Bernoulli.lean
+
+Modified Mathlib/NumberTheory/DirichletCharacter/Basic.lean
+
+Modified Mathlib/NumberTheory/LSeries/PrimesInAP.lean
+
+Modified Mathlib/NumberTheory/Transcendental/Liouville/LiouvilleWith.lean
+- theorem LiouvilleWith.ne_cast_int
++ theorem LiouvilleWith.ne_intCast
+Modified Mathlib/RingTheory/RootsOfUnity/PrimitiveRoots.lean
+- theorem IsPrimitiveRoot.zmodEquivZPowers_apply_coe_int
++ theorem IsPrimitiveRoot.zmodEquivZPowers_apply_intCast
+
+
+
+2026-10-27 11:13:47 b9b0b76
+
+chore: make `Function.prod_apply` protected (#45336)
+This is to avoid conflicts with [prod_apply](https://leanprover-community.github.io/mathlib4_docs/Mathlib/Algebra/BigOperators/Pi.html#prod_apply) which will be used often as `Is*Apply` instances are added.
+
+ESTIMATED CHANGES
+Modified Mathlib/Logic/Function/Defs.lean
+- theorem Function.prod_apply
+
+
+
+2026-10-27 09:52:50 37a7c30
+
+feat(LinearAlgebra/TensorProduct/Tower): add `baseChange_le_iff_le_comap` (#45181)
+This PR adds a criterion for `p.baseChange A ≤ q` in terms of submodules instead of sets.
+
+ESTIMATED CHANGES
+Modified Mathlib/LinearAlgebra/TensorProduct/Tower.lean
++/- theorem Submodule.baseChange_bot
++ theorem Submodule.baseChange_gc
++ theorem Submodule.baseChange_iSup
++ theorem Submodule.baseChange_le_iff_le_comap
++/- theorem Submodule.baseChange_mono
++ theorem Submodule.baseChange_sSup
++ theorem Submodule.baseChange_sup
+
+
+
+2026-10-27 09:27:31 1e72f28
+
+chore: golf `Subgroup.isCyclic` (#45109)
+The proof is the same, it's just been reformatted.
+
+ESTIMATED CHANGES
+Modified Mathlib/GroupTheory/SpecificGroups/Cyclic/Subgroup.lean
+
+
+
+
+2026-10-27 05:50:01 116662a
+
+chore(TensorProduct): golf `mul_assoc` of tensor algebras (#45234)
+We add an auxiliary lemma for proving the associativity law of bilinear maps, turning an equality in terms of bilinear maps into an equality of linear maps so that we can use `ext`. We then use it to golf the proof of `mul_assoc` of tensor algebras.
+
+ESTIMATED CHANGES
+Modified Mathlib/LinearAlgebra/BilinearMap.lean
++ theorem LinearMap.assoc_iff
+Modified Mathlib/LinearAlgebra/TensorProduct/Graded/External.lean
+
+Modified Mathlib/RingTheory/PiTensorProduct.lean
+
+Modified Mathlib/RingTheory/TensorProduct/Basic.lean
+
+
+
+
 2026-10-27 00:37:43 8000f01
 
 chore(Algebra): move `LinearMap.proj` and `LinearMap.pi` (#45302)
