@@ -1,3 +1,822 @@
+2026-10-31 02:16:13 fdeeb26
+
+chore(Data/Nat): remove redundant helper hypotheses (#45516)
+Remove `n ≠ 0` from the private `pow_dvd_iff_le_of_spec` helper in both `Data/Nat/MaxPowDiv` and `Data/Nat/PadicValNat`, and remove `1 < b` from the private `Nat.log.go_aux` helper. Update their local callers to omit the removed arguments. The helper proofs are unchanged.
+
+ESTIMATED CHANGES
+Modified Mathlib/Data/Nat/Log.lean
+
+Modified Mathlib/Data/Nat/MaxPowDiv.lean
+
+Modified Mathlib/Data/Nat/PadicValNat.lean
+
+
+
+
+2026-10-31 01:50:08 156eea3
+
+chore(Data/Nat/Cast): remove redundant order instances (#45515)
+Remove three redundant instance assumptions:
+- `[AddRightMono α]` from `Nat.one_sub_one_div_cast_nonneg`;
+- `[AddLeftMono α]` from `Nat.one_sub_one_div_cast_le_one`;
+- `[IsOrderedRing α]` from `Nat.cast_tsub`.
+The remaining ordered-algebra assumptions supply these instances. All three proofs are unchanged.
+
+ESTIMATED CHANGES
+Modified Mathlib/Data/Nat/Cast/Order/Field.lean
++/- theorem Nat.one_sub_one_div_cast_le_one
++/- theorem Nat.one_sub_one_div_cast_nonneg
+Modified Mathlib/Data/Nat/Cast/Order/Ring.lean
++/- theorem Nat.cast_tsub
+
+
+
+2026-10-30 23:24:30 a3ea5ad
+
+chore(CategoryTheory): remove redundant comma-category hypotheses (#45517)
+Remove redundant assumptions from four related comma-category lemmas:
+- Drop `[Q.RespectsIso]` from `Over.pullbackComp_left_fst_fst`.
+- Drop `[HasPullbacks T]` from `CostructuredArrow.closedUnderLimitsOfShape_walkingCospan`.
+- Scope `[K.HasPullbacks]` to the earlier lemmas in `MorphismProperty/CommaSites`, so `isContinuous_comap_forget` and `toGrothendieck_comap_forget_eq_inducedTopology` no longer assume it separately. Their ambient finite wide pullbacks supply the needed instances.
+All four proofs are unchanged.
+
+ESTIMATED CHANGES
+Modified Mathlib/CategoryTheory/Limits/MorphismProperty.lean
++/- theorem CategoryTheory.CostructuredArrow.closedUnderLimitsOfShape_walkingCospan
+Modified Mathlib/CategoryTheory/MorphismProperty/CommaSites.lean
+
+Modified Mathlib/CategoryTheory/MorphismProperty/OverAdjunction.lean
+
+
+
+
+2026-10-30 23:14:02 0161e86
+
+chore(CategoryTheory): drop hypercover smallness assumptions (#45518)
+Remove `[Precoverage.ZeroHypercover.Small.{v} 𝒰]` from `MorphismProperty.of_zeroHypercover_target` and `MorphismProperty.of_zeroHypercover_source`. Both locality arguments work without requiring the zero-hypercover's index type to be small in the morphism universe. The proofs are unchanged.
+
+ESTIMATED CHANGES
+Modified Mathlib/CategoryTheory/MorphismProperty/Local.lean
+
+
+
+
+2026-10-30 20:28:53 e363848
+
+feat(MeasureTheory): countable uncurry preserves strong measurability (#45492)
+A countable family of strongly measurable functions is jointly strongly measurable when singletons in the index space are measurable.
+Add `stronglyMeasurable_uncurry_of_countable` with only `[TopologicalSpace β]` on the target: no pseudometrizability, topology on the index, or measurable-space structure on the target is required. The proof directly assembles simple-function approximations, using an eventually exact finite-range approximation of the countable index.
+Use the new lemma to shorten `stronglyMeasurable_uncurry_of_continuous_of_stronglyMeasurable`.
+This is an independent prerequisite for #34716; it does not depend on that PR or #42164.
+Developed with assistance from Codex.
+
+ESTIMATED CHANGES
+Modified Mathlib/MeasureTheory/Function/StronglyMeasurable/Basic.lean
++ theorem MeasureTheory.stronglyMeasurable_uncurry_of_countable
+
+
+
+2026-10-30 20:28:50 a36db84
+
+refactor(MeasureTheory/Constructions/BorelSpace/Order): regroup sections and weaken hypotheses (#45475)
+Regroup the sections of `BorelSpace/Order.lean` so that repeated instance binders become section variables, and weaken `BorelSpace` to `OpensMeasurableSpace` where the proofs allow it:
+- the `lt`/`le` lemmas and `Measurable.max`/`min` now share a section with `[SecondCountableTopology α] [OrderClosedTopology α]` instead of repeating these binders;
+- `MeasurableSet.of_mem_nhdsGT_aux` and `MeasurableSet.of_mem_nhdsGT` move next to them under `[OrderTopology α]`, and only assume `[OpensMeasurableSpace α]` (their proofs only use measurability of open sets, singletons and countable sets);
+- `Monotone.measurable`, `Antitone.measurable`, `aemeasurable_restrict_of_monotoneOn` and `aemeasurable_restrict_of_antitoneOn` only assume `[OpensMeasurableSpace β]` on the domain, matching `Continuous.measurable`. The section-wide `[BorelSpace β]` they inherited is kept only for `measurable_iSup_of_lowerSemicontinuous`/`iInf_of_upperSemicontinuous`, where `β` is the codomain.
+No proofs change except the two `Antitone` lemmas, whose positional `@` applications are rewritten with named arguments. Preparation for #42164.
+
+ESTIMATED CHANGES
+Modified Mathlib/MeasureTheory/Constructions/BorelSpace/Order.lean
++/- theorem Measurable.lt
++/- theorem aemeasurable_restrict_of_antitoneOn
++/- theorem aemeasurable_restrict_of_monotoneOn
++/- theorem measurableSet_lt'
++/- theorem measurableSet_lt
++/- theorem measurable_iInf_of_upperSemicontinuous
++/- theorem measurable_iSup_of_lowerSemicontinuous
++/- theorem measurable_lt
++/- theorem nullMeasurableSet_le
++/- theorem nullMeasurableSet_lt'
++/- theorem nullMeasurableSet_lt
+
+
+
+2026-10-30 19:52:16 917045c
+
+feat: `max_pow_of_nonneg` (#45484)
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Order/GroupWithZero/Basic.lean
++ theorem max_pow_of_nonneg
++ theorem min_pow_of_nonneg
+Modified Mathlib/Algebra/Order/Monoid/Unbundled/Pow.lean
++ theorem max_pow
++ theorem min_pow
+
+
+
+2026-10-30 18:12:28 f9738e4
+
+feat(CategoryTheory): stability under retracts of the preservation of (co)limits (#45417)
+If a functor preserves a (co)limit, so does any retract of it.
+
+ESTIMATED CHANGES
+Modified Mathlib/CategoryTheory/ObjectProperty/FunctorCategory/PreservesLimits.lean
++ theorem CategoryTheory.ObjectProperty.preservesFiniteColimits_eq_iSup
++ theorem CategoryTheory.ObjectProperty.preservesFiniteLimits_eq_iSup
+Modified Mathlib/CategoryTheory/ObjectProperty/Retract.lean
+
+Modified Mathlib/CategoryTheory/Retract.lean
++ def CategoryTheory.Retract.app
++ theorem CategoryTheory.Retract.retract_app
+
+
+
+2026-10-30 16:27:20 75b1f08
+
+feat: use `IsApply` for `ArithmeticFunction` (#45386)
+
+ESTIMATED CHANGES
+Modified Mathlib/NumberTheory/ArithmeticFunction/Defs.lean
+- theorem ArithmeticFunction.add_apply
+- theorem ArithmeticFunction.mul_apply
+- theorem ArithmeticFunction.neg_apply
+- theorem ArithmeticFunction.one_apply
+- theorem ArithmeticFunction.smul_apply
+- theorem ArithmeticFunction.zero_apply
+Modified Mathlib/NumberTheory/ArithmeticFunction/LFunction.lean
+
+Modified Mathlib/NumberTheory/ArithmeticFunction/Misc.lean
+
+Modified Mathlib/NumberTheory/ArithmeticFunction/Moebius.lean
+
+Modified Mathlib/NumberTheory/ArithmeticFunction/VonMangoldt.lean
+
+Modified Mathlib/NumberTheory/ArithmeticFunction/Zeta.lean
+
+Modified Mathlib/NumberTheory/LSeries/Dirichlet.lean
+
+
+
+
+2026-10-30 16:27:16 c51f410
+
+feat(Algebra/QuadraticAlgebra/Int): integral elements and the discriminant (#45296)
+For `z` an integral element of `QuadraticAlgebra ℚ a b`, we prove that `discr a b` is the square of the denominator of `z.im` times an integer congruent to `0` or `1` modulo `4`. Conversely, if `discr a b = d ^ 2 * e` with `1 < |d|` and `e` congruent to `0` or `1` modulo `4`, we construct an integral element `z` not in `QuadraticAlgebra ℤ a b` such that `d • z` lies in it.
+These are the two directions needed to determine when `QuadraticAlgebra ℤ a b` is the integral closure of `ℤ` in `QuadraticAlgebra ℚ a b`, which is done in a later PR.
+Prepared with Claude Code 🤖
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/QuadraticAlgebra/Int.lean
++ theorem QuadraticAlgebra.Int.algebraMap_omega
++ theorem QuadraticAlgebra.Int.exists_im_den_sq_mul
++ theorem QuadraticAlgebra.Int.exists_isIntegral_notMem_of_sq_mul
++ theorem QuadraticAlgebra.Int.exists_mul_im_sq_eq
++ theorem QuadraticAlgebra.Int.exists_sq_mul_of_isCoprime
++ theorem QuadraticAlgebra.Int.im_den_smul_mem
++ theorem QuadraticAlgebra.Int.isIntegral_inv_smul_of_dvd
++ theorem QuadraticAlgebra.Int.mem_range_iff_im_mem_range
+Modified Mathlib/Algebra/Ring/Int/Parity.lean
++ theorem Int.sq_emod_two
+
+
+
+2026-10-30 16:27:12 10d46ad
+
+feat(Algebra/Homology): bounded above cochain complexes (#45274)
+This new API is parallel to the API for bounded below cochain complexes.
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Added Mathlib/Algebra/Homology/CochainComplexMinus.lean
++ theorem CategoryTheory.Functor.homotopyEquivalences_mapCochainComplexMinus_map
++ def CategoryTheory.Functor.mapCochainComplexMinus
++ def CategoryTheory.Functor.mapCochainComplexMinusCompι
++ def CategoryTheory.NatTrans.mapCochainComplexMinus
++ theorem CategoryTheory.NatTrans.mapCochainComplexMinus_add
++ theorem CategoryTheory.NatTrans.mapCochainComplexMinus_comp
++ theorem CategoryTheory.NatTrans.mapCochainComplexMinus_id
++ theorem CochainComplex.Minus.epi_iff
++ def CochainComplex.Minus.fullyFaithfulι
++ theorem CochainComplex.Minus.mono_iff
++ def CochainComplex.Minus.quasiIso
++ theorem CochainComplex.Minus.quasiIso_iff
++ theorem CochainComplex.minus_iff
+Modified Mathlib/Algebra/Homology/CochainComplexPlus.lean
++ theorem CochainComplex.Plus.epi_iff
+
+
+
+2026-10-30 16:27:08 14483c7
+
+feat(Algebra/TotalMonoidAlgebra): definitions and basic coefficient API (#44814)
+Add the definitions and basic coefficient API of total monoid algebras.
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Added Mathlib/Algebra/TotalMonoidAlgebra/Defs.lean
++ structure TotalAddMonoidAlgebra
++ def TotalMonoidAlgebra.coeffAddEquiv
++ def TotalMonoidAlgebra.coeffEquiv
++ theorem TotalMonoidAlgebra.coeffEquiv_apply
++ theorem TotalMonoidAlgebra.coeff_add
++ theorem TotalMonoidAlgebra.coeff_eq_zero
++ theorem TotalMonoidAlgebra.coeff_finsuppSum
++ theorem TotalMonoidAlgebra.coeff_inj
++ theorem TotalMonoidAlgebra.coeff_injective
++ theorem TotalMonoidAlgebra.coeff_ofCoeff
++ theorem TotalMonoidAlgebra.coeff_single
++ theorem TotalMonoidAlgebra.coeff_single_apply
++ theorem TotalMonoidAlgebra.coeff_smul
++ theorem TotalMonoidAlgebra.coeff_smul_apply
++ theorem TotalMonoidAlgebra.coeff_sum
++ theorem TotalMonoidAlgebra.coeff_update
++ theorem TotalMonoidAlgebra.coeff_zero
++ theorem TotalMonoidAlgebra.ofCoeff_add
++ theorem TotalMonoidAlgebra.ofCoeff_coeff
++ theorem TotalMonoidAlgebra.ofCoeff_eq_zero
++ theorem TotalMonoidAlgebra.ofCoeff_finsuppSum
++ theorem TotalMonoidAlgebra.ofCoeff_inj
++ theorem TotalMonoidAlgebra.ofCoeff_injective
++ theorem TotalMonoidAlgebra.ofCoeff_single
++ theorem TotalMonoidAlgebra.ofCoeff_smul
++ theorem TotalMonoidAlgebra.ofCoeff_sum
++ theorem TotalMonoidAlgebra.ofCoeff_update
++ theorem TotalMonoidAlgebra.ofCoeff_zero
++ def TotalMonoidAlgebra.single
++ def TotalMonoidAlgebra.singleAddMonoidHom
++ theorem TotalMonoidAlgebra.single_add
++ theorem TotalMonoidAlgebra.single_eq_zero
++ theorem TotalMonoidAlgebra.single_inj
++ theorem TotalMonoidAlgebra.single_left_inj
++ theorem TotalMonoidAlgebra.single_left_injective
++ theorem TotalMonoidAlgebra.single_ne_zero
++ theorem TotalMonoidAlgebra.single_right_inj
++ theorem TotalMonoidAlgebra.single_right_injective
++ theorem TotalMonoidAlgebra.single_zero
++ theorem TotalMonoidAlgebra.smul_single'
++ theorem TotalMonoidAlgebra.smul_single
++ def TotalMonoidAlgebra.update
++ theorem TotalMonoidAlgebra.«exists»
++ theorem TotalMonoidAlgebra.«forall»
++ structure TotalMonoidAlgebra
+
+
+
+2026-10-30 16:27:04 a354dac
+
+feat(SetTheory/Cardinal): add cardinality bounds for direct limits (#42125)
+Add an equivalence between a direct limit and its component at an upper-bound index. Use it to prove upper and lower cardinality bounds and criteria for computing the cardinality of direct limits.
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Modified Mathlib/Order/DirectedInverseSystem.lean
++ def DirectLimit.equivOfIsTop
+Added Mathlib/SetTheory/Cardinal/DirectLimit.lean
++ theorem DirectLimit.mk_eq_iSup_lift_mk
++ theorem DirectLimit.mk_eq_of_forall_lift_mk_eq
++ theorem DirectLimit.mk_le_of_aleph0_le
++ theorem DirectLimit.mk_le_sum
+
+
+
+2026-10-30 15:42:06 cce3fe9
+
+chore(Data/DFinsupp/BigOperators): golf (#44787)
+
+ESTIMATED CHANGES
+Modified Mathlib/Data/DFinsupp/BigOperators.lean
+
+
+
+
+2026-10-30 15:42:03 4bc4028
+
+chore(Topology/Order): deprecate duplicate `nhdsGE_basis_Ico` (#44581)
+Deprecate `nhdsGE_basis_Ico` and its dual `nhdsLE_basis_Ioc`, duplicates of `nhdsGE_basis` and `nhdsLE_basis`.
+
+ESTIMATED CHANGES
+Modified Counterexamples/SorgenfreyLine.lean
+
+Modified Mathlib/Topology/Order/LeftRightNhds.lean
+- theorem nhdsGE_basis_Ico
+
+
+
+2026-10-30 15:42:01 2a1bf39
+
+chore(Algebra/Category/ModuleCat/Sheaf): deprecate duplicate `pushforwardNatTrans_app_val_app_apply` (#44580)
+Deprecate the simp lemma `SheafOfModules.pushforwardNatTrans_app_val_app_apply`, a duplicate of `pushforwardNatTrans_app_val_app`.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Category/ModuleCat/Sheaf/PushforwardContinuous.lean
+- theorem SheafOfModules.pushforwardNatTrans_app_val_app_apply
+
+
+
+2026-10-30 15:41:58 f20abd6
+
+feat(CategoryTheory): external products of derivability structures (#43896)
+The external product of two left/right derivability structures is again a derivability structure (when one assumes that the properties of morphisms which appear contain identities).
+This observation of mine (in 2023) was my main motivation for the formalization of derivability structures, because it would allow to formalize not only derived functors in one variable (see #43267), but also derived functors in several variables (like the tensor product, see https://github.com/joelriou/mathlib4/blob/jriou_localization/Mathlib/CategoryTheory/Localization/DerivabilityStructure/Monoidal.lean).
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Added Mathlib/CategoryTheory/Localization/DerivabilityStructure/Product.lean
+
+Modified Mathlib/CategoryTheory/Localization/Equivalence.lean
+
+Modified Mathlib/CategoryTheory/Localization/LocalizerMorphism.lean
++ def CategoryTheory.LocalizerMorphism.prod
+Modified Mathlib/CategoryTheory/Localization/Resolution.lean
++ def CategoryTheory.LocalizerMorphism.LeftResolution.prod
++ def CategoryTheory.LocalizerMorphism.RightResolution.prod
+Modified Mathlib/CategoryTheory/Products/Basic.lean
+
+Modified docs/references.bib
+
+
+
+
+2026-10-30 15:41:55 a4c49ad
+
+feat(NumberTheory/ArithmeticFunction): prodPrimeFactors_one_sub for every n (#43749)
+`IsMultiplicative.prodPrimeFactors_one_sub_of_squarefree` gives
+```
+∏ p ∈ n.primeFactors, (1 - f p) = ∑ d ∈ n.divisors, μ d * f d
+```
+only for squarefree `n`. The hypothesis is not needed: the summands with `d` not squarefree vanish (`μ d = 0`), and the squarefree divisors of `n` are exactly the divisors of `∏ p ∈ n.primeFactors, p`, which is squarefree with the same prime factors. So the general statement reduces to the squarefree one.
+This PR
+- adds `IsMultiplicative.prodPrimeFactors_one_sub`, the identity for every `n ≠ 0`, with the same orientation and naming as the existing lemma;
+- deprecates `IsMultiplicative.prodPrimeFactors_one_sub_of_squarefree` in favour of it (as requested in review), and inlines its proof.
+
+ESTIMATED CHANGES
+Modified Mathlib/Data/Nat/Squarefree.lean
++ theorem Nat.squarefree_prod_primeFactors
+Modified Mathlib/NumberTheory/ArithmeticFunction/Moebius.lean
++ theorem ArithmeticFunction.IsMultiplicative.prodPrimeFactors_one_sub
+Modified Mathlib/NumberTheory/SelbergSieve.lean
+
+
+
+
+2026-10-30 15:27:20 f67412b
+
+feat(CategoryTheory/Functor): left derived bifunctors (#45460)
+Using currying/uncurrying of functors, this PR introduces a `2`-variable version of the API for derived functors.
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Modified Mathlib/CategoryTheory/Functor/Currying.lean
++ def CategoryTheory.Functor.whiskeringLeft₂HomEquiv
+Added Mathlib/CategoryTheory/Functor/Derived/LeftDerivedTwo.lean
++ def CategoryTheory.Functor.HasLeftDerivedFunctor₂
++ def CategoryTheory.Functor.IsLeftDerivedFunctor₂
++ def CategoryTheory.Functor.bifunctorCounit₁
++ theorem CategoryTheory.Functor.bifunctorCounit₁_app
++ def CategoryTheory.Functor.bifunctorCounit₂
++ theorem CategoryTheory.Functor.bifunctorCounit₂_app
++ theorem CategoryTheory.Functor.leftDerived₂_ext
++ theorem CategoryTheory.Functor.leftDerived₂_fac
++ theorem CategoryTheory.Functor.leftDerived₂_fac_app_app
+
+
+
+2026-10-30 15:08:35 21f7d1b
+
+chore(CategoryTheory): deprecate `leftExactFunctor` (#45418)
+The property of objects `leftExactFunctor` in functor categories is deprecated in favour of `ObjectProperty.preservesFiniteLimits`. The definition of the typeclass `HasExactColimitsOfShape` is moved to a separate file `Mathlib/CategoryTheory/Limits/HasExactLimitsOfShape.lean` with reduced imports in order to avoid a cycle of imports. Results about exact colimits are moved out of `Mathlib/CategoryTheory/ObjectProperty/FunctorCategory/PreservesLimits.lean` to a new file `ExactColimits.lean`. A new file `Mathlib/CategoryTheory/ObjectProperty/BinaryProductsClosure.lean` is also added by part of the content of `FiniteProducts.lean` in order to avoid importing set theory definitions in some algebra files.
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Modified Mathlib/Algebra/Category/Grp/AB.lean
+
+Modified Mathlib/Algebra/Category/Grp/LeftExactFunctor.lean
+
+Modified Mathlib/Algebra/Homology/GrothendieckAbelian.lean
+
+Modified Mathlib/CategoryTheory/Abelian/GrothendieckAxioms/Basic.lean
+- theorem CategoryTheory.Adjunction.hasExactColimitsOfShape
+- theorem CategoryTheory.Adjunction.hasExactLimitsOfShape
+- theorem CategoryTheory.HasExactColimitsOfShape.domain_of_functor
+- theorem CategoryTheory.HasExactColimitsOfShape.of_codomain_equivalence
+- theorem CategoryTheory.HasExactColimitsOfShape.of_domain_equivalence
+- theorem CategoryTheory.HasExactLimitsOfShape.domain_of_functor
+- theorem CategoryTheory.HasExactLimitsOfShape.of_codomain_equivalence
+- theorem CategoryTheory.HasExactLimitsOfShape.of_domain_equivalence
+Modified Mathlib/CategoryTheory/Abelian/GrothendieckAxioms/Colim.lean
+
+Modified Mathlib/CategoryTheory/Abelian/GrothendieckAxioms/Connected.lean
+
+Modified Mathlib/CategoryTheory/Abelian/GrothendieckAxioms/FunctorCategory.lean
+
+Modified Mathlib/CategoryTheory/Abelian/GrothendieckCategory/ColimCoyoneda.lean
+
+Modified Mathlib/CategoryTheory/Abelian/GrothendieckCategory/EnoughInjectives.lean
+
+Modified Mathlib/CategoryTheory/Abelian/GrothendieckCategory/ModuleEmbedding/GabrielPopescu.lean
+
+Modified Mathlib/CategoryTheory/Limits/ExactFunctor.lean
+- theorem CategoryTheory.exactFunctor_le_leftExactFunctor
++ theorem CategoryTheory.exactFunctor_le_preservesFiniteColimits
++ theorem CategoryTheory.exactFunctor_le_preservesFiniteLimits
+- theorem CategoryTheory.exactFunctor_le_rightExactFunctor
+- def CategoryTheory.leftExactFunctor
+- def CategoryTheory.rightExactFunctor
+Added Mathlib/CategoryTheory/Limits/HasExactLimitsOfShape.lean
++ theorem CategoryTheory.Adjunction.hasExactColimitsOfShape
++ theorem CategoryTheory.Adjunction.hasExactLimitsOfShape
++ theorem CategoryTheory.HasExactColimitsOfShape.domain_of_functor
++ theorem CategoryTheory.HasExactColimitsOfShape.of_codomain_equivalence
++ theorem CategoryTheory.HasExactColimitsOfShape.of_domain_equivalence
++ theorem CategoryTheory.HasExactLimitsOfShape.domain_of_functor
++ theorem CategoryTheory.HasExactLimitsOfShape.of_codomain_equivalence
++ theorem CategoryTheory.HasExactLimitsOfShape.of_domain_equivalence
+Added Mathlib/CategoryTheory/ObjectProperty/BinaryProductsClosure.lean
++ theorem CategoryTheory.ObjectProperty.binaryCoproductsClosure_le_iff
++ theorem CategoryTheory.ObjectProperty.binaryProductsClosure_le_iff
+Modified Mathlib/CategoryTheory/ObjectProperty/FiniteProducts.lean
+- theorem CategoryTheory.ObjectProperty.binaryCoproductsClosure_le_iff
+- theorem CategoryTheory.ObjectProperty.binaryProductsClosure_le_iff
+Added Mathlib/CategoryTheory/ObjectProperty/FunctorCategory/ExactColimits.lean
+
+Modified Mathlib/CategoryTheory/ObjectProperty/FunctorCategory/PreservesLimits.lean
+
+Modified Mathlib/CategoryTheory/Preadditive/AdditiveFunctor.lean
+- theorem CategoryTheory.leftExactFunctor_le_additiveFunctor
++ theorem CategoryTheory.preservesFiniteColimits_le_additiveFunctor
++ theorem CategoryTheory.preservesFiniteLimits_le_additiveFunctor
+- theorem CategoryTheory.rightExactFunctor_le_additiveFunctor
+Modified Mathlib/CategoryTheory/Triangulated/Generators.lean
+
+Modified Mathlib/Topology/Sheaves/Abelian.lean
+
+Modified Mathlib/Topology/Sheaves/AddCommGrpCat.lean
+
+
+
+
+2026-10-30 14:28:45 ae15699
+
+feat: use `IsApply` for `AddConstMap` (#45351)
+Also add an `abbrev` that provides a monoid instance for a `FunLike` type satisfying `(f * g) x = f (g x)` and `1 x = x`.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/AddConstMap/Basic.lean
++/- theorem AddConstMap.coe_mul
++/- theorem AddConstMap.coe_one
++/- theorem AddConstMap.coe_pow
+- theorem AddConstMap.pow_apply
+Modified Mathlib/Algebra/Group/FunLike.lean
+
+
+
+
+2026-10-30 14:07:32 ecb7b35
+
+feat(Probability): define complete filtrations (#45237)
+A filtration `𝓕` is complete with respect to a measure `μ` if for all `i`, `𝓕 i` contains all the `μ`-null sets.
+We add a class for that, and a few basic results.
+The plan for stating that a filtration satisfies the "usual conditions" is to use the two classes `IsRightContinuous` and `IsComplete` together, without adding another class on top.
+
+ESTIMATED CHANGES
+Modified Mathlib/Probability/Process/Filtration.lean
++ theorem MeasureTheory.Filtration.IsComplete.isComplete_measure
++ theorem MeasureTheory.Filtration.IsComplete.measurableSet_of_ae_eq
++ theorem MeasureTheory.Filtration.IsComplete.of_absolutelyContinuous
+Modified Mathlib/Probability/Process/Stopping.lean
++ theorem MeasureTheory.IsStoppingTime.congr_ae
+
+
+
+2026-10-30 13:18:18 9756d93
+
+refactor: make `AbsoluteValue.Completion` a one-field structure (#45407)
+See `InfinitePlace.Completion` and `WithLp` for analogous library implementations of one-field structures.
+Afterwards `InfinitePlace.Completion` will become an `abbrev`.
+
+ESTIMATED CHANGES
+Modified Mathlib/Analysis/Normed/Field/WithAbs.lean
+- theorem AbsoluteValue.Completion.algebraMap_apply
++ theorem AbsoluteValue.Completion.algebraMap_apply_of_liesOver
++ theorem AbsoluteValue.Completion.algebraMap_def
+- theorem AbsoluteValue.Completion.algebraMap_eq
++ theorem AbsoluteValue.Completion.algebraMap_eq_of_liesOver
+- theorem AbsoluteValue.Completion.algebra_eq
++ theorem AbsoluteValue.Completion.algebra_eq_of_liesOver
++ theorem AbsoluteValue.Completion.coe_add
++ theorem AbsoluteValue.Completion.coe_inv
++ theorem AbsoluteValue.Completion.coe_mul
++ theorem AbsoluteValue.Completion.coe_neg
++ theorem AbsoluteValue.Completion.coe_one
++ theorem AbsoluteValue.Completion.coe_sub
++ theorem AbsoluteValue.Completion.coe_zero
++ theorem AbsoluteValue.Completion.continuous_coe
++ theorem AbsoluteValue.Completion.continuous_map
++ theorem AbsoluteValue.Completion.continuous_ofCompletion
++ theorem AbsoluteValue.Completion.continuous_toCompletion
++ theorem AbsoluteValue.Completion.denseRange_coe
++ def AbsoluteValue.Completion.equiv
++ theorem AbsoluteValue.Completion.equiv_apply
++ theorem AbsoluteValue.Completion.equiv_symm_apply
++ theorem AbsoluteValue.Completion.ext
++ theorem AbsoluteValue.Completion.induction_on
++ theorem AbsoluteValue.Completion.isometry_map
++ theorem AbsoluteValue.Completion.isometry_ofCompletion
++ theorem AbsoluteValue.Completion.isometry_toCompletion
++ theorem AbsoluteValue.Completion.map_coe
++ theorem AbsoluteValue.Completion.norm_coe
++ theorem AbsoluteValue.Completion.norm_ofCompletion
++ theorem AbsoluteValue.Completion.norm_toCompletion
++ theorem AbsoluteValue.Completion.ofCompletion_algebraMap
++ theorem AbsoluteValue.Completion.ofCompletion_coe
++ theorem AbsoluteValue.Completion.ofCompletion_inj
++ theorem AbsoluteValue.Completion.ofCompletion_injective
++ theorem AbsoluteValue.Completion.ofCompletion_surjective
++ theorem AbsoluteValue.Completion.ofCompletion_toCompletion
++ theorem AbsoluteValue.Completion.toCompletion_algebraMap
++ theorem AbsoluteValue.Completion.toCompletion_coe
++ theorem AbsoluteValue.Completion.toCompletion_inj
++ theorem AbsoluteValue.Completion.toCompletion_injective
++ theorem AbsoluteValue.Completion.toCompletion_ofCompletion
++ theorem AbsoluteValue.Completion.toCompletion_surjective
++ structure AbsoluteValue.Completion
+Modified Mathlib/NumberTheory/NumberField/AdeleRing.lean
+
+Modified Mathlib/NumberTheory/NumberField/Completion/InfinitePlace.lean
++/- theorem NumberField.InfinitePlace.Completion.algebraMap_apply
++/- theorem NumberField.InfinitePlace.Completion.coe_add
++/- theorem NumberField.InfinitePlace.Completion.coe_mul
+Modified Mathlib/NumberTheory/NumberField/Completion/LiesOverInstances.lean
+
+Modified Mathlib/NumberTheory/NumberField/InfiniteAdeleRing.lean
++/- theorem NumberField.InfiniteAdeleRing.algebraMap_apply
++/- theorem NumberField.InfiniteAdeleRing.denseRange_algebraMap
+
+
+
+2026-10-30 13:18:15 143b867
+
+feat(Probability): define the `leastGT` stopping time (#45239)
+The existing `leastGE` is the first time a function is greater or equal to a value. The new `leastGT` is the strict version of that.
+
+ESTIMATED CHANGES
+Modified Mathlib/Probability/Martingale/BorelCantelli.lean
++ theorem MeasureTheory.StronglyAdapted.isStoppingTime_leastGT
++ theorem MeasureTheory.leastGT_lt_iff
+
+
+
+2026-10-30 13:18:12 dc52fb0
+
+chore(GroupTheory/PGroup): reorder lemmas (#41816)
+This PR reorders the `iff` lemmas in `GroupTheory/PGroup.lean` to allow for some golfing.
+
+ESTIMATED CHANGES
+Modified Mathlib/GroupTheory/PGroup.lean
++ theorem Group.primeFactors_exponent_eq_primeFactors_card
+
+
+
+2026-10-30 12:28:11 14577ea
+
+feat: `insert a` and `· \ {a}` are injective on the sets they move (#45161)
+Add `Set.insert_injOn_notMem`, `Set.sdiff_singleton_injOn_mem` and `Finset.insert_injOn_notMem`: adding `a` is injective on the sets not containing `a`, and removing `a` is injective on the sets containing `a`. For finsets, the second statement is `Finset.erase_injOn'`.
+
+ESTIMATED CHANGES
+Modified Mathlib/Data/Finset/Basic.lean
++ theorem Finset.insert_injOn_notMem
++ theorem Finset.insert_right_inj
++ theorem Finset.sdiff_singleton_injOn_mem
+Modified Mathlib/Data/Finset/SDiff.lean
++ theorem Finset.union_left_inj
+Modified Mathlib/Order/BooleanAlgebra/Set.lean
++ theorem Set.disjoint_injOn_union_left
++ theorem Set.insert_injOn_notMem
++ theorem Set.insert_right_inj
++ theorem Set.sdiff_singleton_injOn_mem
++ theorem Set.superset_injOn_sdiff
++ theorem Set.union_left_inj
+Modified Mathlib/Order/Disjoint.lean
++ theorem sup_left_inj_of_disjoint
+
+
+
+2026-10-30 11:51:04 ca845ba
+
+feat(AlgebraicTopology): Eilenberg Steenrod axioms (#38369)
+This introduces the Eilenberg-Steenrod axioms for a homology theory.
+
+ESTIMATED CHANGES
+Modified Mathlib/AlgebraicTopology/EilenbergSteenrod.lean
++ def TopPair.HomologyPretheory.hFunctor
++ theorem TopPair.HomologyPretheory.hasDimensionAxiom_iff
++ theorem TopPair.HomologyPretheory.hasExcisionIso_iff'
++ theorem TopPair.HomologyPretheory.hasPairSequence_iff
++ def TopPair.HomologyPretheory.hₚFunctor
++ theorem TopPair.HomologyPretheory.isAdditive_iff
++ theorem TopPair.HomologyPretheory.isEilenbergSteenrod_iff
++ theorem TopPair.HomologyPretheory.isExtraordinaryEilenbergSteenrod_iff
++/- theorem TopPair.HomologyPretheory.isHomotopyInvariant_iff
+Modified Mathlib/Topology/Category/TopPair.lean
++ def TopPair.diag
++ def TopPair.proj₁
++ def TopPair.proj₂
+
+
+
+2026-10-30 11:31:07 a5ec661
+
+feat(CategoryTheory/Bicategory): pasting for kan extensions (#41530)
+This PR constructs pasting for left lifts and shows the pasting lemma for (abs) left kan lifts. This is done for all four notions of left/right lifts/extensions.
+This is needed for the oo-cosmos project.
+- [x] depends on: #41484
+
+ESTIMATED CHANGES
+Modified Mathlib/CategoryTheory/Bicategory/Extension.lean
++ theorem CategoryTheory.Bicategory.LeftExtension.homMk_right
++ def CategoryTheory.Bicategory.LeftExtension.paste
++ def CategoryTheory.Bicategory.LeftExtension.pasteWhiskerIso
++ theorem CategoryTheory.Bicategory.LeftExtension.paste_extension
++ theorem CategoryTheory.Bicategory.LeftExtension.paste_unit
++ theorem CategoryTheory.Bicategory.LeftLift.homMk_right
++ def CategoryTheory.Bicategory.LeftLift.paste
++ def CategoryTheory.Bicategory.LeftLift.pasteWhiskerIso
++ theorem CategoryTheory.Bicategory.LeftLift.paste_lift
++ theorem CategoryTheory.Bicategory.LeftLift.paste_unit
++ theorem CategoryTheory.Bicategory.RightExtension.homMk_left
++ def CategoryTheory.Bicategory.RightExtension.paste
++ def CategoryTheory.Bicategory.RightExtension.pasteWhiskerIso
++ theorem CategoryTheory.Bicategory.RightExtension.paste_counit
++ theorem CategoryTheory.Bicategory.RightExtension.paste_extension
++ theorem CategoryTheory.Bicategory.RightLift.homMk_left
++ def CategoryTheory.Bicategory.RightLift.paste
++ def CategoryTheory.Bicategory.RightLift.pasteWhiskerIso
++ theorem CategoryTheory.Bicategory.RightLift.paste_counit
++ theorem CategoryTheory.Bicategory.RightLift.paste_lift
+Modified Mathlib/CategoryTheory/Bicategory/Kan/IsKan.lean
++ def CategoryTheory.Bicategory.LeftExtension.IsKan.ofPaste
++ def CategoryTheory.Bicategory.LeftExtension.IsKan.paste
++ def CategoryTheory.Bicategory.LeftExtension.IsKan.unpaste
++ theorem CategoryTheory.Bicategory.LeftExtension.IsKan.unpaste_extension
++ theorem CategoryTheory.Bicategory.LeftExtension.IsKan.unpaste_fac
++ def CategoryTheory.Bicategory.LeftExtension.isKanEquivIsKanPaste
++ def CategoryTheory.Bicategory.LeftLift.IsKan.ofPaste
++ def CategoryTheory.Bicategory.LeftLift.IsKan.paste
++ def CategoryTheory.Bicategory.LeftLift.IsKan.unpaste
++ theorem CategoryTheory.Bicategory.LeftLift.IsKan.unpaste_fac
++ theorem CategoryTheory.Bicategory.LeftLift.IsKan.unpaste_lift
++ def CategoryTheory.Bicategory.LeftLift.isKanEquivIsKanPaste
++ def CategoryTheory.Bicategory.RightExtension.IsKan.ofPaste
++ def CategoryTheory.Bicategory.RightExtension.IsKan.paste
++ def CategoryTheory.Bicategory.RightExtension.IsKan.unpaste
++ theorem CategoryTheory.Bicategory.RightExtension.IsKan.unpaste_extension
++ theorem CategoryTheory.Bicategory.RightExtension.IsKan.unpaste_fac
++ def CategoryTheory.Bicategory.RightExtension.isKanEquivIsKanPaste
++ def CategoryTheory.Bicategory.RightLift.IsKan.ofPaste
++ def CategoryTheory.Bicategory.RightLift.IsKan.paste
++ def CategoryTheory.Bicategory.RightLift.IsKan.unpaste
++ theorem CategoryTheory.Bicategory.RightLift.IsKan.unpaste_fac
++ theorem CategoryTheory.Bicategory.RightLift.IsKan.unpaste_lift
++ def CategoryTheory.Bicategory.RightLift.isKanEquivIsKanPaste
+
+
+
+2026-10-30 11:10:14 50f132d
+
+feat: nullMeasurable versions of some measurable_of_X lemmas (#45232)
+They are all one-line consequence of the `measurable` lemmas but I think they are useful for discoverability.
+
+ESTIMATED CHANGES
+Modified Mathlib/MeasureTheory/Constructions/BorelSpace/Order.lean
++ theorem nullMeasurable_of_Ici
++ theorem nullMeasurable_of_Iic
++ theorem nullMeasurable_of_Iio
++ theorem nullMeasurable_of_Ioi
+Modified Mathlib/MeasureTheory/Measure/NullMeasurable.lean
++ theorem MeasureTheory.nullMeasurable_generateFrom
+
+
+
+2026-10-30 11:10:11 bc65bfb
+
+feat: add `MeasurableSpace.prod_mono` (#45231)
+Add a monotonicity lemma for products of measurable spaces, tagged with `gcongr`.
+
+ESTIMATED CHANGES
+Modified Mathlib/MeasureTheory/MeasurableSpace/Constructions.lean
++ theorem MeasurableSpace.prod_mono
+
+
+
+2026-10-30 11:03:23 3dd2bdf
+
+feat(Topology): compact systems on sum and sigma types (#45228)
+Add the following:
+* `IsCompactSystem.infClosure`: the finite intersections of sets of a compact system form a compact system.
+* `IsCompactSystem.sum`: compact systems on `α` and `β` give a compact system on `α ⊕ β`.
+* `IsCompactSystem.sigma`: compact systems on `α i` give a compact system on `Σ i, α i`.
+
+ESTIMATED CHANGES
+Modified Mathlib/Order/CountableSupClosed.lean
++ theorem supClosure_subset_countableSupClosure
+Modified Mathlib/Topology/Compactness/CompactSystem.lean
+
+
+
+
+2026-10-30 09:21:22 690d730
+
+feat(Algebra): mapping associates (#45424)
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/GroupWithZero/Associated.lean
++ def Associates.congr
++ theorem Associates.congr_mk
++ theorem Associates.congr_refl
++ theorem Associates.congr_toMonoidHom
++ theorem Associates.congr_trans_congr
++ def Associates.map
++ theorem Associates.map_comp_map
++ theorem Associates.map_id
++ theorem Associates.map_mk
++ theorem Associates.symm_congr
+
+
+
+2026-10-30 03:52:36 9c3101a
+
+feat(Topology/Instances/Matrix): interactions between `tsum` and {`IsHermitian`, `PosSemidef`, `trace`} (#45191)
+The main results here are `(∑'[L] a, f a).IsHermitian` and `(∑'[L] a, f a).PosSemidef` under suitable assumptions.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Star/Module.lean
++ theorem selfAdjoint.toAddSubgroup_submodule
++ theorem selfAdjoint.toAddSubmonoid_submodule
+Modified Mathlib/Algebra/Star/SelfAdjoint.lean
++ def selfAdjoint.addSubmonoid
++ theorem toAddSubmonoid_selfAdjoint
+Modified Mathlib/Analysis/Matrix/Order.lean
++/- theorem Matrix.posSemidef_is_closed
+Modified Mathlib/LinearAlgebra/Complex/Module.lean
+
+Modified Mathlib/LinearAlgebra/Matrix/PosDef.lean
++ def Matrix.PosSemidef.addSubmonoid
++ theorem Matrix.PosSemidef.mem_addSubmonoid
+Modified Mathlib/NumberTheory/Modular.lean
+
+Modified Mathlib/NumberTheory/ModularForms/EisensteinSeries/Defs.lean
+
+Modified Mathlib/NumberTheory/NumberField/Discriminant/Basic.lean
+
+Modified Mathlib/Topology/Algebra/InfiniteSum/Basic.lean
++ theorem HasProd.mem
+Modified Mathlib/Topology/Algebra/InfiniteSum/Constructions.lean
++ theorem HasSum.isSelfAdjoint
++ theorem IsSelfAdjoint.tsum
++ theorem isClosed_setOfPred_isSelfAdjoint
+Modified Mathlib/Topology/Instances/Matrix.lean
++ theorem HasSum.matrix_trace
++ theorem Matrix.IsHermitian.of_hasSum
++ theorem Matrix.IsHermitian.tsum
++ theorem Matrix.isClosed_setOfPred_isHermitian
++ theorem Matrix.trace_tsum
++ theorem PosSemidef.of_hasSum
++ theorem PosSemidef.tsum
++ theorem Summable.matrix_trace
++ theorem isClosed_setOfPred_posSemidef
+
+
+
+2026-10-30 03:41:07 4a3c46b
+
+feat(Asymptotics/TVS): add `IsLittleOTVS.sum` and `IsBigOTVS.sum` (#44206)
+Add versions of `IsLittleO.sum`/`IsBigO.sum` for the TVS-valued
+asymptotics, and move the shared typeclass assumptions of the lemmas
+about sums of two functions to a `variable` line.
+Extracted by Claude from a larger refactor written by Yury.
+
+ESTIMATED CHANGES
+Modified Mathlib/Analysis/Asymptotics/TVS.lean
++/- theorem Asymptotics.IsBigOTVS.add
++ theorem Asymptotics.IsBigOTVS.listSum
++ theorem Asymptotics.IsBigOTVS.multisetSum
++ theorem Asymptotics.IsBigOTVS.sum
++/- theorem Asymptotics.IsBigOTVS.triangle
++/- theorem Asymptotics.IsLittleOTVS.add
++ theorem Asymptotics.IsLittleOTVS.listSum
++ theorem Asymptotics.IsLittleOTVS.multisetSum
++ theorem Asymptotics.IsLittleOTVS.sum
++/- theorem Asymptotics.IsLittleOTVS.triangle
+
+
+
 2026-10-30 00:12:08 70078b3
 
 ci: run independent build-pipeline steps in parallel (#44603)
