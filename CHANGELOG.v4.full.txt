@@ -1,3 +1,391 @@
+2026-11-02 01:57:40 1b1ccf4
+
+chore: remove empty sections (#45568)
+This should be all of them. Inspired by #45565.
+
+ESTIMATED CHANGES
+Modified Mathlib/Data/Fin/Basic.lean
+
+Modified Mathlib/Order/GaloisConnection/Basic.lean
+
+Modified Mathlib/SetTheory/Ordinal/Family.lean
+
+
+
+
+2026-11-02 01:38:48 8b6818e
+
+chore: remove unnecessary set_option lines (#45569)
+I removed 39 unnecessary `set_option` line(s) across 23 file(s).
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Category/MonCat/FilteredColimits.lean
+
+Modified Mathlib/AlgebraicGeometry/AffineTransitionLimit.lean
+
+Modified Mathlib/AlgebraicGeometry/Modules/Sheaf.lean
+
+Modified Mathlib/AlgebraicGeometry/Modules/Tilde.lean
+
+Modified Mathlib/AlgebraicTopology/SingularHomology/Basic.lean
+
+Modified Mathlib/Analysis/Complex/Exponential.lean
+
+Modified Mathlib/CategoryTheory/GuitartExact/HorizontalComposition.lean
+
+Modified Mathlib/CategoryTheory/Join/Basic.lean
+
+Modified Mathlib/CategoryTheory/Limits/ConeCategory.lean
+
+Modified Mathlib/CategoryTheory/Limits/Indization/LocallySmall.lean
+
+Modified Mathlib/CategoryTheory/Limits/IsLimit.lean
+
+Modified Mathlib/CategoryTheory/Limits/Preserves/SigmaConst.lean
+
+Modified Mathlib/CategoryTheory/Limits/Preserves/Ulift.lean
+
+Modified Mathlib/CategoryTheory/Limits/Preserves/Yoneda.lean
+
+Modified Mathlib/CategoryTheory/Limits/Presheaf.lean
+
+Modified Mathlib/CategoryTheory/Limits/Types/Colimits.lean
+
+Modified Mathlib/CategoryTheory/Presentable/Basic.lean
+
+Modified Mathlib/CategoryTheory/Presentable/Presheaf.lean
+
+Modified Mathlib/CategoryTheory/RestrictedYoneda.lean
+
+Modified Mathlib/CategoryTheory/ShrinkYoneda.lean
+
+Modified Mathlib/CategoryTheory/Sites/Sieves/Presheaf.lean
+
+Modified Mathlib/CategoryTheory/Subfunctor/OfSection.lean
+
+Modified Mathlib/Topology/Sheaves/Stalks.lean
+
+
+
+
+2026-11-02 00:37:14 b6dfe53
+
+feat(RingTheory/Jacobson/Ideal): surjective `RingHom` and `IsLocalHom` (#41066)
+This is a split of #41064 which shows that a surjective `RingHom` is a local homomorphism if and only if its kernel is contained in the jacobson radical of the ring.
+
+ESTIMATED CHANGES
+Modified Mathlib/RingTheory/Henselian.lean
+- theorem isLocalHom_of_le_jacobson
+Modified Mathlib/RingTheory/Jacobson/Ideal.lean
++ theorem RingHom.isLocalHom_iff_ker_le_jacobson
++ theorem RingHom.ker_le_jacobson_of_isLocalHom
++ theorem isLocalHom_of_le_jacobson
+
+
+
+2026-11-01 22:20:31 16b5a1b
+
+refactor: replace `padicValNat` with `multiplicity` (#43722)
+This doesn't fully deprecate `padicValNat`, but gets most of the way there. Full deprecation will be in a follow-up PR.
+I directly replaced "padicValNat" with "multiplicity" in the declaration names. A few declarations of the form `padicValNat.foo` were manually renamed to `Nat.multiplicity_foo`.
+
+ESTIMATED CHANGES
+Modified Archive/Imo/Imo2025Q3.lean
+- def Imo2025Q3.fExample
+Modified Mathlib/Data/Nat/Factorization/Basic.lean
++ theorem Nat.eq_iff_prime_multiplicity_eq
+- theorem Nat.eq_iff_prime_padicValNat_eq
++ theorem Nat.prod_pow_prime_multiplicity
+- theorem Nat.prod_pow_prime_padicValNat
+Modified Mathlib/Data/Nat/Factorization/Defs.lean
++/- theorem Nat.factorization_def
++ theorem Nat.factorization_le_multiplicity
+- theorem Nat.factorization_le_padicValNat
+Modified Mathlib/Data/Nat/PadicValNat.lean
++/- theorem Nat.fst_maxPowDvdDiv
++ theorem Nat.multiplicity_le_self
++ theorem Nat.multiplicity_lt_self
++ theorem Nat.multiplicity_self
+- theorem Nat.padicValNat_le_self
+- theorem Nat.padicValNat_lt_self
++ theorem Nat.pow_dvd_iff_le_multiplicity
+- theorem Nat.pow_dvd_iff_le_padicValNat
++ theorem Nat.pow_multiplicity_mul_divMaxPow
+- theorem Nat.pow_padicValNat_mul_divMaxPow
++ theorem multiplicity_base_mul
++ theorem multiplicity_base_pow
++ theorem multiplicity_base_pow_mul
+- theorem padicValNat_base
+- theorem padicValNat_base_mul
+- theorem padicValNat_base_pow
+- theorem padicValNat_base_pow_mul
+- theorem padicValNat_one_left
+- theorem padicValNat_one_right
+- theorem padicValNat_zero_left
+- theorem padicValNat_zero_right
+- theorem pow_padicValNat_dvd
+Modified Mathlib/NumberTheory/Bernoulli.lean
+
+Modified Mathlib/NumberTheory/Harmonic/Int.lean
+
+Modified Mathlib/NumberTheory/Multiplicity.lean
++ theorem Nat.multiplicity_pow_add_pow
++ theorem Nat.multiplicity_pow_sub_pow
++ theorem Nat.multiplicity_pow_two_sub_one
++ theorem Nat.multiplicity_pow_two_sub_one_ge
++ theorem Nat.multiplicity_pow_two_sub_pow
+- theorem padicValNat.pow_add_pow
+- theorem padicValNat.pow_sub_pow
+- theorem padicValNat.pow_two_sub_one
+- theorem padicValNat.pow_two_sub_one_ge
+- theorem padicValNat.pow_two_sub_pow
+Modified Mathlib/NumberTheory/Ostrowski.lean
+- def Rat.AbsoluteValue.padic
+Modified Mathlib/NumberTheory/Padics/MahlerBasis.lean
+
+Modified Mathlib/NumberTheory/Padics/PadicNorm.lean
+- def padicNorm
+Modified Mathlib/NumberTheory/Padics/PadicNumbers.lean
+- def Int.padicValuation
++/- theorem Padic.valuation_natCast
+- def Rat.padicValuation
+Modified Mathlib/NumberTheory/Padics/PadicVal/Basic.lean
++ theorem Nat.Prime.multiplicity_self
++ theorem Nat.log_ne_multiplicity_succ
+- theorem Nat.log_ne_padicValNat_succ
++ theorem Nat.max_log_multiplicity_succ_eq_log_succ
+- theorem Nat.max_log_padicValNat_succ_eq_log_succ
++ theorem Nat.multiplicity_div'
++ theorem Nat.multiplicity_div
++ theorem Nat.multiplicity_div_of_dvd
++ theorem Nat.multiplicity_div_pow
++ theorem Nat.multiplicity_dvd_of_ne_zero
++ theorem Nat.multiplicity_mul
++ theorem Nat.multiplicity_pow
++ theorem Nat.multiplicity_prime_pow
++ theorem dvd_iff_multiplicity_ne_zero
+- theorem dvd_iff_padicValNat_ne_zero
++ theorem dvd_of_one_le_multiplicity
+- theorem dvd_of_one_le_padicValNat
++ theorem multiplicity_add_le_self
++ theorem multiplicity_choose'
++ theorem multiplicity_choose
++ theorem multiplicity_dvd_iff
++ theorem multiplicity_dvd_iff_le
++ theorem multiplicity_dvd_iff_of_ne_one
++ theorem multiplicity_eq_zero_of_mem_Ioo
++ theorem multiplicity_factorial
++ theorem multiplicity_factorial_le
++ theorem multiplicity_factorial_lt_of_ne_zero
++ theorem multiplicity_factorial_mul
++ theorem multiplicity_factorial_mul_add
++ theorem multiplicity_le_nat_log
++ theorem multiplicity_mul_div_factorial
++ theorem multiplicity_mul_pow_left
++ theorem multiplicity_mul_pow_right
++ theorem multiplicity_prime_prime_pow
++ theorem multiplicity_primes
++ theorem nat_log_eq_multiplicity_iff
+- theorem nat_log_eq_padicValNat_iff
++ theorem one_le_multiplicity_of_dvd
+- theorem one_le_padicValNat_of_dvd
++/- theorem padicValInt.of_nat
++/- theorem padicValInt.self
+- def padicValInt
+- theorem padicValNat.dvd_of_ne_zero
+- theorem padicValNat.eq_zero_of_not_dvd
+- theorem padicValNat_add_le_self
+- theorem padicValNat_choose'
+- theorem padicValNat_choose
+- theorem padicValNat_dvd_iff
+- theorem padicValNat_dvd_iff_le
+- theorem padicValNat_dvd_iff_le_of_ne_one
+- theorem padicValNat_dvd_iff_of_ne_one
+- theorem padicValNat_eq_zero_of_mem_Ioo
+- theorem padicValNat_factorial
+- theorem padicValNat_factorial_le
+- theorem padicValNat_factorial_lt_of_ne_zero
+- theorem padicValNat_factorial_mul
+- theorem padicValNat_factorial_mul_add
+- theorem padicValNat_le_nat_log
+- theorem padicValNat_mul_div_factorial
+- theorem padicValNat_mul_pow_left
+- theorem padicValNat_mul_pow_right
+- theorem padicValNat_prime_prime_pow
+- theorem padicValNat_primes
+- theorem padicValNat_self
++/- theorem padicValRat.of_nat
+- def padicValRat
++/- theorem padicValRat_of_nat
++ theorem pow_succ_multiplicity_not_dvd
+- theorem pow_succ_padicValNat_not_dvd
++ theorem range_pow_multiplicity_subset_divisors'
++ theorem range_pow_multiplicity_subset_divisors
+- theorem range_pow_padicValNat_subset_divisors'
+- theorem range_pow_padicValNat_subset_divisors
++ theorem sub_one_mul_multiplicity_choose_eq_sub_sum_digits'
++ theorem sub_one_mul_multiplicity_choose_eq_sub_sum_digits
++ theorem sub_one_mul_multiplicity_factorial_lt_of_ne_zero
+- theorem sub_one_mul_padicValNat_choose_eq_sub_sum_digits'
+- theorem sub_one_mul_padicValNat_choose_eq_sub_sum_digits
+- theorem sub_one_mul_padicValNat_factorial
+- theorem sub_one_mul_padicValNat_factorial_lt_of_ne_zero
+Modified Mathlib/NumberTheory/Padics/PadicVal/Defs.lean
++ theorem Nat.multiplicity_eq_zero_iff
++/- theorem Nat.toNat_emultiplicity
++ theorem le_multiplicity_iff_replicate_subperm_primeFactorsList
+- theorem le_padicValNat_iff_replicate_subperm_primeFactorsList
++ theorem mul_multiplicity_le
+- theorem mul_padicValNat_le
++ theorem multiplicity_eq_emultiplicity
++ theorem multiplicity_eq_emultiplicity_of_ne_one
+- theorem padicValNat.eq_zero_iff
+- theorem padicValNat_eq_emultiplicity
+- theorem padicValNat_eq_emultiplicity_of_ne_one
+Modified Mathlib/NumberTheory/SumTwoSquares.lean
+
+Modified Mathlib/RingTheory/DividedPowers/Padic.lean
+
+Modified Mathlib/RingTheory/Polynomial/Cyclotomic/Eval.lean
+
+
+
+
+2026-11-01 21:20:12 2094f6d
+
+chore(Algebra/Polynomial/Splits): cleanup empty sections (#45565)
+Cleanup a section at the end of `Mathlib.Algebra.Polynomial.Splits`, which is empty since #41178.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Polynomial/Splits.lean
+
+
+
+
+2026-11-01 18:05:40 079459b
+
+feat(UnusedTacticLinter): lint `try`, `all_goals`, `any_goals` (#44676)
+This PR extends the unused tactic linter to lint some tactic combinators: `all_goals`, `on_goals`, `try`, each with their own bespoke check. Before this PR, there was already special behaviour for `<;>` and `swap_vars`.
+
+ESTIMATED CHANGES
+Modified Archive/Examples/Kuratowski.lean
+
+Modified Mathlib/Tactic/Linter/UnusedTactic.lean
+
+Modified MathlibTest/Linter/Flexible/Basic.lean
+
+Modified MathlibTest/Linter/Multigoal.lean
+
+Modified MathlibTest/Linter/UnusedTactic.lean
+
+Modified MathlibTest/Tactic/BasicTactics.lean
+
+Modified MathlibTest/TacticAnalysis.lean
+
+Modified MathlibTest/Widget/CalcQuestionMark.lean
+
+
+
+
+2026-11-01 16:25:57 fafbe4e
+
+ci: find fork PRs in the zulip emoji reconcile workflow_run path (#45551)
+This PR fixes a bug where the GitHub API endpoint `commits/{sha}/pulls` queried on the base repo returns `[]` when the commit only exists in a fork, causing nearly every `workflow_run`-triggered job to skip the "Reconcile step", leaving CI emoji stale until the next hourly sweep. The fix is to simply query the CI run's head repository instead.
+
+ESTIMATED CHANGES
+Modified .github/workflows/zulip_emoji_reconcile.yml
+
+
+
+
+2026-11-01 13:42:07 6de3b12
+
+doc(SetTheory/Ordinal/FundamentalSequence): fix typo in docstring (#45490)
+The expression `o.cof.card` for `o : Ordinal` doesn't typecheck. I meant to write `o.cof.ord`, see e.g. [`Ordinal.IsFundamentalSeq.ord_cof`](https://leanprover-community.github.io/mathlib4_docs/Mathlib/SetTheory/Ordinal/FundamentalSequence.html#Ordinal.IsFundamentalSeq.ord_cof).
+
+ESTIMATED CHANGES
+Modified Mathlib/SetTheory/Ordinal/FundamentalSequence.lean
+
+
+
+
+2026-11-01 13:13:20 89f62b7
+
+feat(NumberTheory/DiophantineApproximation): prove Hurwitz's approximation theorem (#43281)
+Prove **Hurwitz's approximation theorem**: for irrational `ξ`, the set of rationals `q` with `|ξ - q| < 1 / (√5 * q.den ^ 2)` is infinite.
+This strengthens `Real.infinite_rat_abs_sub_lt_one_div_den_sq_of_irrational` from`Mathlib/NumberTheory/DiophantineApproximation/Basic.lean`, which gives the same statement with constant `1` instead of `√5`. The constant `√5` is optimal, though the sharpness (using the golden ratio) is not included here.
+The proof avoids continued fractions and opts for Farey brackets (quadruples `p/q < ξ < r/s` with `q * r - p * s = 1`) packaged as `Real.Hurwitz.IsFarey`. It uses the fact that at least one of `p/q`, `r/s`, and the mediant `(p + r)/(q + s)` satisfies the bound, as if not, we can contradict the irrationality of `√5`. By creating brackets of arbitrarily small width, infinitude follows by the same argument as in `Basic.lean`.
+Some design choices:
+* No `GenContFract` to avoid continued fractions/recursive sequences. This also follows the spirit of `Basic.lean`, which defines its own `Real.convergent` rather than building Legendre's theorem on `GenContFract.convs`.
+* `Real.Hurwitz` namespace. Mirrors `Real.ContfracLegendre` in `Basic.lean` by putting the main result in `Real` and the technical material in a secondary namespace.
+* `IsGoodApprox` is stated without division ** as `|y * ξ - x| * y * √5 < 1` for easier manipulation and linked to the quotient form in the actual theorem using `Real.Hurwitz.isGoodApprox_div_bound`.
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Added Mathlib/NumberTheory/DiophantineApproximation/Hurwitz.lean
++ theorem Real.Hurwitz.IsFarey.exists_isGoodApprox
++ theorem Real.Hurwitz.IsFarey.isGoodApprox_or
++ structure Real.Hurwitz.IsFarey
++ theorem Real.Hurwitz.IsGoodApprox.abs_sub_div_lt
++ def Real.Hurwitz.IsGoodApprox
++ theorem Real.Hurwitz.exists_isFarey_large
++ theorem Real.Hurwitz.exists_rat_abs_sub_lt_one_div_sqrt_five_mul_den_sq_and_lt_of_irrational
++ theorem Real.Hurwitz.isGoodApprox_iff
++ theorem Real.infinite_rat_abs_sub_lt_one_div_sqrt_five_mul_den_sq_of_irrational
+
+
+
+2026-11-01 09:13:34 bf20166
+
+feat(CategoryTheory/Limits/Types): lemmas about κ-filtered colimits of types (#45527)
+This PR adds lemmas about κ-filtered colimits of types, parallel to some existing lemmas for filtered colimits of types (which correspond to the case where κ is ℵ₀).
+It shows that any κ-small family in the colimit of a κ-filtered diagram of types can be lifted to a common stage of the diagram. It also shows that any κ-small family of elements in the diagram (potentially in different stages) that becomes equal in the colimit is already equalized at some stage of the diagram.
+These lemmas will be used to provide some extra lemmas on κ-presentable objects in categories.
+Part of the PR series on accessibility of category of algebras.
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Added Mathlib/CategoryTheory/Limits/Types/CardinalFiltered.lean
++ theorem CategoryTheory.Limits.Types.FilteredColimit.isColimit_eq_iff''_of_hasCardinalLT
++ theorem CategoryTheory.Limits.Types.FilteredColimit.isColimit_eq_iff'_of_hasCardinalLT
++ theorem CategoryTheory.Limits.Types.FilteredColimit.jointly_surjective_of_isColimit_of_hasCardinalLT
+
+
+
+2026-11-01 08:43:45 94c3288
+
+feat(RingTheory/MvPolynomial): define generic determinantal ideals (#40266)
+This PR adds a foundational API for determinantal ideals of the generic matrix.
+It defines `Matrix.MinorIndex`, the corresponding minors of the existing generic
+matrix `Matrix.mvPolynomialX`, the finite set of all `t × t` generic minors, and
+the ideal generated by these minors in `MvPolynomial (Fin m × Fin n) R`.
+It also proves basic membership, evaluation, coefficient-map/base-change, and
+finite-generation lemmas.
+This PR intentionally does not include the Sturmfels/KRS/straightening/Groebner
+part of the development.
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Modified Mathlib/LinearAlgebra/Matrix/Determinant/Basic.lean
++ theorem RingHom.map_det_submatrix
+Added Mathlib/RingTheory/MvPolynomial/DeterminantalIdeal.lean
++ theorem Matrix.aeval_mvPolynomialMinor
++ theorem Matrix.map_mvPolynomialMinor
++ theorem Matrix.mvPolynomialMinor_eq_det_submatrix
++ theorem Matrix.mvPolynomialMinor_one
++ theorem Matrix.mvPolynomialMinor_zero
++ theorem MvPolynomial.determinantalIdeal_eq_span_determinantalMinors
++ theorem MvPolynomial.determinantalIdeal_le_iff
++ theorem MvPolynomial.fg_determinantalIdeal
++ theorem MvPolynomial.map_determinantalIdeal
++ theorem MvPolynomial.mem_determinantalMinors
++ theorem MvPolynomial.mvPolynomialMinor_mem_determinantalIdeal
+
+
+
 2026-10-31 22:39:28 a2f96aa
 
 chore: remove straightforward redundant theorem hypotheses (#45526)
