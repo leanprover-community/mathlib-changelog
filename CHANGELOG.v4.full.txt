@@ -1,3 +1,584 @@
+2026-11-03 03:18:19 ed454dc
+
+chore: update Mathlib dependencies 2026-11-03 (#45603)
+This PR updates the Mathlib dependencies.
+It is not merged automatically: a maintainer should look at what the new
+dependency revisions bring in before sending it to bors.
+
+ESTIMATED CHANGES
+Modified .github/actions/get-mathlib-ci/action.yml
+
+
+
+
+2026-11-02 15:43:12 428aa82
+
+chore: missing `@[simp]` attributes for two `cfcHom` lemmas (#45486)
+
+ESTIMATED CHANGES
+Modified Mathlib/Analysis/CStarAlgebra/ContinuousFunctionalCalculus/NonUnital.lean
+
+Modified Mathlib/Analysis/CStarAlgebra/ContinuousFunctionalCalculus/Range.lean
+
+Modified Mathlib/Analysis/CStarAlgebra/ContinuousFunctionalCalculus/Unital.lean
+
+
+
+
+2026-11-02 15:00:29 74d5383
+
+chore(Geometry/Manifold/VectorBundle): rename iff lemmas about differentiability to mention `iff` (#45588)
+All these lemmas characterise differentiability using a trivialization, hence could mention `iff` as part of their name.
+They should, since there exist conceivable statements of the same name without the `iff`
+(e.g., about some section being differentiable).
+This also increases naming consistency: a number of similar lemmas in that file already use the `iff` naming.
+Zulip discussion supporting this: [#mathlib4 > Naming convention @ 💬](https://leanprover.zulipchat.com/#narrow/channel/287929-mathlib4/topic/Naming.20convention/near/636496147)
+
+ESTIMATED CHANGES
+Modified Mathlib/Geometry/Manifold/ContMDiffMFDeriv.lean
+
+Modified Mathlib/Geometry/Manifold/PartitionOfUnity.lean
+
+Modified Mathlib/Geometry/Manifold/Riemannian/Basic.lean
+
+Modified Mathlib/Geometry/Manifold/VectorBundle/Basic.lean
+- theorem Bundle.Trivialization.contMDiffWithinAt_section
++ theorem Bundle.Trivialization.contMDiffWithinAt_section_iff
+- theorem Bundle.contMDiffAt_section
++ theorem Bundle.contMDiffAt_section_iff
+- theorem Bundle.contMDiffAt_totalSpace
++ theorem Bundle.contMDiffAt_totalSpace_iff
+- theorem Bundle.contMDiffWithinAt_section
++ theorem Bundle.contMDiffWithinAt_section_iff
+- theorem Bundle.contMDiffWithinAt_totalSpace
++ theorem Bundle.contMDiffWithinAt_totalSpace_iff
+Modified Mathlib/Geometry/Manifold/VectorBundle/ContMDiffSection.lean
+
+Modified Mathlib/Geometry/Manifold/VectorBundle/ContinuousAlternatingMap.lean
+
+Modified Mathlib/Geometry/Manifold/VectorBundle/Hom.lean
+
+Modified Mathlib/Geometry/Manifold/VectorBundle/MDifferentiable.lean
+
+Modified Mathlib/Geometry/Manifold/VectorBundle/Riemannian.lean
+
+Modified Mathlib/Geometry/Manifold/VectorBundle/Tangent.lean
+
+
+
+
+2026-11-02 14:51:20 17f26bc
+
+refactor(MeasureTheory/Measure/Prokhorov): split long proof (#45375)
+Factor out two big `have` blocks in Prokhorov's theorem (one of the two > 200 line proofs in mathlib) into separate lemmas.
+
+ESTIMATED CHANGES
+Modified Mathlib/MeasureTheory/Measure/Prokhorov.lean
++ theorem MeasureTheory.FiniteMeasure.apply_le_of_tendsto_of_isOpen
++ theorem MeasureTheory.FiniteMeasure.tendsto_of_tendsto_restrict_disjointed
+
+
+
+2026-11-02 14:18:01 414cb94
+
+chore(RingTheory/DedekindDomain/Different): remove usage of `Ideal.ramificationIdx'` (#45416)
+This PR removes usages of `Ideal.ramificationIdx'` from `RingTheory/DedekindDomain/Different`, preparing the way for the eventual deprecation of `Ideal.ramificationIdx'`.
+
+ESTIMATED CHANGES
+Modified Mathlib/RingTheory/DedekindDomain/Different.lean
+
+Modified Mathlib/RingTheory/RamificationInertia/Ramification.lean
++ theorem Ideal.ramificationIdx_eq_one_iff_of_isSeparable
+
+
+
+2026-11-02 13:31:39 cc8b652
+
+chore(deps): bump the actions-version-updates group across 1 directory with 4 updates (#45559)
+Bumps the actions-version-updates group with 4 updates in the /.github/workflows directory: [actions/setup-python](https://github.com/actions/setup-python), [reviewdog/action-actionlint](https://github.com/reviewdog/action-actionlint), [leanprover/lean-action](https://github.com/leanprover/lean-action) and [docker/login-action](https://github.com/docker/login-action).
+
+ESTIMATED CHANGES
+Modified .github/workflows/PR_summary.yml
+
+Modified .github/workflows/actionlint.yml
+
+Modified .github/workflows/add_label_from_diff.yaml
+
+Modified .github/workflows/build_template.yml
+
+Modified .github/workflows/cache_test.yml
+
+Modified .github/workflows/check_pr_titles.yaml
+
+Modified .github/workflows/daily.yml
+
+Modified .github/workflows/docker_build.yml
+
+Modified .github/workflows/export_crossrefs.yml
+
+Modified .github/workflows/latest_import.yml
+
+Modified .github/workflows/lint_and_suggest_pr.yml
+
+Modified .github/workflows/nightly_merge_master.yml
+
+Modified .github/workflows/nolints.yml
+
+Modified .github/workflows/remove_deprecated_decls.yml
+
+Modified .github/workflows/rm_set_option.yml
+
+Modified .github/workflows/shake.yaml
+
+Modified .github/workflows/update_dependencies.yml
+
+Modified .github/workflows/update_dependencies_zulip.yml
+
+Modified .github/workflows/weekly-lints.yml
+
+
+
+
+2026-11-02 12:57:34 086e758
+
+refactor(Algebra/Star/StarRingHom): deprecate `NonUnitalStarRingHomClass` (#44575)
+It can be stated as `[NonUnitalRingHomClass F A B] [StarHomClass F A B]` instead.
+This is analogous to #16591 for the star algebra hom classes.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Order/Star/Basic.lean
+
+Modified Mathlib/Algebra/Star/StarAlgHom.lean
+
+Modified Mathlib/Algebra/Star/StarRingHom.lean
++/- def NonUnitalStarRingHom.ofClass
+
+
+
+2026-11-02 11:11:51 27ee06b
+
+chore(RingTheory/Congruence/Defs): fix an instance diamond (#45146)
+Found by the linter in #38781.
+
+ESTIMATED CHANGES
+Modified Mathlib/RingTheory/Congruence/Defs.lean
+
+
+
+
+2026-11-02 08:37:35 18516c0
+
+chore(CategoryTheory/ObjectProperty): fix wrong names (#45542)
+I gave a wrong name `..._eq_iSup` to a few lemmas instead of `..._eq_iInf`. This is fixed in this PR.
+
+ESTIMATED CHANGES
+Modified Mathlib/CategoryTheory/Limits/Types/PreservesLimit.lean
+
+Modified Mathlib/CategoryTheory/ObjectProperty/FunctorCategory/PreservesLimits.lean
++ theorem CategoryTheory.ObjectProperty.preservesColimitsOfShape_eq_iInf
+- theorem CategoryTheory.ObjectProperty.preservesColimitsOfShape_eq_iSup
++ theorem CategoryTheory.ObjectProperty.preservesFiniteColimits_eq_iInf
+- theorem CategoryTheory.ObjectProperty.preservesFiniteColimits_eq_iSup
++ theorem CategoryTheory.ObjectProperty.preservesFiniteLimits_eq_iInf
+- theorem CategoryTheory.ObjectProperty.preservesFiniteLimits_eq_iSup
++ theorem CategoryTheory.ObjectProperty.preservesLimitsOfShape_eq_iInf
+- theorem CategoryTheory.ObjectProperty.preservesLimitsOfShape_eq_iSup
+
+
+
+2026-11-02 08:37:32 5c9032c
+
+chore(RingTheory/FractionalIdeal): remove simp attribute from spanSingleton_inv (#45541)
+Since #44475 made `spanSingleton` a monoid with zero homomorphism, `map_inv₀` rewrites `spanSingleton _ x⁻¹` to `(spanSingleton _ x)⁻¹`, which is the reverse of the simp lemma `spanSingleton_inv`, so `simp` loops. This removes the `simp` attribute from `spanSingleton_inv`.
+Prepared with Claude Code 🤖
+
+ESTIMATED CHANGES
+Modified Mathlib/RingTheory/FractionalIdeal/Inverse.lean
+
+
+
+
+2026-11-02 08:37:29 40ccacc
+
+refactor(MeasureTheory/VectorMeasure): split long WithDensity proof (#45374)
+Split a > 200 line proof into more digestible pieces, by carving out a `have` block into a separate lemma
+
+ESTIMATED CHANGES
+Modified Mathlib/MeasureTheory/VectorMeasure/WithDensityVec.lean
++ theorem MeasureTheory.VectorMeasure.sum_enorm_setIntegral_le_variation_withDensity
+
+
+
+2026-11-02 08:37:26 df518a7
+
+refactor(RingTheory): make `ModuleCat.smulShortComplex` implicit reducible (#44524)
+Currently, we are facing trouble on identification of `X_1` and `X_2` in short complex `M => M => M/xM => 0`. Further benefits of this change can be seen in #32098
+
+ESTIMATED CHANGES
+Modified Mathlib/RingTheory/Regular/Category.lean
+
+Modified Mathlib/RingTheory/Regular/ProjectiveDimension.lean
+
+
+
+
+2026-11-02 08:37:23 abea571
+
+chore(Order/RelClasses): remove redundant instances (#43608)
+Some instances can be synthesized but are necessary to help `to_dual`, so they are kept.
+
+ESTIMATED CHANGES
+Modified Mathlib/Order/Quotient.lean
+
+Modified Mathlib/Order/RelClasses.lean
+- theorem isTrans_le
+- theorem isTrans_lt
+Modified Mathlib/RingTheory/Valuation/ValuationSubring.lean
+
+Modified Mathlib/SetTheory/ZFC/Basic.lean
+
+
+
+
+2026-11-02 08:15:57 dd67281
+
+refactor(Algebra/Polynomial): make into an `abbrev` of `AddMonoidAlgebra` (#41981)
+... and deprecate the declarations that are now tautological (`toFinsupp`/`ofFinsupp`, `coeff` and their API). For some of the `Polynomial` declarations that needed changing, it was simplest to replace them with the corresponding `AddMonoidAlgebra` one. Note that this replacement is far from exhaustive (a majority of the `Polynomial` API could be replaced this way).
+Note that `algebraMap R R[X]` has changed defeq.
+[Zulip](https://leanprover.zulipchat.com/#narrow/channel/287929-mathlib4/topic/Reworking.20Finsupp.2C.20MonoidAlgebra.2C.20HahnSeries.2E.20PowerSeries/with/609275708)
+Generated through several rounds of manual review with Claude Opus. Heavily edited by hand afterwards.
+Assisted-by: Claude Opus 4.8
+
+ESTIMATED CHANGES
+Modified Counterexamples/Cyclotomic105.lean
++/- theorem Counterexample.coeff_cyclotomic_105
+Modified Counterexamples/MapFloor.lean
++/- theorem Counterexample.IntWithEpsilon.forgetEpsilons_apply
+Modified Counterexamples/MonicNonRegular.lean
+
+Modified Mathlib/Algebra/CubicDiscriminant.lean
+
+Modified Mathlib/Algebra/Lie/Rank.lean
+
+Modified Mathlib/Algebra/Module/LinearMap/Polynomial.lean
+
+Modified Mathlib/Algebra/MonoidAlgebra/MapDomain.lean
+
+Modified Mathlib/Algebra/MonoidAlgebra/Support.lean
++ theorem MonoidAlgebra.card_support_coeff_mul_le
+Modified Mathlib/Algebra/MvPolynomial/Equiv.lean
+
+Modified Mathlib/Algebra/Polynomial/AlgebraMap.lean
++/- theorem Polynomial.ofFinsupp_algebraMap
++ theorem Polynomial.toFinsuppIsoAlg_symm_apply_toFinsupp
+Modified Mathlib/Algebra/Polynomial/Basic.lean
++ theorem Polynomial.X_eq_single
+- def Polynomial.coeff
++/- theorem Polynomial.coeff_C_zero
++/- theorem Polynomial.coeff_X
++/- theorem Polynomial.coeff_X_one
++/- theorem Polynomial.coeff_X_zero
+- theorem Polynomial.coeff_inj
+- theorem Polynomial.coeff_injective
++/- theorem Polynomial.coeff_monomial
++ theorem Polynomial.coeff_monomial_apply
++/- theorem Polynomial.coeff_monomial_succ
++/- theorem Polynomial.coeff_neg
++/- theorem Polynomial.coeff_ofFinsupp
++/- theorem Polynomial.coeff_ofNat_succ
++/- theorem Polynomial.coeff_ofNat_zero
+- theorem Polynomial.coeff_one_zero
++/- theorem Polynomial.coeff_sub
++/- theorem Polynomial.coeff_update_same
+- def Polynomial.erase
++/- theorem Polynomial.erase_monomial
++/- theorem Polynomial.erase_same
+- theorem Polynomial.erase_zero
++/- theorem Polynomial.eta
++/- theorem Polynomial.exists_iff_exists_finsupp
+- theorem Polynomial.ext
+- theorem Polynomial.ext_iff
++/- theorem Polynomial.forall_iff_forall_finsupp
++/- theorem Polynomial.monomial_add_erase
++ def Polynomial.ofFinsupp
++/- theorem Polynomial.ofFinsupp_add
++/- theorem Polynomial.ofFinsupp_eq_one
++/- theorem Polynomial.ofFinsupp_eq_zero
++/- theorem Polynomial.ofFinsupp_inj
++/- theorem Polynomial.ofFinsupp_intCast
++/- theorem Polynomial.ofFinsupp_mul
++/- theorem Polynomial.ofFinsupp_natCast
++/- theorem Polynomial.ofFinsupp_neg
++/- theorem Polynomial.ofFinsupp_nsmul
++/- theorem Polynomial.ofFinsupp_ofNat
++/- theorem Polynomial.ofFinsupp_one
++/- theorem Polynomial.ofFinsupp_pow
++/- theorem Polynomial.ofFinsupp_single
++/- theorem Polynomial.ofFinsupp_sub
++/- theorem Polynomial.ofFinsupp_zero
++ theorem Polynomial.single_eq_monomial
++/- theorem Polynomial.sum_monomial_eq
++/- def Polynomial.support
++ theorem Polynomial.support_ofCoeff
++/- theorem Polynomial.support_ofFinsupp
++/- theorem Polynomial.support_toFinsupp
++ def Polynomial.toFinsupp
++/- def Polynomial.toFinsuppIso
++/- def Polynomial.toFinsuppIsoLinear
++ theorem Polynomial.toFinsuppIsoLinear_symm_apply_toFinsupp
++/- theorem Polynomial.toFinsupp_C
++/- theorem Polynomial.toFinsupp_C_mul_X_pow
++/- theorem Polynomial.toFinsupp_X_pow
++/- theorem Polynomial.toFinsupp_apply
++/- theorem Polynomial.toFinsupp_eq_one
++/- theorem Polynomial.toFinsupp_eq_zero
++/- theorem Polynomial.toFinsupp_erase
++/- theorem Polynomial.toFinsupp_inj
++/- theorem Polynomial.toFinsupp_injective
++/- theorem Polynomial.toFinsupp_monomial
++/- theorem Polynomial.toFinsupp_pow
++/- theorem Polynomial.toFinsupp_zero
+- def Polynomial.update
+- structure Polynomial
+Modified Mathlib/Algebra/Polynomial/Basis.lean
++/- theorem Polynomial.coe_basisMonomials
+Modified Mathlib/Algebra/Polynomial/BigOperators.lean
+
+Modified Mathlib/Algebra/Polynomial/Cardinal.lean
++/- theorem Polynomial.cardinalMk_eq_max
+Modified Mathlib/Algebra/Polynomial/Coeff.lean
++/- theorem Polynomial.card_support_mul_le
++/- theorem Polynomial.coeff_C_mul
++/- theorem Polynomial.coeff_add
++/- theorem Polynomial.coeff_mul_C
+- theorem Polynomial.coeff_smul
++/- theorem Polynomial.mul_X_pow_eq_zero
++/- theorem Polynomial.smul_eq_C_mul
+Modified Mathlib/Algebra/Polynomial/CoeffList.lean
+
+Modified Mathlib/Algebra/Polynomial/CoeffMem.lean
+
+Modified Mathlib/Algebra/Polynomial/Degree/Defs.lean
+
+Modified Mathlib/Algebra/Polynomial/Degree/Domain.lean
+
+Modified Mathlib/Algebra/Polynomial/Degree/IsMonicOfDegree.lean
+
+Modified Mathlib/Algebra/Polynomial/Degree/Lemmas.lean
+
+Modified Mathlib/Algebra/Polynomial/Degree/Operations.lean
++/- theorem Polynomial.supDegree_eq_degree
+Modified Mathlib/Algebra/Polynomial/Degree/SmallDegree.lean
++/- theorem Polynomial.eq_X_add_C_of_degree_le_one
+Modified Mathlib/Algebra/Polynomial/Degree/Support.lean
++/- theorem Polynomial.supDegree_eq_natDegree
+Modified Mathlib/Algebra/Polynomial/Degree/TrailingDegree.lean
+
+Modified Mathlib/Algebra/Polynomial/Degree/Units.lean
+
+Modified Mathlib/Algebra/Polynomial/Derivative.lean
+
+Modified Mathlib/Algebra/Polynomial/Div.lean
+
+Modified Mathlib/Algebra/Polynomial/EraseLead.lean
++/- theorem Polynomial.eraseLead_zero
+Modified Mathlib/Algebra/Polynomial/Eval/Algebra.lean
+
+Modified Mathlib/Algebra/Polynomial/Eval/Coeff.lean
++/- theorem Polynomial.map_id
++/- theorem Polynomial.map_injective
++/- theorem Polynomial.map_map
+Modified Mathlib/Algebra/Polynomial/Eval/Defs.lean
++ theorem Polynomial.eval₂_eq_liftNC
+Modified Mathlib/Algebra/Polynomial/Eval/Degree.lean
+
+Modified Mathlib/Algebra/Polynomial/Expand.lean
++/- theorem Polynomial.contract_one
++/- theorem Polynomial.expand_injective
+Modified Mathlib/Algebra/Polynomial/FieldDivision.lean
+
+Modified Mathlib/Algebra/Polynomial/GroupRingAction.lean
+
+Modified Mathlib/Algebra/Polynomial/HasseDeriv.lean
+
+Modified Mathlib/Algebra/Polynomial/Homogenize.lean
+
+Modified Mathlib/Algebra/Polynomial/Inductions.lean
++/- theorem Polynomial.X_mul_divX_add
++/- theorem Polynomial.divX_C
++/- theorem Polynomial.divX_add
++/- theorem Polynomial.divX_mul_X_add
+Modified Mathlib/Algebra/Polynomial/Laurent.lean
+
+Modified Mathlib/Algebra/Polynomial/Lifts.lean
+
+Modified Mathlib/Algebra/Polynomial/Mirror.lean
++/- theorem Polynomial.mirror_mirror
++/- theorem Polynomial.mirror_natDegree
+Modified Mathlib/Algebra/Polynomial/Module/Basic.lean
+
+Modified Mathlib/Algebra/Polynomial/Monic.lean
+
+Modified Mathlib/Algebra/Polynomial/Monomial.lean
++/- theorem Polynomial.monomial_one_eq_iff
+Modified Mathlib/Algebra/Polynomial/OfFn.lean
+
+Modified Mathlib/Algebra/Polynomial/Reverse.lean
+
+Modified Mathlib/Algebra/Polynomial/Roots.lean
+
+Modified Mathlib/Algebra/Polynomial/RuleOfSigns.lean
+
+Modified Mathlib/Algebra/Polynomial/Sequence.lean
+
+Modified Mathlib/Algebra/Polynomial/Splits.lean
+
+Modified Mathlib/Algebra/Polynomial/UnitTrinomial.lean
+
+Modified Mathlib/Algebra/Ring/Subring/IntPolynomial.lean
+
+Modified Mathlib/AlgebraicGeometry/EllipticCurve/DivisionPolynomial/Degree.lean
+
+Modified Mathlib/Analysis/Polynomial/CauchyBound.lean
+
+Modified Mathlib/Analysis/Polynomial/Fourier.lean
+
+Modified Mathlib/Combinatorics/Nullstellensatz.lean
+
+Modified Mathlib/FieldTheory/Finite/Basic.lean
+
+Modified Mathlib/FieldTheory/Minpoly/Basic.lean
+
+Modified Mathlib/FieldTheory/Minpoly/Field.lean
++/- theorem minpoly.coeff_zero_eq_zero
++/- theorem minpoly.coeff_zero_ne_zero
+Modified Mathlib/FieldTheory/Minpoly/MinpolyDiv.lean
++/- theorem coeff_minpolyDiv
+Modified Mathlib/FieldTheory/SeparablyGenerated.lean
+
+Modified Mathlib/LinearAlgebra/Finsupp/VectorSpace.lean
+
+Modified Mathlib/LinearAlgebra/Lagrange.lean
+
+Modified Mathlib/LinearAlgebra/Matrix/Charpoly/Coeff.lean
+
+Modified Mathlib/LinearAlgebra/Matrix/Charpoly/Univ.lean
+
+Modified Mathlib/LinearAlgebra/Matrix/GeneralLinearGroup/FinTwo.lean
+
+Modified Mathlib/LinearAlgebra/Matrix/Polynomial.lean
+
+Modified Mathlib/NumberTheory/BernoulliPolynomials.lean
+
+Modified Mathlib/RingTheory/AdjoinRoot.lean
+
+Modified Mathlib/RingTheory/Algebraic/Basic.lean
+
+Modified Mathlib/RingTheory/Algebraic/Integral.lean
+
+Modified Mathlib/RingTheory/Algebraic/StronglyTranscendental.lean
+
+Modified Mathlib/RingTheory/Artinian/Instances.lean
+
+Modified Mathlib/RingTheory/Derivation/MapCoeffs.lean
++/- theorem Derivation.mapCoeffs_apply
+Modified Mathlib/RingTheory/Ideal/GoingUp.lean
+
+Modified Mathlib/RingTheory/IntegralClosure/IsIntegralClosure/Basic.lean
+
+Modified Mathlib/RingTheory/Invariant/Basic.lean
+
+Modified Mathlib/RingTheory/IsAdjoinRoot.lean
+
+Modified Mathlib/RingTheory/Jacobson/Polynomial.lean
+
+Modified Mathlib/RingTheory/Jacobson/Ring.lean
+
+Modified Mathlib/RingTheory/KrullDimension/Polynomial.lean
+
+Modified Mathlib/RingTheory/LocalRing/ResidueField/Polynomial.lean
+
+Modified Mathlib/RingTheory/Localization/Integral.lean
+
+Modified Mathlib/RingTheory/MatrixPolynomialAlgebra.lean
+
+Modified Mathlib/RingTheory/MvPolynomial/Homogeneous.lean
+
+Modified Mathlib/RingTheory/Norm/Basic.lean
+
+Modified Mathlib/RingTheory/Polynomial/Basic.lean
++/- theorem Polynomial.coeff_restriction'
++/- theorem Polynomial.coeff_restriction
++/- theorem Polynomial.restriction_one
++/- theorem exists_C_coeff_notMem
++/- theorem mem_span_C_coeff
+Modified Mathlib/RingTheory/Polynomial/Cyclotomic/Basic.lean
+
+Modified Mathlib/RingTheory/Polynomial/Cyclotomic/Roots.lean
+
+Modified Mathlib/RingTheory/Polynomial/Eisenstein/IsIntegral.lean
+
+Modified Mathlib/RingTheory/Polynomial/Hermite/Basic.lean
+
+Modified Mathlib/RingTheory/Polynomial/HilbertPoly.lean
+
+Modified Mathlib/RingTheory/Polynomial/Ideal.lean
+
+Modified Mathlib/RingTheory/Polynomial/IntegralNormalization.lean
+
+Modified Mathlib/RingTheory/Polynomial/IrreducibleRing.lean
+
+Modified Mathlib/RingTheory/Polynomial/Nilpotent.lean
+
+Modified Mathlib/RingTheory/Polynomial/Opposites.lean
+
+Modified Mathlib/RingTheory/Polynomial/Quotient.lean
+
+Modified Mathlib/RingTheory/Polynomial/ScaleRoots.lean
+
+Modified Mathlib/RingTheory/Polynomial/Subring.lean
+
+Modified Mathlib/RingTheory/Polynomial/Vieta.lean
+
+Modified Mathlib/RingTheory/PolynomialAlgebra.lean
+
+Modified Mathlib/RingTheory/PowerBasis.lean
+
+Modified Mathlib/RingTheory/PowerSeries/Basic.lean
++/- theorem Polynomial.coe_def
++/- theorem Polynomial.coeff_coe
+Modified Mathlib/RingTheory/PowerSeries/Derivative.lean
+
+Modified Mathlib/RingTheory/PowerSeries/Trunc.lean
++/- theorem PowerSeries.trunc_C
++/- theorem PowerSeries.trunc_one
+Modified Mathlib/RingTheory/QuasiFinite/Polynomial.lean
+
+Modified Mathlib/RingTheory/ReesAlgebra.lean
+
+Modified Mathlib/RingTheory/Spectrum/Prime/ChevalleyComplexity.lean
+
+Modified Mathlib/RingTheory/Spectrum/Prime/IsOpenComapC.lean
+
+Modified Mathlib/RingTheory/Spectrum/Prime/Polynomial.lean
+
+Modified Mathlib/RingTheory/Spectrum/Prime/Topology.lean
+
+Modified Mathlib/RingTheory/Trace/Basic.lean
+
+Modified Mathlib/RingTheory/ZariskisMainTheorem.lean
+
+Modified Mathlib/Tactic/ComputeDegree.lean
+
+Modified Mathlib/Tactic/ReduceModChar.lean
+
+Modified MathlibTest/ComputeDegree.lean
+
+Modified MathlibTest/InstanceDiamonds.lean
+
+
+
+
 2026-11-02 01:57:40 1b1ccf4
 
 chore: remove empty sections (#45568)
