@@ -1,3 +1,762 @@
+2026-11-04 01:08:41 a8f44fc
+
+feat(Basic/Countable/Basic): option type is (un)countable iff type is (#45616)
+The option type is (un)countable if and only the type is (un)countable.
+Before merging #39567 , @felixpernegger suggested proving the analogous result 
+for countable and uncountable types. Here is the PR for such results.
+
+ESTIMATED CHANGES
+Modified Mathlib/Basic/Countable/Basic.lean
++ theorem Option.countable_iff
++ theorem Option.uncountable_iff
+
+
+
+2026-11-04 01:08:39 3f0dd46
+
+chore: remove `set_option` in `DyckWord` (#45155)
+
+ESTIMATED CHANGES
+Modified Mathlib/Combinatorics/Enumerative/DyckWord.lean
+
+
+
+
+2026-11-04 01:08:36 12b8ea7
+
+refactor(Combinatorics/SimpleGraph): reuse leaf connectivity proof (#45091)
+While reviewing the graph API, I noticed that the proof of
+```
+Connected.induce_compl_singleton_of_degree_eq_one
+```
+can be shortened using
+```
+Preconnected.induce_of_degree_eq_one (s := {v}ᶜ)
+```
+The unique neighbor handles nonemptiness. This removes the duplicate proof and moves the lemma from `Acyclic` to `Connectivity.Connected`. No API changes required, and the lemma can be imported without `Acyclic`.
+
+ESTIMATED CHANGES
+Modified Mathlib/Combinatorics/SimpleGraph/Acyclic.lean
+- theorem SimpleGraph.Connected.induce_compl_singleton_of_degree_eq_one
+Modified Mathlib/Combinatorics/SimpleGraph/Connectivity/Connected.lean
++ theorem SimpleGraph.Connected.induce_compl_singleton_of_degree_eq_one
+
+
+
+2026-11-04 01:08:33 cfd1fb3
+
+chore(Algebra/Notation/Pi/Basic): add simp lemma to resolve confluence issue (#44890)
+#34083, adding `Set.indicator_singleton`, made simp non-confluent: the following example fails on current master:
+```
+import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+example : ({0} : Set ℝ).indicator 1 =ᵐ[MeasureTheory.volume] (0 : ℝ → ℝ) := by
+  simp [-Set.indicator_singleton, Filter.EventuallyEq, MeasureTheory.ae_iff]
+```
+Add a simp lemma to resolve this issue.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Notation/Pi/Basic.lean
++ theorem Pi.mulSingle_eq_one_iff'
+
+
+
+2026-11-04 01:08:30 9793efa
+
+chore(Combinatorics/SimpleGraph): golf `Coloring.odd_length_iff_not_c… (#44137)
+…ongr`
+
+ESTIMATED CHANGES
+Modified Mathlib/Combinatorics/SimpleGraph/Coloring/Constructions.lean
+
+
+
+
+2026-11-04 00:30:13 ef82364
+
+feat(Order/Interval/Finset/Basic): `Finset.Iic_one` (#45615)
+- `Finset.Iic_one : Iic (1 : α) = {1}` for `IsBotOneClass α`, and its additive version `Finset.Iic_zero`, both `simp`.
+
+ESTIMATED CHANGES
+Modified Mathlib/Order/Interval/Finset/Basic.lean
++ theorem Finset.Iic_one
+
+
+
+2026-11-04 00:05:40 3996015
+
+feat(AlgebraicGeometry): scheme level order of vanishing api (#43273)
+In this PR, we develop some API for the order of vanishing of rational functions on schemes. We also change the file structure of order of vanishing in algebraic geometry to more closely mirror that of the ring theoretic order of vanishing results.
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Modified Mathlib/AlgebraicGeometry/AffineScheme.lean
++ theorem AlgebraicGeometry.IsAffineOpen.mem_basicOpen_iff_notMem_primeIdealOf
+Modified Mathlib/AlgebraicGeometry/FunctionField.lean
+
+Renamed Mathlib/AlgebraicGeometry/OrderOfVanishing.lean to Mathlib/AlgebraicGeometry/OrderOfVanishing/Basic.lean
++ theorem AlgebraicGeometry.Scheme.algebraMap_functionField_ne_zero
+- theorem AlgebraicGeometry.Scheme.ord_add
++ theorem AlgebraicGeometry.Scheme.ord_algebraMap_eq_zero_of_isUnit
++ theorem AlgebraicGeometry.Scheme.ord_algebraMap_nonneg
++ theorem AlgebraicGeometry.Scheme.ord_algebraMap_section_nonneg
++ theorem AlgebraicGeometry.Scheme.ord_div
++ theorem AlgebraicGeometry.Scheme.ord_eq_zero_of_mem_basicOpen
++ theorem AlgebraicGeometry.Scheme.ord_inv
++ theorem AlgebraicGeometry.Scheme.ord_neg
++ theorem AlgebraicGeometry.Scheme.ord_one
++ theorem AlgebraicGeometry.Scheme.ord_pow
++ theorem AlgebraicGeometry.Scheme.ord_prod
++ theorem AlgebraicGeometry.Scheme.ord_zpow
+Added Mathlib/AlgebraicGeometry/OrderOfVanishing/DVR.lean
++ theorem AlgebraicGeometry.Scheme.coheight_eq_one_of_isDiscreteValuationRing
++ theorem AlgebraicGeometry.Scheme.exists_algebraMap_eq_iff_ord_nonneg
++ theorem AlgebraicGeometry.Scheme.mem_maximalIdeal_iff_one_le_ord
++ theorem AlgebraicGeometry.Scheme.one_le_ord_iff_notMem_basicOpen
++ theorem AlgebraicGeometry.Scheme.ord_add
++ theorem AlgebraicGeometry.Scheme.ord_algebraMap_eq_of_eq_unit_mul_pow
++ theorem AlgebraicGeometry.Scheme.ord_algebraMap_irreducible
++ theorem AlgebraicGeometry.Scheme.ord_zpow_algebraMap_irreducible
+Modified Mathlib/AlgebraicGeometry/Restrict.lean
+
+
+
+
+2026-11-03 23:55:27 d4bda67
+
+feat(NumberTheory/LSeries): the Wiener-Ikehara Tauberian theorem (#43233)
+This PR adds the Wiener–Ikehara Tauberian theorem (`WienerIkehara` /
+`tendsto_sum_div` and friends) in `Mathlib/NumberTheory/LSeries/WienerIkehara.lean`,
+the analytic engine behind the (weak) prime number theorem.  This theorem gives an asymptotic for `∑ n ∈ .Icc 0 ⌊x⌋₊, f n` for nonnegative `f` provided that `LSeries f` admits a continuous extension to `{s | 1 ≤ s.re}` after removing a simple pole at `s=1`.   
+Mathematically, an advantage of this theorem is that no bounds on `LSeries f` are required at all; continuity (after removing the pole) is the only hypothesis.  The disadvantage is that the conclusion is purely qualitative: no rate of convergence can be extracted.
+This result gives the weak prime number theorem (in both von Mangoldt and Mobius forms) quite easily, as well as a version in arithmetic progressions, using existing Mathlib support for Riemann zeta and Dirichlet L-functions.  This will be done in a separate PR.
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Modified Mathlib/Analysis/Fourier/Notation.lean
++ theorem FourierTransform.fourierInv_sub
++ theorem FourierTransform.fourier_sub
+Modified Mathlib/Analysis/SpecialFunctions/ImproperIntegrals.lean
++ theorem integral_cexp_neg_mul_Ioi_neg_log
+Added Mathlib/NumberTheory/LSeries/WienerIkehara.lean
++ theorem WienerIkehara.tendsto_sum_div
++ theorem WienerIkehara.tendsto_sum_div_smooth
++ theorem WienerIkehara.tendsto_sum_div_smooth_real
++ theorem WienerIkehara.tendsto_sum_range_div
+
+
+
+2026-11-03 20:57:30 80ac13c
+
+chore: use `map_continuous` or `fun_prop` instead of `.2` which is `continuous_toFun` (#45600)
+This is just a bit of code hygiene that arose during the creation of the linter for numeric projections.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Category/ModuleCat/Topology/Basic.lean
+
+Modified Mathlib/AlgebraicGeometry/Scheme.lean
++/- theorem AlgebraicGeometry.Scheme.Hom.continuous
+Modified Mathlib/CategoryTheory/Extensive.lean
+
+Modified Mathlib/Condensed/Discrete/LocallyConstant.lean
+
+Modified Mathlib/MeasureTheory/Category/MeasCat.lean
+
+Modified Mathlib/MeasureTheory/Integral/RieszMarkovKakutani/Basic.lean
+
+Modified Mathlib/MeasureTheory/Integral/RieszMarkovKakutani/Real.lean
+
+Modified Mathlib/MeasureTheory/Measure/Haar/Unique.lean
+
+Modified Mathlib/Topology/Algebra/ContinuousAffineEquiv.lean
+
+Modified Mathlib/Topology/Algebra/SeparationQuotient/Hom.lean
+
+Modified Mathlib/Topology/Category/CompHaus/Basic.lean
+
+Modified Mathlib/Topology/Category/Compactum.lean
+
+Modified Mathlib/Topology/Category/Profinite/Basic.lean
+
+Modified Mathlib/Topology/Category/Stonean/Basic.lean
+
+Modified Mathlib/Topology/Category/Stonean/Limits.lean
+
+Modified Mathlib/Topology/Category/TopCat/Limits/Basic.lean
+
+Modified Mathlib/Topology/Category/TopCat/Limits/Products.lean
+
+Modified Mathlib/Topology/Category/TopCommRingCat.lean
+
+Modified Mathlib/Topology/ClopenBox.lean
+
+Modified Mathlib/Topology/CompactOpen.lean
+
+Modified Mathlib/Topology/Compactness/CompactlyGeneratedSpace.lean
+
+Modified Mathlib/Topology/Connected/TotallyDisconnected.lean
+
+Modified Mathlib/Topology/ContinuousMap/Algebra.lean
+
+Modified Mathlib/Topology/ContinuousMap/Basic.lean
+
+Modified Mathlib/Topology/ContinuousMap/BoundedCompactlySupported.lean
+
+Modified Mathlib/Topology/ContinuousMap/CompactlySupported.lean
+
+Modified Mathlib/Topology/Convenient/GeneratedBy.lean
+
+Modified Mathlib/Topology/Gluing.lean
+
+Modified Mathlib/Topology/Homotopy/HomotopyGroup.lean
+
+Modified Mathlib/Topology/Homotopy/Lifting.lean
+
+Modified Mathlib/Topology/Sheaves/LocalPredicate.lean
+
+Modified Mathlib/Topology/UniformSpace/CompactConvergence.lean
+
+Modified Mathlib/Topology/UniformSpace/Real.lean
+
+
+
+
+2026-11-03 20:57:26 92e2522
+
+feat(GroupTheory/Coset/Card): quotients of countable groups are countable (#45597)
+This PR adds a `Countable (α ⧸ s)` instance (as `QuotientGroup` is not instance-reducible).
+
+ESTIMATED CHANGES
+Modified Mathlib/GroupTheory/Coset/Card.lean
+
+
+
+
+2026-11-03 20:05:17 dd0b07e
+
+chore(RingTheory/Ideal/Operations): golf long proof (#45622)
+Simplify the proof of prime avoidance
+
+ESTIMATED CHANGES
+Modified Mathlib/RingTheory/Ideal/Operations.lean
++/- theorem Ideal.subset_union_prime'
++/- theorem Ideal.subset_union_prime
+
+
+
+2026-11-03 20:05:14 5f770fa
+
+chore(NumberTheory/ModularForms): fix tech debt (#45606)
+Remove numerous `backward.isDefEq.respectTransparency false` flags and other tech debt in the modular forms library.
+
+ESTIMATED CHANGES
+Modified Mathlib/NumberTheory/Modular.lean
+
+Modified Mathlib/NumberTheory/ModularForms/Basic.lean
+
+Modified Mathlib/NumberTheory/ModularForms/Bounds.lean
+
+Modified Mathlib/NumberTheory/ModularForms/CongruenceSubgroups.lean
+
+Modified Mathlib/NumberTheory/ModularForms/Cusps.lean
+
+Modified Mathlib/NumberTheory/ModularForms/Discriminant.lean
+
+Modified Mathlib/NumberTheory/ModularForms/EisensteinSeries/E2/Defs.lean
+
+Modified Mathlib/NumberTheory/ModularForms/EisensteinSeries/E2/Transform.lean
+
+Modified Mathlib/NumberTheory/ModularForms/Identities.lean
+
+Modified Mathlib/NumberTheory/ModularForms/SlashActions.lean
+
+
+
+
+2026-11-03 20:05:11 4ab310d
+
+feat(GroupTheory/QuotientGroup): add `QuotientGroup.map_injective_iff` (#45580)
+The map `G/N →* H/M` induced by `f : G →* H` is injective iff  `M.comap f ≤ N`.
+
+ESTIMATED CHANGES
+Modified Mathlib/GroupTheory/QuotientGroup/Defs.lean
++ theorem QuotientGroup.map_injective_iff
+
+
+
+2026-11-03 19:04:54 faf5f05
+
+chore: remove various superfluous set options (#45044)
+- The `header` doesn't fire on import-only files any more, so need not be disabled there.
+- One comment is obsolete, as the linter has also been fixed.
+- Another option is superfluous; two more are easy to fix.
+
+ESTIMATED CHANGES
+Modified Mathlib/CategoryTheory/Idempotents/FunctorExtension.lean
+
+Modified Mathlib/Probability/Process/Filtration.lean
+
+Modified Mathlib/RingTheory/Valuation/LocalSubring.lean
+
+Modified Mathlib/Tactic/CancelDenoms.lean
+
+Modified Mathlib/Tactic/Linter.lean
+
+Modified Mathlib/Tactic/Monotonicity.lean
+
+Modified Mathlib/Tactic/NormNum.lean
+
+Modified Mathlib/Tactic/Positivity.lean
+
+Modified Mathlib/Tactic/Ring.lean
+
+Modified Mathlib/Tactic/ToAdditive.lean
+
+Modified MathlibTest/FunPropMinimal.lean
+
+
+
+
+2026-11-03 18:07:25 1df8067
+
+chore: fix docstring in AddMonoidAlgebra.algebra (#45618)
+just do it.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/MonoidAlgebra/Basic.lean
+
+
+
+
+2026-11-03 15:21:00 5f44e80
+
+feat(RingTheory/Unramified/Finite): add `inertiaIdempotent` (#45390)
+This PR adds certain idempotent elements that exist when a group acts on an unramified extension of rings.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Algebra/Hom.lean
++ theorem MulSemiringAction.toAlgHom_one
+Modified Mathlib/Algebra/GroupWithZero/Idempotent.lean
+
+Modified Mathlib/RingTheory/Unramified/Finite.lean
++ theorem Algebra.FormallyUnramified.inertiaIdempotent_one
++ theorem Algebra.FormallyUnramified.isIdempotentElem_inertiaIdempotent
++ theorem Algebra.FormallyUnramified.mk_inertiaIdempotent
++ theorem Algebra.FormallyUnramified.mk_inertiaIdempotent_eq_one_iff
++ theorem Algebra.FormallyUnramified.smul_mul_inertiaIdempotent
+
+
+
+2026-11-03 13:32:43 2658fa5
+
+ci: support Batteries adaptation PRs (#45478)
+Support Batteries adaptations as ordinary Mathlib PRs from `mathlib4-adaptations`.
+- Allow full commit pins during PR tests. Bors still requires stable dependency references.
+- Reuse `lean-pr-testing-comments.sh` in a separate job with the `mathlib-adaptations-status` App. Preserve status comments, labels, and `awaiting-mathlib` notifications.
+- Skip reports for superseded Mathlib commits or outdated Batteries pins.
+Keep push builds and status reports for existing adaptations in `mathlib4-nightly-testing`, with their current App. This lets this PR merge before Batteries #2049. TODOs mark the temporary reporting job and documentation for removal after those adaptations move.
+Validation: CI's Actionlint passes for the shared workflow and all five callers. The restored job matches the existing reporting behavior. Live validation is pending.
+- [x] depends on: leanprover-community/mathlib-ci#95
+Prepared with Codex.
+
+ESTIMATED CHANGES
+Modified .github/workflows/build_template.yml
+
+Modified .github/workflows/ci_dev.yml
+
+Modified docs/workflows.md
+
+
+
+
+2026-11-03 12:51:34 2467052
+
+chore(NumberTheory/NumberField): deprecate duplicate `fundamentalCone.equivFinRank` (#44597)
+Deprecate `NumberField.mixedEmbedding.fundamentalCone.equivFinRank`, a copy of `NumberField.Units.equivFinRank`, and use the latter in `NormLeOne.lean`.
+
+ESTIMATED CHANGES
+Modified Mathlib/NumberTheory/NumberField/CanonicalEmbedding/NormLeOne.lean
+- def NumberField.mixedEmbedding.fundamentalCone.equivFinRank
+
+
+
+2026-11-03 11:20:56 f1f9827
+
+feat(Topology/Separation/Basic): dense sets in infinite T1 spaces are infinite (#45577)
+
+ESTIMATED CHANGES
+Modified Mathlib/Topology/Closure.lean
++ theorem IsClosed.dense_iff
+Modified Mathlib/Topology/Separation/Basic.lean
++ theorem Dense.infinite
+
+
+
+2026-11-03 10:22:49 296b5b4
+
+feat(RingTheory/Unramified/Finite): add `equalizerIdempotent` (#45499)
+This PR adds certain idempotent elements that capture the equalizer of two algebra homomorphisms from an unramified extension of rings.
+Mostly written by hand, but I got some help with `equalizerIdempotent_mul_eq_iff`.
+
+ESTIMATED CHANGES
+Modified Mathlib/RingTheory/TensorProduct/Maps.lean
++ theorem Algebra.TensorProduct.comp_productMap
+Modified Mathlib/RingTheory/Unramified/Finite.lean
++ theorem Algebra.FormallyUnramified.apply_mul_equalizerIdempotent
++ theorem Algebra.FormallyUnramified.equalizerIdempotent_comm
++ theorem Algebra.FormallyUnramified.equalizerIdempotent_eq_one_iff
++ theorem Algebra.FormallyUnramified.equalizerIdempotent_mul_eq_iff
++ theorem Algebra.FormallyUnramified.equalizerIdempotent_self
++ theorem Algebra.FormallyUnramified.isIdempotentElem_equalizerIdempotent
++ theorem Algebra.FormallyUnramified.map_equalizerIdempotent
++ theorem Algebra.FormallyUnramified.span_equalizerIdempotent_one_sub_eq
+
+
+
+2026-11-03 04:18:41 1626233
+
+chore: use `to_dual` for `GradeMinOrder` and `GradeMaxOrder` (#45585)
+
+ESTIMATED CHANGES
+Modified Mathlib/Order/Grade.lean
+- theorem GradeOrder.wellFoundedGT
+- theorem grade_top
+- theorem isMax_grade_iff
+
+
+
+2026-11-03 04:18:39 ccf2383
+
+chore(Analysis): golf long proof (#45567)
+Golf the 9th longest proof in mathlib by over 100 lines! mainly from deduplicating
+(originally from mathlib3 and got no review comments https://github.com/leanprover-community/mathlib3/pull/13850=
+
+ESTIMATED CHANGES
+Modified Mathlib/Analysis/SpecificLimits/FloorPow.lean
+
+Modified Mathlib/Order/Filter/AtTopBot/Basic.lean
++ theorem Filter.Tendsto.exists_le_lt_succ
+
+
+
+2026-11-03 04:18:36 c45a047
+
+feat(Data/Subtype): simp lemma for `Subtype.val` composed with `Subtype.map` (#45511)
+and tag the matching `Set.inclusion` lemma as `@[simp]`.
+
+ESTIMATED CHANGES
+Modified Mathlib/Data/Set/Inclusion.lean
+
+Modified Mathlib/Data/Subtype.lean
++ theorem Subtype.val_comp_map
+
+
+
+2026-11-03 04:18:33 cb3f643
+
+chore(Algebra/Order/Ring): golf proof about geometric sum (#45503)
+Split from #44287 using ChatGPT 5.5.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Order/Ring/GeomSum.lean
+
+
+
+
+2026-11-03 04:18:30 3995b26
+
+chore(Order/ConditionallyCompleteLattice): split off material on `WithTop` (#45402)
+This PR moves the material on `sSup` and `sInf` on `WithTop α` and `WithBot α` from `Order/ConditionallyCompleteLattice/Basic` and `Order/ConditionallyCompleteLattice/Indexed` to a new file `Order/ConditionallyCompleteLattice/WithTop`.
+This material was scattered over five places in the two files, although the rest of these files does not depend on it.
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Modified Mathlib/Algebra/Tropical/BigOperators.lean
+
+Modified Mathlib/Basic/ENNReal/Basic.lean
+
+Modified Mathlib/Data/ENat/Lattice.lean
+
+Modified Mathlib/Order/ConditionallyCompleteLattice/Basic.lean
+- theorem WithTop.coe_sInf'
+- theorem WithTop.coe_sInf
+- theorem WithTop.coe_sSup'
+- theorem WithTop.coe_sSup
+- theorem WithTop.isGLB_sInf'
+- theorem WithTop.isGLB_sInf
+- theorem WithTop.isLUB_sSup'
+- theorem WithTop.isLUB_sSup
+- theorem WithTop.sInf_empty
+- theorem WithTop.sInf_eq
+- theorem WithTop.sInf_of_not_bddBelow
+- theorem WithTop.sInf_singleton_top
+- theorem WithTop.sSup_empty
+- theorem WithTop.sSup_eq
+- theorem WithTop.sSup_of_not_bddAbove
+- theorem WithTop.sSup_of_top_mem
+- theorem WithTop.sSup_singleton_top
+Modified Mathlib/Order/ConditionallyCompleteLattice/Indexed.lean
+- theorem WithBot.coe_biInf
+- theorem WithBot.coe_biSup
+- theorem WithTop.coe_iInf
+- theorem WithTop.coe_iSup
+- theorem WithTop.iInf_coe_eq_top
+- theorem WithTop.iInf_coe_lt_top
+- theorem WithTop.iInf_empty
+- theorem WithTop.iSup_coe_eq_top
+- theorem WithTop.iSup_coe_lt_top
+Added Mathlib/Order/ConditionallyCompleteLattice/WithTop.lean
++ theorem WithBot.coe_biInf
++ theorem WithBot.coe_biSup
++ theorem WithTop.coe_iInf
++ theorem WithTop.coe_iSup
++ theorem WithTop.coe_sInf'
++ theorem WithTop.coe_sInf
++ theorem WithTop.coe_sSup'
++ theorem WithTop.coe_sSup
++ theorem WithTop.iInf_coe_eq_top
++ theorem WithTop.iInf_coe_lt_top
++ theorem WithTop.iInf_empty
++ theorem WithTop.iSup_coe_eq_top
++ theorem WithTop.iSup_coe_lt_top
++ theorem WithTop.isGLB_sInf'
++ theorem WithTop.isGLB_sInf
++ theorem WithTop.isLUB_sSup'
++ theorem WithTop.isLUB_sSup
++ theorem WithTop.sInf_empty
++ theorem WithTop.sInf_eq
++ theorem WithTop.sInf_of_not_bddBelow
++ theorem WithTop.sInf_singleton_top
++ theorem WithTop.sSup_empty
++ theorem WithTop.sSup_eq
++ theorem WithTop.sSup_of_not_bddAbove
++ theorem WithTop.sSup_of_top_mem
++ theorem WithTop.sSup_singleton_top
+
+
+
+2026-11-03 04:18:27 4072283
+
+feat:(SetTheory/Ordinal/Arithmetic): prove `ofNat` version of `simp` lemma (#45260)
+Used in the CGT repo.
+
+ESTIMATED CHANGES
+Modified Mathlib/SetTheory/Ordinal/Arithmetic.lean
++ theorem Ordinal.ofNat_lt_omega0
+
+
+
+2026-11-03 04:18:24 3524024
+
+feat(Order): `OrderIso.prodCongr` (#45251)
+... and `OrderIso.prodUnique`, `OrderIso.uniqueProd`. These all follow the existing `Equiv` definitions.
+
+ESTIMATED CHANGES
+Modified Mathlib/Logic/Equiv/Prod.lean
++/- theorem Equiv.coe_prodUnique
++/- theorem Equiv.coe_uniqueProd
++ theorem Equiv.prodComm_trans_prodCongr
++ theorem Equiv.prodComm_trans_prodUnique
++ theorem Equiv.prodComm_trans_uniqueProd
++ theorem Equiv.prodCongr_refl_refl
++ theorem Equiv.prodCongr_trans_prodCongr
++/- def Equiv.prodUnique
++/- theorem Equiv.prodUnique_apply
++/- theorem Equiv.prodUnique_symm_apply
++ theorem Equiv.symm_prodUnique_trans_prodComm
++ theorem Equiv.symm_uniqueProd_trans_prodComm
++/- def Equiv.uniqueProd
++/- theorem Equiv.uniqueProd_apply
++/- theorem Equiv.uniqueProd_symm_apply
+Modified Mathlib/Order/Hom/Basic.lean
++ theorem OrderIso.arrowCongr_refl
++ theorem OrderIso.arrowCongr_symm
++ theorem OrderIso.arrowCongr_trans
++ theorem OrderIso.coe_prodUnique
++ theorem OrderIso.coe_uniqueProd
++ theorem OrderIso.conj_refl
++ theorem OrderIso.conj_symm_apply
++ theorem OrderIso.conj_trans_conj
++ theorem OrderIso.dual_refl
++ theorem OrderIso.dual_trans
++ theorem OrderIso.orderEmbeddingCongr_refl
++ theorem OrderIso.orderEmbeddingCongr_symm
++ theorem OrderIso.orderEmbeddingCongr_trans
++ theorem OrderIso.orderIsoCongr_refl
++ theorem OrderIso.orderIsoCongr_symm
++ theorem OrderIso.orderIsoCongr_trans
++ theorem OrderIso.prodComm_trans_prodCongr
++ theorem OrderIso.prodComm_trans_prodUnique
++ theorem OrderIso.prodComm_trans_uniqueProd
++ def OrderIso.prodCongr
++ theorem OrderIso.prodCongr_refl_refl
++ theorem OrderIso.prodCongr_trans_prodCongr
++ def OrderIso.prodUnique
++ theorem OrderIso.symm_conj
++ theorem OrderIso.symm_prodCongr
++ theorem OrderIso.symm_prodUnique_trans_prodComm
++ theorem OrderIso.symm_uniqueProd_trans_prodComm
++ theorem OrderIso.trans_toEquiv
++ def OrderIso.uniqueProd
+
+
+
+2026-11-03 04:18:21 e1beb09
+
+feat(LinearAlgebra/Matrix): `row` and `col` are linear maps (#44933)
+`simp` lemmas for `(A + B).row` and similar expressions, and bundled forms of `row`/`col` as `Equiv`/`AddEquiv`/`LinearEquiv`.
+Also fixes lots of places that should use `row`/`col` but don't.
+
+ESTIMATED CHANGES
+Modified Mathlib/Combinatorics/Configuration.lean
+
+Modified Mathlib/Data/Matrix/Basic.lean
++ theorem Matrix.coe_colAddEquiv
++ theorem Matrix.coe_colLinearEquiv
++ theorem Matrix.coe_rowAddEquiv
++ theorem Matrix.coe_rowLinearEquiv
++ def Matrix.colAddEquiv
++ def Matrix.colLinearEquiv
++ theorem Matrix.col_sum
++ def Matrix.rowAddEquiv
++ def Matrix.rowLinearEquiv
++ theorem Matrix.row_sum
++ theorem Matrix.toAddEquiv_colLinearEquiv
++ theorem Matrix.toAddEquiv_rowLinearEquiv
++ theorem Matrix.toEquiv_colAddEquiv
++ theorem Matrix.toEquiv_colLinearEquiv
++ theorem Matrix.toEquiv_rowAddEquiv
++ theorem Matrix.toEquiv_rowLinearEquiv
+Modified Mathlib/Data/Matrix/Basis.lean
++ theorem Matrix.row_single
+Modified Mathlib/GroupTheory/Coxeter/Matrix.lean
+
+Modified Mathlib/LinearAlgebra/Matrix/Defs.lean
++ theorem Matrix.coe_colEquiv
++ theorem Matrix.coe_rowEquiv
++ def Matrix.colEquiv
++ theorem Matrix.col_add
++/- theorem Matrix.col_eq_transpose
++ theorem Matrix.col_inj
++ theorem Matrix.col_injective
++ theorem Matrix.col_neg
++ theorem Matrix.col_of
++ theorem Matrix.col_smul
++ theorem Matrix.col_sub
++ theorem Matrix.col_zero
++/- theorem Matrix.of_col
+- theorem Matrix.of_row
++/- theorem Matrix.of_symm_zero
++ def Matrix.rowEquiv
++ theorem Matrix.row_add
++/- theorem Matrix.row_eq_self
++ theorem Matrix.row_inj
++ theorem Matrix.row_injective
++ theorem Matrix.row_neg
++ theorem Matrix.row_of
++ theorem Matrix.row_smul
++ theorem Matrix.row_sub
++ theorem Matrix.row_zero
++ theorem Matrix.symm_of
++ theorem Matrix.symm_rowEquiv
++ theorem Matrix.transpose_of
+Modified Mathlib/LinearAlgebra/Matrix/Determinant/Basic.lean
+
+Modified Mathlib/LinearAlgebra/Matrix/Nonsingular.lean
+
+Modified Mathlib/LinearAlgebra/Matrix/Notation.lean
+
+Modified Mathlib/LinearAlgebra/Matrix/Rank.lean
+
+Modified Mathlib/LinearAlgebra/Matrix/SemiringInverse.lean
+
+
+
+
+2026-11-03 04:18:18 028057c
+
+chore: simplify guessing of base field in custom elaborators (#44585)
+Given a space of continuous linear (or alternating linear) maps, we can read off the base field directly: no need to recurse into the domain there.
+
+ESTIMATED CHANGES
+Modified Mathlib/Geometry/Manifold/Notation.lean
+
+
+
+
+2026-11-03 04:18:15 dd49c96
+
+chore(Order/Basic): add `grind _=_` to `Subtype.coe_lt_coe`, `coe_le_coe` (#41821)
+Add grind annotations to Subtype.coe_le_coe and Subtype.coe_lt_coe.
+As noted in [this zulip thread](https://leanprover.zulipchat.com/#narrow/channel/113488-general/topic/grind.20failures/near/610812085), grind was failing to solve some fairly simple goals, and I think these are generally good annotations to have. (I think they will usually fire usefully.)
+
+ESTIMATED CHANGES
+Modified Mathlib/Order/Basic.lean
+
+
+
+
+2026-11-03 04:18:12 69692f9
+
+feat(Algebra/Order/Antidiagonal): connect `Finset.HasAntidiagonal` with `Filter.TendstoCofinite` (#41555)
+This PR connects `Finset.HasAntidiagonal` with `Filter.TendstoCofinite` and cleans up `TendstoCofinite.lean`.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Order/Antidiag/Prod.lean
++ theorem Finset.HasMulAntidiagonal.coe_mulAntidiagonal_eq_preimage_singleton
+Modified Mathlib/Order/Filter/TendstoCofinite.lean
+- theorem Filter.TendstoCofinite.comp
+- theorem Filter.TendstoCofinite.embedding
+- theorem Filter.TendstoCofinite.equiv
+- theorem Filter.TendstoCofinite.id
+- theorem Filter.tendstoCofinite_of_finite
+- theorem Finsupp.mapDomain_tendstoCofinite
+
+
+
+2026-11-03 04:18:08 57a5cac
+
+doc(Control/Monad/Cont): add docstrings (#27050)
+Split of #25917. This PR adds docstrings to this file. 
+This documentation was written by a few versions of Claude (Claude 3.5 Sonnet and Fable 5) , with human supervision.
+
+ESTIMATED CHANGES
+Modified Mathlib/Control/Monad/Cont.lean
+
+Modified scripts/nolints.json
+
+
+
+
+2026-11-03 03:41:48 d3338e0
+
+refactor(Order/CompleteLatticeIntervals): redefine `sSup` and `sInf` (#37082)
+This PR introduces `OrderSupSet.chooseBot` and `OrderInfSet.chooseTop`. Unlike `OrderSupSet.choose d`, which returns `d` whenever a least upper bound does not exist, `OrderSupSet.chooseBot d` returns the bottom element in this case, and `d` only if there is no bottom element either. Thus it satisfies the requirements of  `ConditionallyCompleteLinearOrder` on junk values.
+The `ConditionallyCompleteLinearOrder` instance on `OrdConnected` sets is redefined using them, and the new instance satisfies `OrderSupSet` and `OrderInfSet`. This is needed for #35674.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Order/Nonneg/Lattice.lean
+
+Modified Mathlib/Basic/NNReal/Defs.lean
+
+Modified Mathlib/Order/Bounds/Basic.lean
++ theorem OrderSupSet.chooseBot_sSup_empty_of_noBotOrder
++ theorem OrderSupSet.chooseBot_sSup_of_not_exists
+Modified Mathlib/Order/CompleteLatticeIntervals.lean
++ theorem Set.OrdConnected.coe_sInf
++ theorem Set.OrdConnected.coe_sSup
++ theorem Set.OrdConnected.csInf_image_mem
++ theorem Set.OrdConnected.csSup_image_mem
++ theorem Set.OrdConnected.sInf_empty_of_noTopOrder
++ theorem Set.OrdConnected.sSup_empty_of_noBotOrder
++ theorem Subtype.isLUB_of_csSup_image_mem
+- theorem sInf_within_of_ordConnected
+- theorem sSup_within_of_ordConnected
+
+
+
 2026-11-03 03:18:19 ed454dc
 
 chore: update Mathlib dependencies 2026-11-03 (#45603)
