@@ -1,3 +1,335 @@
+2026-11-04 22:49:31 805bbc4
+
+chore: adapt to leanprover-community/batteries#2051 (#45634)
+Adaptations for https://github.com/leanprover-community/batteries/pull/2051.
+The bot updates the Batteries dependency after successful Batteries CI.
+To contribute adaptations, open a PR against this branch from a fork of `leanprover-community/mathlib4-adaptations`, as described in the [Batteries contributor guide](https://github.com/leanprover-community/batteries#mathlib-adaptations).
+After the Batteries PR is merged, the bot restores the main dependency and marks this PR ready for review.
+
+ESTIMATED CHANGES
+Modified Mathlib/Data/String/Defs.lean
+- def Char.isAscii
+Modified lake-manifest.json
+
+
+
+
+2026-11-04 21:52:20 a1f7576
+
+feat(CategoryTheory/Presentable): extra lemmas for κ-presentable objects (#45538)
+This PR adds some lemmas about κ-presentable objects of categories. These are variants of existing lemmas about lifting maps from a presentable object to a colimit, but done in κ-small families.
+The lemma `exists_of_square` is a technical lemma repeatedly used in the proof that categories of inserters are accessible.
+Part of a PR series formalizing accessibility of categories of algebras.
+
+ESTIMATED CHANGES
+Modified Mathlib/CategoryTheory/ObjectProperty/IsClosedUnderCardinalFilteredColimits.lean
+
+Modified Mathlib/CategoryTheory/Presentable/Basic.lean
++ theorem CategoryTheory.HasCardinalFilteredColimits.hasColimitsOfShape
++ theorem CategoryTheory.IsCardinalPresentable.exists_eq_of_isColimit'_of_hasCardinalLT
++ theorem CategoryTheory.IsCardinalPresentable.exists_hom_above_of_isColimit
++ theorem CategoryTheory.IsCardinalPresentable.exists_hom_of_isColimit_of_hasCardinalLT
++ theorem CategoryTheory.IsCardinalPresentable.exists_of_square
++ theorem CategoryTheory.Limits.exists_eq_of_preservesColimit_coyoneda_self_of_hasCardinalLT
++ theorem CategoryTheory.Limits.exists_hom_of_preservesColimit_coyoneda_of_hasCardinalLT
+Modified Mathlib/CategoryTheory/Presentable/CardinalDirectedPoset.lean
+
+Modified Mathlib/CategoryTheory/Presentable/Comma.lean
+
+
+
+
+2026-11-04 21:10:57 f1f7df0
+
+feat(RingTheory/DedekindDomain/SInteger): the ring of S-integers is a localization and a Dedekind Domain (#40848)
+We prove
+```
+IsDedekindDomain.isLocalizationSInteger (R : Type *) [CommRing R] (S : Set (HeightOneSpectrum R)) (K : Type *)
+ [Field K] [Algebra R K] [IsFractionRing R K] [IsDedekindDomain R] [Fact (IsMulTorsion (ClassGroup R))] :
+ IsLocalization (Localization.submonoid S) ↥(S.integer K)
+```
+and
+```
+IsDedekindDomain.isDedekindDomainSInteger (R : Type *) [CommRing R] (S : Set (HeightOneSpectrum R)) (K : Type *) [Field K] [Algebra R K] [IsFractionRing R K] [IsDedekindDomain R] [Fact (IsMulTorsion (ClassGroup R))] :
+ IsDedekindDomain ↥(S.integer K)
+```
+This is joint work with @larskuehne.
+
+ESTIMATED CHANGES
+Modified Mathlib/RingTheory/DedekindDomain/SInteger.lean
++ theorem IsDedekindDomain.exists_mul_algebraMap_eq_algebraMap
++ theorem Localization.mem_submonoid_iff
++ def Localization.submonoid
++ theorem Localization.submonoid_eq_primeCompl
++ theorem Localization.submonoid_le_nonZeroDivisors
+Modified Mathlib/RingTheory/Ideal/Prime.lean
++ theorem Ideal.mem_sInfPrimeCompl_iff
++ def Ideal.sInfPrimeCompl
++ theorem Ideal.sInfPrimeCompl_anti
++ theorem Ideal.sInfPrimeCompl_def
++ theorem Ideal.sInfPrimeCompl_empty
++ theorem Ideal.sInfPrimeCompl_le_primeCompl
++ theorem Ideal.sInfPrimeCompl_singleton
++ theorem Ideal.sInfPrimeCompl_union
+
+
+
+2026-11-04 20:40:06 b1f53d4
+
+feat: add integral representation for p \in (-1,0) (#44827)
+Some quick notes:
+- Formalisation was standard for x > 0 real, only thing is may want to change names.
+- For CFC case, I had to insist on working in a C*-algebra rather than the slightly more general setting, because I used C*-algebra specific results.
+- Also needed unital rather than non-unital for x^{-1} to make sense.
+- Certain places use copy-pasted code from other sections.
+
+ESTIMATED CHANGES
+Modified Mathlib/Analysis/SpecialFunctions/ContinuousFunctionalCalculus/Rpow/IntegralRepresentation.lean
++ theorem CFC.exists_measure_rpow_eq_integral_cfc_rpowIntegrand₁₀
++ theorem Real.antitoneOn_rpowIntegrandNeg
++ theorem Real.continuousOn_rpowIntegrandNeg_uncurry
++ theorem Real.exists_measure_rpow_eq_integral_rpowIntegrandNeg
++ theorem Real.integrableOn_rpowIntegrandNeg
++ theorem Real.rpowIntegrandNeg_eq_inv_mul_rpowIntegrand₀₁
++ theorem Real.rpowIntegrandNeg_nonneg
++ theorem Real.rpow_eq_const_mul_integral_rpowIntegrandNeg
+
+
+
+2026-11-04 16:31:44 a84939a
+
+feat(Algebra/QuadraticAlgebra): maximal quadratic orders over ℤ (#43088)
+For `a b : ℤ`, the order `QuadraticAlgebra ℤ a b` is the integral closure of `ℤ` in `QuadraticAlgebra ℚ a b` if and only if `discr a b` is a fundamental discriminant. 
+Prepared with Claude Code 🤖
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/QuadraticAlgebra/Int.lean
++ theorem QuadraticAlgebra.Int.algebraMap_algEquivIntegralClosure_symm_apply
++ theorem QuadraticAlgebra.Int.coe_algEquivIntegralClosure_apply
++ theorem QuadraticAlgebra.Int.coe_algEquivIntegralClosure_omega
+Modified Mathlib/NumberTheory/FundamentalDiscriminant.lean
++ theorem Int.IsFundamentalDiscr.eq_one_of_eq_sq_mul
+
+
+
+2026-11-04 14:16:28 c995178
+
+feat(Data/Nat/Totient): remove redundant hypothesis (#45664)
+These were found by Opus 5.5, but code is written by me :)
+
+ESTIMATED CHANGES
+Modified Mathlib/Data/Nat/Totient.lean
++/- theorem Nat.prime_pow_pow_totient_ediv_prod
++/- theorem Nat.prod_primeFactors_pow_totient_ediv_dvd
++ theorem Nat.totient_mul_of_dvd
+- theorem Nat.totient_mul_of_prime_of_dvd
+Modified Mathlib/NumberTheory/NumberField/Cyclotomic/Basic.lean
+
+Modified Mathlib/RingTheory/Polynomial/Cyclotomic/Expand.lean
+
+
+
+
+2026-11-04 12:55:21 75b352c
+
+feat(GroupTheory/IsPerfect): a group is perfect iff its abelianization is trivial (#45653)
+Add `subsingleton_abelianization_iff_isPerfect`: a group is perfect if and only if its abelianization is trivial.
+
+ESTIMATED CHANGES
+Modified Mathlib/GroupTheory/IsPerfect.lean
++ theorem Group.subsingleton_abelianization_iff_isPerfect
+Modified Mathlib/GroupTheory/QuotientGroup/Basic.lean
+
+
+
+
+2026-11-04 11:27:12 6190227
+
+chore(NumberTheory/PellMatiyasevic): fix privateInPublic (#45627)
+In this (very old) file, many public declarations refer to a private definition `d`. This PR makes `d` into a local notation instead of a definition, avoiding the issue without introducing a global definition with a one-letter name. (This required removing an unnecessary proof argument, and hence some adjustment to later call locations.)
+ ---
+<!-- Your PR title will become the first line of the commit message.
+In this box, the text above the `---` (if not empty) will be appended
+to the commit message, and can be used to give additional context or
+details. Please leave a blank newline before the `---`, otherwise GitHub
+will format the text above it as a title.
+For details on the "pull request lifecycle" in mathlib, please see:
+https://leanprover-community.github.io/contribute/index.html
+In particular, note that most reviewers will only notice your PR
+if it passes the continuous integration checks.
+Please ask for help on https://leanprover.zulipchat.com if needed.
+When merging, all the commits will be squashed into a single commit
+listing all co-authors.
+Co-authors in the squash commit are gathered from two sources:
+First, all authors of commits to this PR branch are included. Thus,
+one way to add co-authors is to include at least one commit authored by
+each co-author among the commits in the pull request. If necessary, you
+may create empty commits to indicate co-authorship, using commands like so:
+git commit --author="Author Name <author@email.com>" --allow-empty -m "add Author Name as coauthor"
+Second, co-authors can also be listed in lines at the very bottom of
+the commit message (that is, directly before the `---`) using the following format:
+If you are moving or deleting declarations, please include these lines
+at the bottom of the commit message (before the `---`, and also before
+any "Co-authored-by" lines) using the following format:
+Moves:
+- Vector.* -> List.Vector.*
+- ...
+Deletions:
+- Nat.bit1_add_bit1
+- ...
+Any other comments you want to keep out of the PR commit should go
+below the `---`, and placed outside this HTML comment, or else they
+will be invisible to reviewers.
+If this PR depends on other PRs, please list them below this comment,
+using the following format:
+- [ ] depends on: #abc [optional extra text]
+- [ ] depends on: #xyz [optional extra text]
+-->
+
+ESTIMATED CHANGES
+Modified Mathlib/NumberTheory/PellMatiyasevic.lean
++/- theorem Pell.d_pos
++ theorem Pell.dnsq
++/- theorem Pell.dz_val
++/- theorem Pell.eq_pell
++/- theorem Pell.eq_pellZd
++/- theorem Pell.eq_pell_lem
++/- theorem Pell.isPell_nat
++/- theorem Pell.isPell_one
++/- def Pell.pell
++/- def Pell.pellZd
++/- theorem Pell.pell_eq
++/- theorem Pell.pell_eqz
++/- theorem Pell.xn_add
++/- theorem Pell.xn_modEq_x2n_add_lem
++/- theorem Pell.xn_succ
++/- theorem Pell.xz_succ
+
+
+
+2026-11-04 10:33:52 0c07479
+
+chore(MathlibTest/Linter/TextBased): split test file (#45425)
+Having the tests for Linter/Style.lean in a file TextBased.lean is confusing. As that file contains tests for both style syntax linters and text-based linters, there is a natural splitting point: split the tests for style linters into a new file.
+
+ESTIMATED CHANGES
+Added MathlibTest/Linter/Style.lean
++ def aux'
++ def aux
++ def bar
++ def baz
++ theorem foo'
++ def foo
++ theorem tactic2
++ theorem tactic3
++ theorem tactic4
++ theorem tactic
++ def test
+Modified MathlibTest/Linter/TextBased.lean
+- def aux'
+- def aux
+- def bar
+- def baz
+- theorem foo'
+- def foo
+- theorem tactic2
+- theorem tactic3
+- theorem tactic4
+- theorem tactic
+- def test
+
+
+
+2026-11-04 07:44:40 e76f257
+
+chore(CategoryTheory/WithTerminal/Basic): use `to_dual` (#45623)
+This PR uses `to_dual` for `WithTerminal`/`WithInitial`.
+- For the proofs involving `Cat` to go though, I needed to add `attribute [to_dual_dont_translate] Bundled.α`.
+- I made `false_of_from_star'` private, as it seems `false_of_from_star` is the public version.
+- The definition of `WithInitial.Hom` generated by `to_dual` somehow causes some `rfl` proofs to fail. Luckily they can be replaced with the `subsingleton` tactic.
+
+ESTIMATED CHANGES
+Modified Mathlib/AlgebraicTopology/SimplexCategory/Augmented/Monoidal.lean
+
+Modified Mathlib/CategoryTheory/Category/Cat.lean
+
+Modified Mathlib/CategoryTheory/WithTerminal/Basic.lean
+- def CategoryTheory.WithInitial.Hom
+- def CategoryTheory.WithInitial.comp
+- def CategoryTheory.WithInitial.down
+- theorem CategoryTheory.WithInitial.down_comp
+- theorem CategoryTheory.WithInitial.down_id
+- def CategoryTheory.WithInitial.equivComma
+- theorem CategoryTheory.WithInitial.false_of_to_star'
+- theorem CategoryTheory.WithInitial.false_of_to_star
+- def CategoryTheory.WithInitial.homTo
+- def CategoryTheory.WithInitial.id
+- def CategoryTheory.WithInitial.incl
+- def CategoryTheory.WithInitial.inclLift
+- def CategoryTheory.WithInitial.inclLiftToInitial
+- def CategoryTheory.WithInitial.lift
+- def CategoryTheory.WithInitial.liftStar
+- theorem CategoryTheory.WithInitial.liftStar_lift_map
+- def CategoryTheory.WithInitial.liftToInitial
+- def CategoryTheory.WithInitial.liftToInitialUnique
+- def CategoryTheory.WithInitial.liftUnique
+- def CategoryTheory.WithInitial.map
+- def CategoryTheory.WithInitial.mapComp
+- def CategoryTheory.WithInitial.mapId
+- def CategoryTheory.WithInitial.map₂
+- def CategoryTheory.WithInitial.mkCommaMorphism
+- def CategoryTheory.WithInitial.mkCommaObject
+- def CategoryTheory.WithInitial.ofCommaMorphism
+- def CategoryTheory.WithInitial.ofCommaObject
+- def CategoryTheory.WithInitial.opEquiv
+- def CategoryTheory.WithInitial.prelaxfunctor
+- def CategoryTheory.WithInitial.pseudofunctor
+- def CategoryTheory.WithInitial.starInitial
++/- theorem CategoryTheory.WithTerminal.down_comp
++/- theorem CategoryTheory.WithTerminal.down_id
+- theorem CategoryTheory.WithTerminal.false_of_from_star'
+
+
+
+2026-11-04 07:29:16 5f717ce
+
+refactor: remove `set_option` in `ZagierTwoSquares` (#43434)
+I refactor one of my very first non-porting contributions to mathlib by changing `zagierSet` to a structure `Zagier.Triple` and rewriting the whole proof to avoid `set_option`s. This required changing the type of `card_fixedPoints_modEq` to accept just `α → α` rather than `Function.End α`.
+No deprecations are added since this a leaf file in Archive.
+
+ESTIMATED CHANGES
+Modified Archive/ZagierTwoSquares.lean
++ theorem Zagier.Triple.card_fixedPoints_piecewise_eq_one
++ theorem Zagier.Triple.eq_of_piecewise_eq_self
++ theorem Zagier.Triple.involutive_piecewise
++ theorem Zagier.Triple.involutive_swap
++ def Zagier.Triple.piecewise
++ theorem Zagier.Triple.sq_add_sq_of_swap_eq_self
++ def Zagier.Triple.swap
++ theorem Zagier.Triple.x_mem_Icc_one_succ
++ theorem Zagier.Triple.x_ne_zero
++ theorem Zagier.Triple.y_mem_Icc_one_succ
++ theorem Zagier.Triple.y_ne_zero
++ theorem Zagier.Triple.z_mem_Icc_one_succ
++ theorem Zagier.Triple.z_ne_zero
++ structure Zagier.Triple
+- theorem Zagier.card_fixedPoints_eq_one
+- def Zagier.complexInvo
+- theorem Zagier.complexInvo_sq
+- theorem Zagier.eq_of_mem_fixedPoints
+- def Zagier.obvInvo
+- theorem Zagier.obvInvo_sq
+- def Zagier.singletonFixedPoint
+- theorem Zagier.sq_add_sq_of_nonempty_fixedPoints
+- def Zagier.zagierSet
+- theorem Zagier.zagierSet_lower_bound
+- theorem Zagier.zagierSet_subset
+- theorem Zagier.zagierSet_upper_bound
+Modified Mathlib/GroupTheory/Perm/Cycle/Type.lean
++/- theorem Equiv.Perm.card_fixedPoints_modEq
+
+
+
 2026-11-04 01:08:41 a8f44fc
 
 feat(Basic/Countable/Basic): option type is (un)countable iff type is (#45616)
