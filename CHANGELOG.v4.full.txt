@@ -1,3 +1,2065 @@
+2026-11-06 02:43:47 94f4300
+
+chore(SimpleGraph/Coloring/Constructions): some golfs (#42665)
+Also remove the `2 ≤ n` hypothesis from `cycleGraph.tricoloring`, and spell `two_colorable_iff_forall_loop_even` using `IsBipartite`.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Ring/Parity.lean
+
+Modified Mathlib/Combinatorics/SimpleGraph/Acyclic.lean
+
+Modified Mathlib/Combinatorics/SimpleGraph/Coloring/Constructions.lean
++/- def SimpleGraph.cycleGraph.tricoloring
++ theorem SimpleGraph.isBipartite_iff_forall_walk_even_length
+- theorem SimpleGraph.two_colorable_iff_forall_loop_even
+
+
+
+2026-11-05 22:10:46 5216ddb
+
+feat: Dieudonné measure on a well-order (#39746)
+Given a well-order of uncountable cofinality, we can define a measurable space, consisting of sets which either contain or entirely omit a club set. On this space, the indicator function of stationary sets is a measure, known as the Dieudonné measure. It is a zero-one measure, which is nevertheless not a Dirac measure; it in fact has empty support.
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Added Mathlib/MeasureTheory/Constructions/Dieudonne.lean
++ theorem MeasureTheory.Dieudonne.exists_isClub_subset
++ theorem MeasureTheory.Dieudonne.measurableSet_def
++ theorem MeasureTheory.Dieudonne.measurableSet_of_isClub
++ theorem MeasureTheory.Dieudonne.measurableSet_of_not_isStationary
++ theorem MeasureTheory.Dieudonne.measurableSet_of_orderTop
++ theorem MeasureTheory.Dieudonne.measure_eq_dirac
++ theorem MeasureTheory.Dieudonne.measure_eq_one_iff
++ theorem MeasureTheory.Dieudonne.measure_eq_zero_iff
++ theorem MeasureTheory.Dieudonne.measure_ne_one_iff
++ theorem MeasureTheory.Dieudonne.measure_ne_zero_iff
++ theorem MeasureTheory.Dieudonne.measure_of_isClub
++ theorem MeasureTheory.Dieudonne.measure_of_not_isCofinal
++ theorem MeasureTheory.Dieudonne.support_measure
+Modified Mathlib/Order/Cofinal.lean
++ theorem not_isCofinal_Iio
+Modified Mathlib/SetTheory/Cardinal/Aleph.lean
++ theorem Cardinal.aleph0_eq_aleph
++ theorem Cardinal.aleph_eq_aleph0
+Modified Mathlib/SetTheory/Cardinal/Cofinality/Club.lean
++ theorem IsClub.Ici_inter
++ theorem IsClub.Ioi_inter
++ theorem IsClub.inter_Ici
++ theorem IsClub.inter_Ioi
++ theorem IsClub.singleton_top
++ theorem IsMax.isClub_singleton
++ theorem IsStationary.isCofinal
++ theorem IsStationary.singleton_top
++ theorem isClub_Ici
++ theorem isClub_Ioi
++ theorem isStationary_iff_top_mem
++ theorem isStationary_singleton_iff
++ theorem not_isStationary_singleton
+
+
+
+2026-11-05 21:29:55 cfaeae1
+
+feat: prove Dedekind completion of rationals isomorphic to `EReal` (#44992)
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Modified Mathlib/Data/EReal/Basic.lean
++ theorem EReal.le_of_forall_lt_ratCast_imp_le
++ theorem EReal.le_of_forall_ratCast_lt_imp_le
++ def Real.coeOrderEmbedding
++ theorem Real.coeOrderEmbedding_apply
+Added Mathlib/Data/EReal/DedekindCut.lean
++ def EReal.dedekindCutOrderIso
++ theorem EReal.dedekindCutOrderIso_apply_eq_sInf
++ theorem EReal.dedekindCutOrderIso_apply_eq_sSup
++ theorem EReal.dedekindCutOrderIso_principal
++ theorem EReal.left_dedekindCutOrderIso_symm_apply
++ theorem EReal.lowerBounds_setOfPred_le_ratCast
++ theorem EReal.right_dedekindCutOrderIso_symm_apply
++ theorem EReal.upperBounds_setOfPred_ratCast_le
+Modified Mathlib/Order/Completion.lean
++ theorem DedekindCut.biInf_principal_right
++ theorem DedekindCut.biSup_principal_left
++ theorem DedekindCut.left_mk
++ theorem DedekindCut.right_mk
+
+
+
+2026-11-05 21:22:33 a778c7b
+
+feat(Data/Dyadic): add some lemmas about `shift{Left, Right}` (#45421)
+This PR adds some lemmas about `shiftLeft` and `shiftRight`.
+
+ESTIMATED CHANGES
+Modified Mathlib/Data/Dyadic.lean
++ theorem Dyadic.add_shiftLeft_int
++ theorem Dyadic.add_shiftLeft_nat
++ theorem Dyadic.add_shiftRight_int
++ theorem Dyadic.add_shiftRight_nat
++ theorem Dyadic.neg_shiftLeft
++ theorem Dyadic.neg_shiftRight
++ theorem Dyadic.ofOdd_shiftLeft
++ theorem Dyadic.ofOdd_shiftRight
++ theorem Dyadic.shiftLeft_add_int
++ theorem Dyadic.shiftLeft_add_nat
++ theorem Dyadic.shiftLeft_eq_zero
++ theorem Dyadic.shiftLeft_inj
++ theorem Dyadic.shiftLeft_natCast
++ theorem Dyadic.shiftLeft_neg
++ theorem Dyadic.shiftLeft_shiftRight'
++ theorem Dyadic.shiftLeft_shiftRight
++ theorem Dyadic.shiftRight_add_int
++ theorem Dyadic.shiftRight_add_nat
++ theorem Dyadic.shiftRight_eq_zero
++ theorem Dyadic.shiftRight_inj
++ theorem Dyadic.shiftRight_natCast
++ theorem Dyadic.shiftRight_neg
++ theorem Dyadic.shiftRight_shiftLeft'
++ theorem Dyadic.shiftRight_shiftLeft
++ theorem Dyadic.sub_shiftLeft_int
++ theorem Dyadic.sub_shiftLeft_nat
++ theorem Dyadic.sub_shiftRight_int
++ theorem Dyadic.sub_shiftRight_nat
++ theorem Dyadic.toRat_shiftLeft
++ theorem Dyadic.toRat_shiftLeft_nat
++ theorem Dyadic.toRat_shiftRight'
++ theorem Dyadic.toRat_shiftRight
++ theorem Dyadic.toRat_shiftRight_nat
++ theorem Dyadic.zero_shiftLeft
++ theorem Dyadic.zero_shiftRight
+
+
+
+2026-11-05 20:58:03 c58c200
+
+chore: rename `nnnorm` -> `nnNorm` (#45536)
+This PR renames `nnnorm` to `nnNorm`. This follows the new naming convention around decapitalizing names that start with multiple capitals, in this case `NNNorm`.
+This PR consists of 3 main steps:
+1. Do a string replacement of every occurrence of `nnnorm` -> `nnNorm`
+2. Run `add_deprecations.sh`
+3. Fix the edge cases where step (2) did something wrong
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Order/Floor/Defs.lean
+
+Modified Mathlib/Analysis/Analytic/Basic.lean
+
+Modified Mathlib/Analysis/Analytic/Binomial.lean
+
+Modified Mathlib/Analysis/Analytic/ChangeOrigin.lean
++ theorem FormalMultilinearSeries.nnNorm_changeOriginSeriesTerm
++ theorem FormalMultilinearSeries.nnNorm_changeOriginSeriesTerm_apply_le
++ theorem FormalMultilinearSeries.nnNorm_changeOriginSeries_apply_le_tsum
++ theorem FormalMultilinearSeries.nnNorm_changeOriginSeries_le_tsum
++ theorem FormalMultilinearSeries.nnNorm_changeOrigin_le
+- theorem FormalMultilinearSeries.nnnorm_changeOriginSeriesTerm
+- theorem FormalMultilinearSeries.nnnorm_changeOriginSeriesTerm_apply_le
+- theorem FormalMultilinearSeries.nnnorm_changeOriginSeries_apply_le_tsum
+- theorem FormalMultilinearSeries.nnnorm_changeOriginSeries_le_tsum
+- theorem FormalMultilinearSeries.nnnorm_changeOrigin_le
+Modified Mathlib/Analysis/Analytic/Composition.lean
++ theorem FormalMultilinearSeries.compAlongComposition_nnNorm
+- theorem FormalMultilinearSeries.compAlongComposition_nnnorm
+Modified Mathlib/Analysis/Analytic/ConvergenceRadius.lean
++ theorem FormalMultilinearSeries.le_radius_of_summable_nnNorm
+- theorem FormalMultilinearSeries.le_radius_of_summable_nnnorm
++ theorem FormalMultilinearSeries.nnNorm_compContinuousLinearMap_le
++ theorem FormalMultilinearSeries.nnNorm_mul_pow_le_of_lt_radius
+- theorem FormalMultilinearSeries.nnnorm_compContinuousLinearMap_le
+- theorem FormalMultilinearSeries.nnnorm_mul_pow_le_of_lt_radius
++ theorem FormalMultilinearSeries.not_summable_norm_of_radius_lt_nnNorm
+- theorem FormalMultilinearSeries.not_summable_norm_of_radius_lt_nnnorm
++ theorem FormalMultilinearSeries.summable_nnNorm_mul_pow
+- theorem FormalMultilinearSeries.summable_nnnorm_mul_pow
+Modified Mathlib/Analysis/Analytic/Inverse.lean
+
+Modified Mathlib/Analysis/Asymptotics/Basic.lean
++ theorem Asymptotics.isBigO_iff_nnNorm
+- theorem Asymptotics.isBigO_iff_nnnorm
++ theorem Asymptotics.isLittleO_iff_nnNorm
+- theorem Asymptotics.isLittleO_iff_nnnorm
+Modified Mathlib/Analysis/Asymptotics/TVS.lean
+
+Modified Mathlib/Analysis/CStarAlgebra/ApproximateUnit.lean
++ theorem CStarAlgebra.nnNorm_sub_mul_self_le
+- theorem CStarAlgebra.nnnorm_sub_mul_self_le
++ theorem Filter.IsIncreasingApproximateUnit.eventually_nnNorm
+- theorem Filter.IsIncreasingApproximateUnit.eventually_nnnorm
+Modified Mathlib/Analysis/CStarAlgebra/Basic.lean
++ theorem CStarRing.nnNorm_self_mul_star
++ theorem CStarRing.nnNorm_star_mul_self
+- theorem CStarRing.nnnorm_self_mul_star
+- theorem CStarRing.nnnorm_star_mul_self
++ theorem IsSelfAdjoint.nnNorm_mul_self
++ theorem IsSelfAdjoint.nnNorm_pow_two_pow
+- theorem IsSelfAdjoint.nnnorm_mul_self
+- theorem IsSelfAdjoint.nnnorm_pow_two_pow
++ theorem nnNorm_star
+- theorem nnnorm_star
+Modified Mathlib/Analysis/CStarAlgebra/CStarMatrix.lean
+
+Modified Mathlib/Analysis/CStarAlgebra/ContinuousFunctionalCalculus/Basic.lean
++ theorem SpectrumRestricts.nnReal_iff_nnNorm
+- theorem SpectrumRestricts.nnreal_iff_nnnorm
+Modified Mathlib/Analysis/CStarAlgebra/ContinuousFunctionalCalculus/Isometric.lean
++ theorem IsGreatest.nnNorm_cfc
++ theorem IsGreatest.nnNorm_cfc_nnreal
++ theorem IsGreatest.nnNorm_cfcₙ
++ theorem IsGreatest.nnNorm_cfcₙ_nnreal
+- theorem IsGreatest.nnnorm_cfc
+- theorem IsGreatest.nnnorm_cfc_nnreal
+- theorem IsGreatest.nnnorm_cfcₙ
+- theorem IsGreatest.nnnorm_cfcₙ_nnreal
++ theorem IsometricContinuousFunctionalCalculus.isGreatest_nnNorm_spectrum
+- theorem IsometricContinuousFunctionalCalculus.isGreatest_nnnorm_spectrum
++ theorem IsometricContinuousFunctionalCalculus.nnNorm_spectrum_le
+- theorem IsometricContinuousFunctionalCalculus.nnnorm_spectrum_le
++ theorem MonotoneOn.nnNorm_cfc
++ theorem MonotoneOn.nnNorm_cfcₙ
+- theorem MonotoneOn.nnnorm_cfc
+- theorem MonotoneOn.nnnorm_cfcₙ
++ theorem NonUnitalIsometricContinuousFunctionalCalculus.isGreatest_nnNorm_quasispectrum
+- theorem NonUnitalIsometricContinuousFunctionalCalculus.isGreatest_nnnorm_quasispectrum
++ theorem NonUnitalIsometricContinuousFunctionalCalculus.nnNorm_quasispectrum_le
+- theorem NonUnitalIsometricContinuousFunctionalCalculus.nnnorm_quasispectrum_le
++ theorem apply_le_nnNorm_cfc_nnreal
++ theorem apply_le_nnNorm_cfcₙ_nnreal
+- theorem apply_le_nnnorm_cfc_nnreal
+- theorem apply_le_nnnorm_cfcₙ_nnreal
++ theorem nnNorm_apply_le_nnNorm_cfc
++ theorem nnNorm_apply_le_nnNorm_cfcₙ
++ theorem nnNorm_cfcHom
++ theorem nnNorm_cfc_le
++ theorem nnNorm_cfc_le_iff
++ theorem nnNorm_cfc_lt
++ theorem nnNorm_cfc_lt_iff
++ theorem nnNorm_cfc_nnreal_le
++ theorem nnNorm_cfc_nnreal_le_iff
++ theorem nnNorm_cfc_nnreal_lt
++ theorem nnNorm_cfc_nnreal_lt_iff
++ theorem nnNorm_cfcₙHom
++ theorem nnNorm_cfcₙ_le
++ theorem nnNorm_cfcₙ_le_iff
++ theorem nnNorm_cfcₙ_lt
++ theorem nnNorm_cfcₙ_lt_iff
++ theorem nnNorm_cfcₙ_nnreal_le
++ theorem nnNorm_cfcₙ_nnreal_le_iff
++ theorem nnNorm_cfcₙ_nnreal_lt
++ theorem nnNorm_cfcₙ_nnreal_lt_iff
+- theorem nnnorm_apply_le_nnnorm_cfc
+- theorem nnnorm_apply_le_nnnorm_cfcₙ
+- theorem nnnorm_cfcHom
+- theorem nnnorm_cfc_le
+- theorem nnnorm_cfc_le_iff
+- theorem nnnorm_cfc_lt
+- theorem nnnorm_cfc_lt_iff
+- theorem nnnorm_cfc_nnreal_le
+- theorem nnnorm_cfc_nnreal_le_iff
+- theorem nnnorm_cfc_nnreal_lt
+- theorem nnnorm_cfc_nnreal_lt_iff
+- theorem nnnorm_cfcₙHom
+- theorem nnnorm_cfcₙ_le
+- theorem nnnorm_cfcₙ_le_iff
+- theorem nnnorm_cfcₙ_lt
+- theorem nnnorm_cfcₙ_lt_iff
+- theorem nnnorm_cfcₙ_nnreal_le
+- theorem nnnorm_cfcₙ_nnreal_le_iff
+- theorem nnnorm_cfcₙ_nnreal_lt
+- theorem nnnorm_cfcₙ_nnreal_lt_iff
+Modified Mathlib/Analysis/CStarAlgebra/ContinuousFunctionalCalculus/Order.lean
++ theorem CStarAlgebra.inr_mem_Icc_iff_nnNorm_le
+- theorem CStarAlgebra.inr_mem_Icc_iff_nnnorm_le
++ theorem CStarAlgebra.mem_Icc_algebraMap_iff_nnNorm_le
+- theorem CStarAlgebra.mem_Icc_algebraMap_iff_nnnorm_le
++ theorem CStarAlgebra.mem_Icc_iff_nnNorm_le_one
+- theorem CStarAlgebra.mem_Icc_iff_nnnorm_le_one
++ theorem CStarAlgebra.nnNorm_le_iff_of_nonneg
++ theorem CStarAlgebra.nnNorm_le_natCast_iff_of_nonneg
++ theorem CStarAlgebra.nnNorm_le_nnNorm_of_le_of_nonneg
++ theorem CStarAlgebra.nnNorm_le_one_iff_of_nonneg
++ theorem CStarAlgebra.nnNorm_mem_spectrum_of_nonneg
+- theorem CStarAlgebra.nnnorm_le_iff_of_nonneg
+- theorem CStarAlgebra.nnnorm_le_natCast_iff_of_nonneg
+- theorem CStarAlgebra.nnnorm_le_nnnorm_of_le_of_nonneg
+- theorem CStarAlgebra.nnnorm_le_one_iff_of_nonneg
+- theorem CStarAlgebra.nnnorm_mem_spectrum_of_nonneg
+Modified Mathlib/Analysis/CStarAlgebra/GelfandDuality.lean
++ theorem CommCStarAlgebra.nnNorm_add_eq_max
++ theorem CommCStarAlgebra.nnNorm_sub_eq_max
++ theorem CommCStarAlgebra.nnNorm_sum_eq_sup
+- theorem CommCStarAlgebra.nnnorm_add_eq_max
+- theorem CommCStarAlgebra.nnnorm_sub_eq_max
+- theorem CommCStarAlgebra.nnnorm_sum_eq_sup
++ theorem IsSelfAdjoint.nnNorm_add_eq_max
++ theorem IsSelfAdjoint.nnNorm_sub_eq_max
++ theorem IsSelfAdjoint.nnNorm_sum_eq_sup
+- theorem IsSelfAdjoint.nnnorm_add_eq_max
+- theorem IsSelfAdjoint.nnnorm_sub_eq_max
+- theorem IsSelfAdjoint.nnnorm_sum_eq_sup
++ theorem IsStarNormal.nnNorm_add_eq_max
++ theorem IsStarNormal.nnNorm_sub_eq_max
+- theorem IsStarNormal.nnnorm_add_eq_max
+- theorem IsStarNormal.nnnorm_sub_eq_max
+Modified Mathlib/Analysis/CStarAlgebra/Hom.lean
++ theorem NonUnitalStarAlgHom.nnNorm_map
+- theorem NonUnitalStarAlgHom.nnnorm_map
+Modified Mathlib/Analysis/CStarAlgebra/Matrix.lean
++ theorem Matrix.cstar_nnNorm_def
+- theorem Matrix.cstar_nnnorm_def
+Modified Mathlib/Analysis/CStarAlgebra/Module/Constructions.lean
+
+Modified Mathlib/Analysis/CStarAlgebra/Multiplier.lean
++ theorem DoubleCentralizer.nnNorm_def'
++ theorem DoubleCentralizer.nnNorm_def
++ theorem DoubleCentralizer.nnNorm_fst
++ theorem DoubleCentralizer.nnNorm_fst_eq_snd
++ theorem DoubleCentralizer.nnNorm_snd
+- theorem DoubleCentralizer.nnnorm_def'
+- theorem DoubleCentralizer.nnnorm_def
+- theorem DoubleCentralizer.nnnorm_fst
+- theorem DoubleCentralizer.nnnorm_fst_eq_snd
+- theorem DoubleCentralizer.nnnorm_snd
+Modified Mathlib/Analysis/CStarAlgebra/PositiveLinearFunctional.lean
++ theorem PositiveContinuousLinearMap.nnNorm_map_le_sqrt_opNNNorm_mul
++ theorem PositiveContinuousLinearMap.nnNorm_map_sq_le_opNNNorm_mul
+- theorem PositiveContinuousLinearMap.nnnorm_map_le_sqrt_opNNNorm_mul
+- theorem PositiveContinuousLinearMap.nnnorm_map_sq_le_opNNNorm_mul
+Modified Mathlib/Analysis/CStarAlgebra/Spectrum.lean
++ theorem CStarAlgebra.le_nnNorm_of_mem_quasispectrum
+- theorem CStarAlgebra.le_nnnorm_of_mem_quasispectrum
++ theorem IsSelfAdjoint.spectralRadius_eq_nnNorm
+- theorem IsSelfAdjoint.spectralRadius_eq_nnnorm
++ theorem IsStarNormal.spectralRadius_eq_nnNorm
+- theorem IsStarNormal.spectralRadius_eq_nnnorm
++ theorem NonUnitalStarAlgHom.nnNorm_apply_le
+- theorem NonUnitalStarAlgHom.nnnorm_apply_le
++ theorem StarAlgEquiv.nnNorm_map
+- theorem StarAlgEquiv.nnnorm_map
+Modified Mathlib/Analysis/CStarAlgebra/Unitization.lean
+
+Modified Mathlib/Analysis/Calculus/BumpFunction/FiniteDimension.lean
+
+Modified Mathlib/Analysis/Calculus/ContDiff/RCLike.lean
++ theorem ContDiffAt.exists_lipschitzOnWith_of_nnNorm_lt
+- theorem ContDiffAt.exists_lipschitzOnWith_of_nnnorm_lt
++ theorem HasFTaylorSeriesUpToOn.exists_lipschitzOnWith_of_nnNorm_lt
+- theorem HasFTaylorSeriesUpToOn.exists_lipschitzOnWith_of_nnnorm_lt
+Modified Mathlib/Analysis/Calculus/FDeriv/Basic.lean
++ theorem HasStrictFDerivAt.exists_lipschitzOnWith_of_nnNorm_lt
+- theorem HasStrictFDerivAt.exists_lipschitzOnWith_of_nnnorm_lt
+Modified Mathlib/Analysis/Calculus/InverseFunctionTheorem/ApproximatesLinearOn.lean
+
+Modified Mathlib/Analysis/Calculus/InverseFunctionTheorem/FDeriv.lean
+
+Modified Mathlib/Analysis/Calculus/MeanValue.lean
++ theorem Convex.exists_nhdsWithin_lipschitzOnWith_of_hasFDerivWithinAt_of_nnNorm_lt
+- theorem Convex.exists_nhdsWithin_lipschitzOnWith_of_hasFDerivWithinAt_of_nnnorm_lt
++ theorem Convex.lipschitzOnWith_of_nnNorm_derivWithin_le
++ theorem Convex.lipschitzOnWith_of_nnNorm_deriv_le
++ theorem Convex.lipschitzOnWith_of_nnNorm_fderivWithin_le
++ theorem Convex.lipschitzOnWith_of_nnNorm_fderiv_le
++ theorem Convex.lipschitzOnWith_of_nnNorm_hasDerivWithin_le
++ theorem Convex.lipschitzOnWith_of_nnNorm_hasFDerivWithin_le
+- theorem Convex.lipschitzOnWith_of_nnnorm_derivWithin_le
+- theorem Convex.lipschitzOnWith_of_nnnorm_deriv_le
+- theorem Convex.lipschitzOnWith_of_nnnorm_fderivWithin_le
+- theorem Convex.lipschitzOnWith_of_nnnorm_fderiv_le
+- theorem Convex.lipschitzOnWith_of_nnnorm_hasDerivWithin_le
+- theorem Convex.lipschitzOnWith_of_nnnorm_hasFDerivWithin_le
++ theorem lipschitzWith_of_nnNorm_deriv_le
++ theorem lipschitzWith_of_nnNorm_fderiv_le
+- theorem lipschitzWith_of_nnnorm_deriv_le
+- theorem lipschitzWith_of_nnnorm_fderiv_le
+Modified Mathlib/Analysis/Calculus/ParametricIntegral.lean
+
+Modified Mathlib/Analysis/Complex/Basic.lean
++ theorem Complex.nnNorm_eq_one_of_pow_eq_one
++ theorem Complex.nnNorm_intCast
+- theorem Complex.nnnorm_eq_one_of_pow_eq_one
+- theorem Complex.nnnorm_intCast
+Modified Mathlib/Analysis/Complex/CauchyIntegral.lean
+
+Modified Mathlib/Analysis/Complex/Circle.lean
++/- theorem Circle.enorm_coe
++ theorem Circle.nnNorm_coe
+- theorem Circle.nnnorm_coe
+Modified Mathlib/Analysis/Complex/Norm.lean
++ theorem Complex.nnNorm_I
++ theorem Complex.nnNorm_natCast
++ theorem Complex.nnNorm_nnRatCast
++ theorem Complex.nnNorm_ofNat
++ theorem Complex.nnNorm_ratCast
++ theorem Complex.nnNorm_real
+- theorem Complex.nnnorm_I
+- theorem Complex.nnnorm_natCast
+- theorem Complex.nnnorm_nnratCast
+- theorem Complex.nnnorm_ofNat
+- theorem Complex.nnnorm_ratCast
+- theorem Complex.nnnorm_real
+Modified Mathlib/Analysis/Complex/OperatorNorm.lean
++ theorem Complex.conjCLE_nnNorm
+- theorem Complex.conjCLE_nnnorm
++ theorem Complex.imCLM_nnNorm
+- theorem Complex.imCLM_nnnorm
++ theorem Complex.ofRealCLM_nnNorm
+- theorem Complex.ofRealCLM_nnnorm
++ theorem Complex.reCLM_nnNorm
+- theorem Complex.reCLM_nnnorm
+Modified Mathlib/Analysis/Complex/Trigonometric.lean
++ theorem Complex.nnNorm_exp_I_mul_ofReal
++ theorem Complex.nnNorm_exp_ofReal_mul_I
+- theorem Complex.nnnorm_exp_I_mul_ofReal
+- theorem Complex.nnnorm_exp_ofReal_mul_I
+Modified Mathlib/Analysis/Complex/UpperHalfPlane/Measure.lean
+
+Modified Mathlib/Analysis/Convex/EGauge.lean
+
+Modified Mathlib/Analysis/Distribution/SchwartzSpace/Basic.lean
+
+Modified Mathlib/Analysis/FunctionalSpaces/SobolevInequality.lean
+
+Modified Mathlib/Analysis/InnerProductSpace/Adjoint.lean
+
+Modified Mathlib/Analysis/InnerProductSpace/Basic.lean
++ theorem nnNorm_inner_le_nnNorm
+- theorem nnnorm_inner_le_nnnorm
++ theorem parallelogram_law_with_nnNorm
++ theorem parallelogram_law_with_nnNorm_mul
+- theorem parallelogram_law_with_nnnorm
+- theorem parallelogram_law_with_nnnorm_mul
+Modified Mathlib/Analysis/InnerProductSpace/LinearMap.lean
++ theorem InnerProductSpace.nnNorm_rankOne
+- theorem InnerProductSpace.nnnorm_rankOne
+Modified Mathlib/Analysis/InnerProductSpace/NormPow.lean
++ theorem nnNorm_fderiv_norm_rPow_le
+- theorem nnnorm_fderiv_norm_rpow_le
+Modified Mathlib/Analysis/InnerProductSpace/Orthonormal.lean
++ theorem Orthonormal.nnNorm_eq_one
+- theorem Orthonormal.nnnorm_eq_one
+Modified Mathlib/Analysis/InnerProductSpace/PiL2.lean
++ theorem EuclideanSpace.nnNorm_eq
+- theorem EuclideanSpace.nnnorm_eq
++ theorem OrthonormalBasis.nnNorm_eq_one
+- theorem OrthonormalBasis.nnnorm_eq_one
+Modified Mathlib/Analysis/InnerProductSpace/Projection/Basic.lean
++ theorem Submodule.nnNorm_starProjection_eq_infNNDist
+- theorem Submodule.nnnorm_starProjection_eq_infNndist
+Modified Mathlib/Analysis/InnerProductSpace/Rayleigh.lean
++ theorem ContinuousLinearMap.spectralRadius_eq_nnNorm
+- theorem ContinuousLinearMap.spectralRadius_eq_nnnorm
+Modified Mathlib/Analysis/InnerProductSpace/Spectrum.lean
+
+Modified Mathlib/Analysis/InnerProductSpace/TensorProduct.lean
++ theorem TensorProduct.nnNorm_assoc
++ theorem TensorProduct.nnNorm_comm
++ theorem TensorProduct.nnNorm_lid
++ theorem TensorProduct.nnNorm_map
++ theorem TensorProduct.nnNorm_rid
++ theorem TensorProduct.nnNorm_tmul
+- theorem TensorProduct.nnnorm_assoc
+- theorem TensorProduct.nnnorm_comm
+- theorem TensorProduct.nnnorm_lid
+- theorem TensorProduct.nnnorm_map
+- theorem TensorProduct.nnnorm_rid
+- theorem TensorProduct.nnnorm_tmul
+Modified Mathlib/Analysis/LocallyConvex/Asymptotics.lean
+
+Modified Mathlib/Analysis/LocallyConvex/Bounded.lean
+
+Modified Mathlib/Analysis/Matrix/Normed.lean
++ theorem Matrix.frobenius_nnNorm_conjTranspose
++ theorem Matrix.frobenius_nnNorm_def
++ theorem Matrix.frobenius_nnNorm_diagonal
++ theorem Matrix.frobenius_nnNorm_map_eq
++ theorem Matrix.frobenius_nnNorm_mul
++ theorem Matrix.frobenius_nnNorm_one
++ theorem Matrix.frobenius_nnNorm_replicateCol
++ theorem Matrix.frobenius_nnNorm_replicateRow
++ theorem Matrix.frobenius_nnNorm_transpose
+- theorem Matrix.frobenius_nnnorm_conjTranspose
+- theorem Matrix.frobenius_nnnorm_def
+- theorem Matrix.frobenius_nnnorm_diagonal
+- theorem Matrix.frobenius_nnnorm_map_eq
+- theorem Matrix.frobenius_nnnorm_mul
+- theorem Matrix.frobenius_nnnorm_one
+- theorem Matrix.frobenius_nnnorm_replicateCol
+- theorem Matrix.frobenius_nnnorm_replicateRow
+- theorem Matrix.frobenius_nnnorm_transpose
++ theorem Matrix.nnNorm_apply_le_frobenius_nnNorm
++ theorem Matrix.nnNorm_apply_le_linfty_opNNNorm
++ theorem Matrix.nnNorm_apply_le_nnNorm
++ theorem Matrix.nnNorm_conjTranspose
++ theorem Matrix.nnNorm_def
++ theorem Matrix.nnNorm_diagonal
++ theorem Matrix.nnNorm_le_iff
++ theorem Matrix.nnNorm_lt_iff
++ theorem Matrix.nnNorm_map_eq
++ theorem Matrix.nnNorm_replicateCol
++ theorem Matrix.nnNorm_replicateRow
++ theorem Matrix.nnNorm_transpose
+- theorem Matrix.nnnorm_apply_le_frobenius_nnnorm
+- theorem Matrix.nnnorm_apply_le_linfty_opNNNorm
+- theorem Matrix.nnnorm_apply_le_nnnorm
+- theorem Matrix.nnnorm_conjTranspose
+- theorem Matrix.nnnorm_def
+- theorem Matrix.nnnorm_diagonal
+- theorem Matrix.nnnorm_le_iff
+- theorem Matrix.nnnorm_lt_iff
+- theorem Matrix.nnnorm_map_eq
+- theorem Matrix.nnnorm_replicateCol
+- theorem Matrix.nnnorm_replicateRow
+- theorem Matrix.nnnorm_transpose
++ theorem Matrix.norm_eq_sup_sup_nnNorm
+- theorem Matrix.norm_eq_sup_sup_nnnorm
+Modified Mathlib/Analysis/Normed/Affine/AddTorsor.lean
+
+Modified Mathlib/Analysis/Normed/Algebra/GelfandFormula.lean
++ theorem spectrum.exists_nnNorm_eq_spectralRadius
+- theorem spectrum.exists_nnnorm_eq_spectralRadius
++ theorem spectrum.limsup_pow_nnNorm_pow_one_div_le_spectralRadius
+- theorem spectrum.limsup_pow_nnnorm_pow_one_div_le_spectralRadius
++ theorem spectrum.pow_nnNorm_pow_one_div_tendsto_nhds_spectralRadius
+- theorem spectrum.pow_nnnorm_pow_one_div_tendsto_nhds_spectralRadius
+Modified Mathlib/Analysis/Normed/Algebra/Spectrum.lean
++ theorem exists_nnNorm_quasispectrum_eq_spectralRadius
+- theorem exists_nnnorm_quasispectrum_eq_spectralRadius
++ theorem spectralRadius_le_nnNorm
+- theorem spectralRadius_le_nnnorm
++ theorem spectrum.exists_nnNorm_eq_spectralRadius_of_nonempty
+- theorem spectrum.exists_nnnorm_eq_spectralRadius_of_nonempty
++ theorem spectrum.le_nnNorm_of_mem
+- theorem spectrum.le_nnnorm_of_mem
++ theorem spectrum.spectralRadius_le_liminf_pow_nnNorm_pow_one_div
+- theorem spectrum.spectralRadius_le_liminf_pow_nnnorm_pow_one_div
++ theorem spectrum.spectralRadius_le_pow_nnNorm_pow_one_div
+- theorem spectrum.spectralRadius_le_pow_nnnorm_pow_one_div
+Modified Mathlib/Analysis/Normed/Algebra/TrivSqZeroExt.lean
++ theorem TrivSqZeroExt.nnNorm_def
++ theorem TrivSqZeroExt.nnNorm_inl
++ theorem TrivSqZeroExt.nnNorm_inr
+- theorem TrivSqZeroExt.nnnorm_def
+- theorem TrivSqZeroExt.nnnorm_inl
+- theorem TrivSqZeroExt.nnnorm_inr
+Modified Mathlib/Analysis/Normed/Algebra/Unitization.lean
++ theorem Unitization.nnNorm_def
++ theorem Unitization.nnNorm_eq_sup
++ theorem Unitization.nnNorm_inr
+- theorem Unitization.nnnorm_def
+- theorem Unitization.nnnorm_eq_sup
+- theorem Unitization.nnnorm_inr
+Modified Mathlib/Analysis/Normed/Algebra/UnitizationL1.lean
++ theorem WithLp.unitization_nnNorm_def
++ theorem WithLp.unitization_nnNorm_inr
+- theorem WithLp.unitization_nnnorm_def
+- theorem WithLp.unitization_nnnorm_inr
+Modified Mathlib/Analysis/Normed/Field/Basic.lean
++ theorem NormedField.exists_lt_nnNorm
++ theorem NormedField.exists_lt_nnNorm_lt
+- theorem NormedField.exists_lt_nnnorm
+- theorem NormedField.exists_lt_nnnorm_lt
++ theorem NormedField.exists_nnNorm_lt
++ theorem NormedField.exists_nnNorm_lt_one
+- theorem NormedField.exists_nnnorm_lt
+- theorem NormedField.exists_nnnorm_lt_one
++ theorem NormedField.exists_one_lt_nnNorm
+- theorem NormedField.exists_one_lt_nnnorm
++ theorem Real.nnNorm_mul_toNNReal
+- theorem Real.nnnorm_mul_toNNReal
++ theorem Real.toNNReal_mul_nnNorm
+- theorem Real.toNNReal_mul_nnnorm
++ theorem nnNorm_commutator_sub_one_le
++ theorem nnNorm_div
++ theorem nnNorm_inv
++ theorem nnNorm_zpow
+- theorem nnnorm_commutator_sub_one_le
+- theorem nnnorm_div
+- theorem nnnorm_inv
+- theorem nnnorm_zpow
+Modified Mathlib/Analysis/Normed/Field/Lemmas.lean
++ theorem NormedField.denseRange_nnNorm
+- theorem NormedField.denseRange_nnnorm
+Modified Mathlib/Analysis/Normed/Group/AddTorsor.lean
++ theorem nnDist_eq_nnNorm_vsub'
++ theorem nnDist_eq_nnNorm_vsub
+- theorem nndist_eq_nnnorm_vsub'
+- theorem nndist_eq_nnnorm_vsub
+Modified Mathlib/Analysis/Normed/Group/Basic.lean
++ theorem IndiscreteTopology.nnNorm_eq_zero'
+- theorem IndiscreteTopology.nnnorm_eq_zero'
++ theorem coe_comp_nnNorm'
+- theorem coe_comp_nnnorm'
++ theorem coe_nnNorm'
+- theorem coe_nnnorm'
++ theorem eq_one_or_nnNorm_pos
+- theorem eq_one_or_nnnorm_pos
++ theorem exists_nnNorm_ne_zero'
+- theorem exists_nnnorm_ne_zero'
++ theorem indiscreteTopology_iff_forall_nnNorm_eq_zero'
+- theorem indiscreteTopology_iff_forall_nnnorm_eq_zero'
++ theorem mem_closedBall_iff_nnNorm'''
++ theorem mem_closedBall_iff_nnNorm''
+- theorem mem_closedBall_iff_nnnorm'''
+- theorem mem_closedBall_iff_nnnorm''
++ theorem ne_one_of_nnNorm_ne_zero
+- theorem ne_one_of_nnnorm_ne_zero
++ theorem nnDist_eq_nnNorm_div
++ theorem nnDist_eq_nnNorm_inv_mul
++ theorem nnDist_nnNorm_nnNorm_le'
++ theorem nnDist_nnNorm_nnNorm_le_nnNorm_inv_mul
++ theorem nnNorm_div_eq_nnNorm_left
++ theorem nnNorm_div_eq_nnNorm_right
++ theorem nnNorm_div_le
++ theorem nnNorm_eq_zero'
++ theorem nnNorm_inv'
++ theorem nnNorm_le_mul_nnNorm_add'
++ theorem nnNorm_le_mul_nnNorm_add
++ theorem nnNorm_le_nnNorm_add_nnNorm_div'
++ theorem nnNorm_le_nnNorm_add_nnNorm_div
++ theorem nnNorm_mul_eq_nnNorm_left
++ theorem nnNorm_mul_eq_nnNorm_right
++ theorem nnNorm_mul_le'
++ theorem nnNorm_multiset_prod_le
++ theorem nnNorm_ne_zero_iff'
++ theorem nnNorm_one'
++ theorem nnNorm_pos'
++ theorem nnNorm_pow_le_mul_norm
++ theorem nnNorm_pow_natAbs
++ theorem nnNorm_prod_le
++ theorem nnNorm_prod_le_of_le
++ theorem nnNorm_units_zsmul
++ theorem nnNorm_zpow_abs
++ theorem nnNorm_zpow_isUnit
+- theorem nndist_eq_nnnorm_div
+- theorem nndist_eq_nnnorm_inv_mul
+- theorem nndist_nnnorm_nnnorm_le'
+- theorem nndist_nnnorm_nnnorm_le_nnnorm_inv_mul
++/- theorem nndist_one_left
+- theorem nnnorm_div_eq_nnnorm_left
+- theorem nnnorm_div_eq_nnnorm_right
+- theorem nnnorm_div_le
+- theorem nnnorm_eq_zero'
+- theorem nnnorm_inv'
+- theorem nnnorm_le_mul_nnnorm_add'
+- theorem nnnorm_le_mul_nnnorm_add
+- theorem nnnorm_le_nnnorm_add_nnnorm_div'
+- theorem nnnorm_le_nnnorm_add_nnnorm_div
+- theorem nnnorm_mul_eq_nnnorm_left
+- theorem nnnorm_mul_eq_nnnorm_right
+- theorem nnnorm_mul_le'
+- theorem nnnorm_multiset_prod_le
+- theorem nnnorm_ne_zero_iff'
+- theorem nnnorm_one'
+- theorem nnnorm_pos'
+- theorem nnnorm_pow_le_mul_norm
+- theorem nnnorm_pow_natAbs
+- theorem nnnorm_prod_le
+- theorem nnnorm_prod_le_of_le
+- theorem nnnorm_units_zsmul
+- theorem nnnorm_zpow_abs
+- theorem nnnorm_zpow_isUnit
++ theorem nontrivialTopology_iff_exists_nnNorm_ne_zero'
+- theorem nontrivialTopology_iff_exists_nnnorm_ne_zero'
++ theorem toReal_coe_nnNorm'
+- theorem toReal_coe_nnnorm'
+Modified Mathlib/Analysis/Normed/Group/Completion.lean
++ theorem UniformSpace.Completion.nnNorm_coe
+- theorem UniformSpace.Completion.nnnorm_coe
+Modified Mathlib/Analysis/Normed/Group/Constructions.lean
++ theorem Function.FactorsThrough.nnNorm_extend'
++ theorem Function.FactorsThrough.nnNorm_extend_one
+- theorem Function.FactorsThrough.nnnorm_extend'
+- theorem Function.FactorsThrough.nnnorm_extend_one
++ theorem MulOpposite.nnNorm_op
++ theorem MulOpposite.nnNorm_unop
+- theorem MulOpposite.nnnorm_op
+- theorem MulOpposite.nnnorm_unop
++ theorem Pi.nnNorm_def'
++ theorem Pi.nnNorm_extend_le'
++ theorem Pi.nnNorm_single
+- theorem Pi.nnnorm_def'
+- theorem Pi.nnnorm_extend_le'
+- theorem Pi.nnnorm_single
++ theorem Pi.sum_nnNorm_apply_le_nnNorm'
+- theorem Pi.sum_nnnorm_apply_le_nnnorm'
++ theorem Prod.nnNorm_def'
++ theorem Prod.nnNorm_mk'
+- theorem Prod.nnnorm_def'
+- theorem Prod.nnnorm_mk'
++ theorem ULift.nnNorm_def
++ theorem ULift.nnNorm_down
++ theorem ULift.nnNorm_up
+- theorem ULift.nnnorm_def
+- theorem ULift.nnnorm_down
+- theorem ULift.nnnorm_up
++ theorem nnNorm_le_pi_nnNorm'
++ theorem nnNorm_ofAdd
++ theorem nnNorm_ofDual
++ theorem nnNorm_ofMul
++ theorem nnNorm_toAdd
++ theorem nnNorm_toDual
++ theorem nnNorm_toMul
+- theorem nnnorm_le_pi_nnnorm'
+- theorem nnnorm_ofAdd
+- theorem nnnorm_ofDual
+- theorem nnnorm_ofMul
+- theorem nnnorm_toAdd
+- theorem nnnorm_toDual
+- theorem nnnorm_toMul
++ theorem pi_nnNorm_comp_le'
++ theorem pi_nnNorm_const'
++ theorem pi_nnNorm_const_le'
++ theorem pi_nnNorm_le_iff'
++ theorem pi_nnNorm_lt_iff'
+- theorem pi_nnnorm_comp_le'
+- theorem pi_nnnorm_const'
+- theorem pi_nnnorm_const_le'
+- theorem pi_nnnorm_le_iff'
+- theorem pi_nnnorm_lt_iff'
+Modified Mathlib/Analysis/Normed/Group/Continuity.lean
++ theorem Continuous.nnNorm'
+- theorem Continuous.nnnorm'
++ theorem ContinuousAt.nnNorm'
+- theorem ContinuousAt.nnnorm'
++ theorem ContinuousOn.nnNorm'
+- theorem ContinuousOn.nnnorm'
++ theorem ContinuousWithinAt.nnNorm'
+- theorem ContinuousWithinAt.nnnorm'
++ theorem Filter.Tendsto.nnNorm'
+- theorem Filter.Tendsto.nnnorm'
++ theorem Inseparable.nnNorm_eq_nnNorm'
+- theorem Inseparable.nnnorm_eq_nnnorm'
++ theorem continuous_nnNorm'
+- theorem continuous_nnnorm'
+Modified Mathlib/Analysis/Normed/Group/Defs.lean
++ theorem eNorm_eq_nnNorm
+- theorem enorm_eq_nnnorm
+Modified Mathlib/Analysis/Normed/Group/Indicator.lean
++ theorem nnNorm_indicator_eq_indicator_nnNorm
+- theorem nnnorm_indicator_eq_indicator_nnnorm
+Modified Mathlib/Analysis/Normed/Group/InfiniteSum.lean
++ theorem Summable.of_nnNorm
++ theorem Summable.of_nnNorm_bounded
+- theorem Summable.of_nnnorm
+- theorem Summable.of_nnnorm_bounded
++ theorem nnNorm_tsum_le
+- theorem nnnorm_tsum_le
++ theorem tsum_enorm_ne_top_iff_summable_nnNorm
+- theorem tsum_enorm_ne_top_iff_summable_nnnorm
++ theorem tsum_of_nnNorm_bounded
+- theorem tsum_of_nnnorm_bounded
+Modified Mathlib/Analysis/Normed/Group/Int.lean
++ theorem nnNorm_zpow_le_mul_norm
+- theorem nnnorm_zpow_le_mul_norm
+Modified Mathlib/Analysis/Normed/Group/Lemmas.lean
++ theorem eventually_nnNorm_sub_lt
+- theorem eventually_nnnorm_sub_lt
+Modified Mathlib/Analysis/Normed/Group/Real.lean
++ theorem NNReal.nnNorm_eq_self
+- theorem NNReal.nnnorm_eq_self
++ theorem Real.nnNorm_abs
++ theorem Real.nnNorm_natCast
++ theorem Real.nnNorm_nnRatCast
++ theorem Real.nnNorm_ofNat
++ theorem Real.nnNorm_of_nonneg
++ theorem Real.nnNorm_two
+- theorem Real.nnnorm_abs
+- theorem Real.nnnorm_natCast
+- theorem Real.nnnorm_nnratCast
+- theorem Real.nnnorm_ofNat
+- theorem Real.nnnorm_of_nonneg
+- theorem Real.nnnorm_two
++ theorem Real.toNNReal_eq_nnNorm_of_nonneg
+- theorem Real.toNNReal_eq_nnnorm_of_nonneg
++ theorem nnNorm_norm'
+- theorem nnnorm_norm'
+Modified Mathlib/Analysis/Normed/Group/SemiNormedGrp/Kernels.lean
+
+Modified Mathlib/Analysis/Normed/Group/Ultra.lean
++ theorem Finset.nnNorm_prod_le_sup_nnNorm
+- theorem Finset.nnnorm_prod_le_sup_nnnorm
++ theorem IsUltrametricDist.isNonarchimedean_nnNorm
+- theorem IsUltrametricDist.isNonarchimedean_nnnorm
++ theorem IsUltrametricDist.isUltrametricDist_iff_isNonarchimedean_nnNorm
+- theorem IsUltrametricDist.isUltrametricDist_iff_isNonarchimedean_nnnorm
++ theorem IsUltrametricDist.isUltrametricDist_of_forall_nnNorm_mul_le_max_nnNorm
+- theorem IsUltrametricDist.isUltrametricDist_of_forall_nnnorm_mul_le_max_nnnorm
++ theorem IsUltrametricDist.isUltrametricDist_of_isNonarchimedean_nnNorm
+- theorem IsUltrametricDist.isUltrametricDist_of_isNonarchimedean_nnnorm
++ theorem IsUltrametricDist.nnNorm_div_eq_max_of_nnNorm_div_ne_nnNorm_div
++ theorem IsUltrametricDist.nnNorm_eq_of_mul_nnNorm_lt_max
++ theorem IsUltrametricDist.nnNorm_mul_eq_max_of_nnNorm_ne_nnNorm
++ theorem IsUltrametricDist.nnNorm_mul_le_max
++ theorem IsUltrametricDist.nnNorm_pow_le
++ theorem IsUltrametricDist.nnNorm_prod_eq_sup_of_pairwise_ne
++ theorem IsUltrametricDist.nnNorm_prod_le_of_forall_le
++ theorem IsUltrametricDist.nnNorm_tprod_le
++ theorem IsUltrametricDist.nnNorm_tprod_le_of_forall_le
++ theorem IsUltrametricDist.nnNorm_zpow_le
+- theorem IsUltrametricDist.nnnorm_div_eq_max_of_nnnorm_div_ne_nnnorm_div
+- theorem IsUltrametricDist.nnnorm_eq_of_mul_nnnorm_lt_max
+- theorem IsUltrametricDist.nnnorm_mul_eq_max_of_nnnorm_ne_nnnorm
+- theorem IsUltrametricDist.nnnorm_mul_le_max
+- theorem IsUltrametricDist.nnnorm_pow_le
+- theorem IsUltrametricDist.nnnorm_prod_eq_sup_of_pairwise_ne
+- theorem IsUltrametricDist.nnnorm_prod_le_of_forall_le
+- theorem IsUltrametricDist.nnnorm_tprod_le
+- theorem IsUltrametricDist.nnnorm_tprod_le_of_forall_le
+- theorem IsUltrametricDist.nnnorm_zpow_le
+Modified Mathlib/Analysis/Normed/Group/Uniform.lean
++ theorem AntilipschitzWith.le_mul_nnNorm'
+- theorem AntilipschitzWith.le_mul_nnnorm'
++ theorem Isometry.nnNorm_map_of_map_one
+- theorem Isometry.nnnorm_map_of_map_one
++ theorem LipschitzWith.nnNorm_le_mul'
+- theorem LipschitzWith.nnnorm_le_mul'
++ theorem MonoidHomClass.lipschitz_of_bound_nnNorm
+- theorem MonoidHomClass.lipschitz_of_bound_nnnorm
++ theorem SeparationQuotient.nnNorm_mk'
+- theorem SeparationQuotient.nnnorm_mk'
++ theorem lipschitzWith_one_nnNorm'
+- theorem lipschitzWith_one_nnnorm'
++ theorem nnNorm_map'
+- theorem nnnorm_map'
++ theorem uniformContinuous_nnNorm'
+- theorem uniformContinuous_nnnorm'
+Modified Mathlib/Analysis/Normed/Lp/PiLp.lean
++ theorem PiLp.nnNorm_apply_le
++ theorem PiLp.nnNorm_eq_ciSup
++ theorem PiLp.nnNorm_eq_of_L1
++ theorem PiLp.nnNorm_eq_of_L2
++ theorem PiLp.nnNorm_eq_sum
++ theorem PiLp.nnNorm_ofLp
++ theorem PiLp.nnNorm_seminormedAddCommGroupToPi
++ theorem PiLp.nnNorm_single
++ theorem PiLp.nnNorm_toLp
++ theorem PiLp.nnNorm_toLp_const'
++ theorem PiLp.nnNorm_toLp_const
++ theorem PiLp.nnNorm_toLp_one
+- theorem PiLp.nnnorm_apply_le
+- theorem PiLp.nnnorm_eq_ciSup
+- theorem PiLp.nnnorm_eq_of_L1
+- theorem PiLp.nnnorm_eq_of_L2
+- theorem PiLp.nnnorm_eq_sum
+- theorem PiLp.nnnorm_ofLp
+- theorem PiLp.nnnorm_seminormedAddCommGroupToPi
+- theorem PiLp.nnnorm_single
+- theorem PiLp.nnnorm_toLp
+- theorem PiLp.nnnorm_toLp_const'
+- theorem PiLp.nnnorm_toLp_const
+- theorem PiLp.nnnorm_toLp_one
++/- theorem PiLp.norm_ofLp
+Modified Mathlib/Analysis/Normed/Lp/ProdLp.lean
++ theorem WithLp.nnNorm_fst_le
++ theorem WithLp.nnNorm_seminormedAddCommGroupToProd
++ theorem WithLp.nnNorm_snd_le
++ theorem WithLp.nnNorm_toLp_inl
++ theorem WithLp.nnNorm_toLp_inr
+- theorem WithLp.nnnorm_fst_le
+- theorem WithLp.nnnorm_seminormedAddCommGroupToProd
+- theorem WithLp.nnnorm_snd_le
+- theorem WithLp.nnnorm_toLp_inl
+- theorem WithLp.nnnorm_toLp_inr
++ theorem WithLp.prod_nnNorm_eq_add
++ theorem WithLp.prod_nnNorm_eq_of_L1
++ theorem WithLp.prod_nnNorm_eq_of_L2
++ theorem WithLp.prod_nnNorm_eq_sup
++ theorem WithLp.prod_nnNorm_ofLp
++ theorem WithLp.prod_nnNorm_toLp
+- theorem WithLp.prod_nnnorm_eq_add
+- theorem WithLp.prod_nnnorm_eq_of_L1
+- theorem WithLp.prod_nnnorm_eq_of_L2
+- theorem WithLp.prod_nnnorm_eq_sup
+- theorem WithLp.prod_nnnorm_ofLp
+- theorem WithLp.prod_nnnorm_toLp
+Modified Mathlib/Analysis/Normed/Lp/lpSpace.lean
+
+Modified Mathlib/Analysis/Normed/Module/Alternating/Basic.lean
++ theorem ContinuousAlternatingMap.nnNorm_constOfIsEmpty
++ theorem ContinuousAlternatingMap.nnNorm_ofSubsingleton
++ theorem ContinuousAlternatingMap.nnNorm_ofSubsingleton_id
++ theorem ContinuousAlternatingMap.nnNorm_ofSubsingleton_id_le
++ theorem ContinuousAlternatingMap.nnNorm_toContinuousMultilinearMap
+- theorem ContinuousAlternatingMap.nnnorm_constOfIsEmpty
+- theorem ContinuousAlternatingMap.nnnorm_ofSubsingleton
+- theorem ContinuousAlternatingMap.nnnorm_ofSubsingleton_id
+- theorem ContinuousAlternatingMap.nnnorm_ofSubsingleton_id_le
+- theorem ContinuousAlternatingMap.nnnorm_toContinuousMultilinearMap
+Modified Mathlib/Analysis/Normed/Module/Ball/Pointwise.lean
+
+Modified Mathlib/Analysis/Normed/Module/Bases.lean
++ theorem SchauderBasis.bddAbove_range_nnNorm_proj
+- theorem SchauderBasis.bddAbove_range_nnnorm_proj
++ theorem SchauderBasis.nnNorm_proj_le_nnNormProjBound
+- theorem SchauderBasis.nnnorm_proj_le_nnnormProjBound
++ theorem SchauderBasis.norm_proj_le_nnNormProjBound
+- theorem SchauderBasis.norm_proj_le_nnnormProjBound
++ theorem UnconditionalSchauderBasis.bddAbove_range_nnNorm_proj
+- theorem UnconditionalSchauderBasis.bddAbove_range_nnnorm_proj
++ theorem UnconditionalSchauderBasis.nnNorm_proj_le_nnNormProjBound
+- theorem UnconditionalSchauderBasis.nnnorm_proj_le_nnnormProjBound
++ theorem UnconditionalSchauderBasis.norm_proj_le_nnNormProjBound
+- theorem UnconditionalSchauderBasis.norm_proj_le_nnnormProjBound
+Modified Mathlib/Analysis/Normed/Module/Basic.lean
++ theorem nnNorm_algebraMap'
++ theorem nnNorm_algebraMap
++ theorem nnNorm_algebraMap_nnReal
+- theorem nnnorm_algebraMap'
+- theorem nnnorm_algebraMap
+- theorem nnnorm_algebraMap_nnreal
+Modified Mathlib/Analysis/Normed/Module/FiniteDimension.lean
+
+Modified Mathlib/Analysis/Normed/Module/Multilinear/Basic.lean
++ theorem ContinuousMultilinearMap.nnNorm_constOfIsEmpty
++ theorem ContinuousMultilinearMap.nnNorm_ofSubsingleton
++ theorem ContinuousMultilinearMap.nnNorm_ofSubsingleton_id
++ theorem ContinuousMultilinearMap.nnNorm_ofSubsingleton_id_le
++ theorem ContinuousMultilinearMap.nnNorm_smulRight
+- theorem ContinuousMultilinearMap.nnnorm_constOfIsEmpty
+- theorem ContinuousMultilinearMap.nnnorm_ofSubsingleton
+- theorem ContinuousMultilinearMap.nnnorm_ofSubsingleton_id
+- theorem ContinuousMultilinearMap.nnnorm_ofSubsingleton_id_le
+- theorem ContinuousMultilinearMap.nnnorm_smulRight
+Modified Mathlib/Analysis/Normed/Module/RCLike/Real.lean
++ theorem nnNorm_surjective
+- theorem nnnorm_surjective
++ theorem range_nnNorm
+- theorem range_nnnorm
+Modified Mathlib/Analysis/Normed/MulAction.lean
++ theorem IsBoundedSMul.of_nnNorm_smul_le
+- theorem IsBoundedSMul.of_nnnorm_smul_le
++ theorem NormSMulClass.of_nnNorm_smul
+- theorem NormSMulClass.of_nnnorm_smul
++ theorem nnNorm_smul
++ theorem nnNorm_smul_le
+- theorem nnnorm_smul
+- theorem nnnorm_smul_le
+Modified Mathlib/Analysis/Normed/Operator/Banach.lean
++ theorem ContinuousLinearMap.nonlinearRightInverseOfSurjective_nnNorm_pos
+- theorem ContinuousLinearMap.nonlinearRightInverseOfSurjective_nnnorm_pos
+Modified Mathlib/Analysis/Normed/Operator/BanachSteinhaus.lean
++ theorem banach_steinhaus_iSup_nnNorm
+- theorem banach_steinhaus_iSup_nnnorm
+Modified Mathlib/Analysis/Normed/Operator/Basic.lean
++ theorem ContinuousLinearMap.nnNorm_id
+- theorem ContinuousLinearMap.nnnorm_id
+Modified Mathlib/Analysis/Normed/Operator/Bilinear.lean
++ theorem ContinuousLinearMap.nnNorm_smulRight_apply
++ theorem ContinuousLinearMap.nnNorm_toSpanSingleton
+- theorem ContinuousLinearMap.nnnorm_smulRight_apply
+- theorem ContinuousLinearMap.nnnorm_toSpanSingleton
+Modified Mathlib/Analysis/Normed/Operator/LinearIsometry.lean
++ theorem SemilinearIsometryClass.nnNorm_map
+- theorem SemilinearIsometryClass.nnnorm_map
+Modified Mathlib/Analysis/Normed/Operator/Mul.lean
+
+Modified Mathlib/Analysis/Normed/Operator/NNNorm.lean
++ theorem ContinuousLinearMap.exists_nnNorm_eq_one_lt_apply_of_lt_opNNNorm
+- theorem ContinuousLinearMap.exists_nnnorm_eq_one_lt_apply_of_lt_opNNNorm
++ theorem ContinuousLinearMap.nnNorm_def
+- theorem ContinuousLinearMap.nnnorm_def
++ theorem ContinuousLinearMap.opNNNorm_le_of_unit_nnNorm
+- theorem ContinuousLinearMap.opNNNorm_le_of_unit_nnnorm
++ theorem ContinuousLinearMap.sSup_sphere_eq_nnNorm
+- theorem ContinuousLinearMap.sSup_sphere_eq_nnnorm
++ theorem ContinuousLinearMap.sSup_unitClosedBall_eq_nnNorm
+- theorem ContinuousLinearMap.sSup_unitClosedBall_eq_nnnorm
++ theorem ContinuousLinearMap.sSup_unit_ball_eq_nnNorm
+- theorem ContinuousLinearMap.sSup_unit_ball_eq_nnnorm
+Modified Mathlib/Analysis/Normed/Operator/NormedSpace.lean
++ theorem ContinuousLinearEquiv.nnNorm_symm_pos
+- theorem ContinuousLinearEquiv.nnnorm_symm_pos
++ theorem ContinuousLinearEquiv.subsingleton_or_nnNorm_symm_pos
+- theorem ContinuousLinearEquiv.subsingleton_or_nnnorm_symm_pos
++ theorem LinearIsometry.nnNorm_toContinuousLinearMap
+- theorem LinearIsometry.nnnorm_toContinuousLinearMap
++ theorem LinearIsometryEquiv.nnNorm_toContinuousLinearMap
+- theorem LinearIsometryEquiv.nnnorm_toContinuousLinearMap
+Modified Mathlib/Analysis/Normed/Ring/Basic.lean
++ theorem Finset.nnNorm_prod_le'
++ theorem Finset.nnNorm_prod_le
+- theorem Finset.nnnorm_prod_le'
+- theorem Finset.nnnorm_prod_le
++ theorem List.nnNorm_prod_le'
++ theorem List.nnNorm_prod_le
++ theorem List.nnNorm_prod_map
+- theorem List.nnnorm_prod_le'
+- theorem List.nnnorm_prod_le
+- theorem List.nnnorm_prod_map
++ theorem Multiset.nnNorm_prod_map
+- theorem Multiset.nnnorm_prod_map
++ theorem NNReal.nnNorm_eq
+- theorem NNReal.nnnorm_eq
++ theorem RingHomIsometric.nnNorm_map
+- theorem RingHomIsometric.nnnorm_map
++ theorem Units.nnNorm_pos
+- theorem Units.nnnorm_pos
++ def nnNormHom
++ theorem nnNorm_commutator_units_sub_one_le
++ theorem nnNorm_intCast_abs
++ theorem nnNorm_mul
++ theorem nnNorm_mul_le
++ theorem nnNorm_mul_le_of_le
++ theorem nnNorm_mul₃_le
++ theorem nnNorm_natAbs
++ theorem nnNorm_neg_pow
++ theorem nnNorm_one
++ theorem nnNorm_pow
++ theorem nnNorm_pow_le'
++ theorem nnNorm_pow_le
++ theorem nnNorm_prod
++ theorem nnNorm_sub_mul_le'
++ theorem nnNorm_sub_mul_le
+- def nnnormHom
+- theorem nnnorm_commutator_units_sub_one_le
+- theorem nnnorm_intCast_abs
+- theorem nnnorm_mul
+- theorem nnnorm_mul_le
+- theorem nnnorm_mul_le_of_le
+- theorem nnnorm_mul₃_le
+- theorem nnnorm_natAbs
+- theorem nnnorm_neg_pow
+- theorem nnnorm_one
+- theorem nnnorm_pow
+- theorem nnnorm_pow_le'
+- theorem nnnorm_pow_le
+- theorem nnnorm_prod
+- theorem nnnorm_sub_mul_le'
+- theorem nnnorm_sub_mul_le
++ theorem one_le_nnNorm_one
+- theorem one_le_nnnorm_one
+Modified Mathlib/Analysis/Normed/Ring/Int.lean
++ theorem Int.nnNorm_coe_units
++ theorem Int.nnNorm_natCast
+- theorem Int.nnnorm_coe_units
+- theorem Int.nnnorm_natCast
++ theorem Int.toNat_add_toNat_neg_eq_nnNorm
+- theorem Int.toNat_add_toNat_neg_eq_nnnorm
+Modified Mathlib/Analysis/Normed/Ring/Lemmas.lean
+
+Modified Mathlib/Analysis/Normed/Ring/Ultra.lean
++ theorem IsUltrametricDist.nnNorm_add_one_le_max_nnNorm_one
++ theorem IsUltrametricDist.nnNorm_intCast_le_one
++ theorem IsUltrametricDist.nnNorm_natCast_le_one
+- theorem IsUltrametricDist.nnnorm_add_one_le_max_nnnorm_one
+- theorem IsUltrametricDist.nnnorm_intCast_le_one
+- theorem IsUltrametricDist.nnnorm_natCast_le_one
+Modified Mathlib/Analysis/Polynomial/CauchyBound.lean
+
+Modified Mathlib/Analysis/Polynomial/MahlerMeasure.lean
+
+Modified Mathlib/Analysis/Quaternion.lean
++ theorem Quaternion.nnNorm_coe
++ theorem Quaternion.nnNorm_star
+- theorem Quaternion.nnnorm_coe
+- theorem Quaternion.nnnorm_star
+Modified Mathlib/Analysis/RCLike/Basic.lean
++ theorem RCLike.nnNorm_conj
++ theorem RCLike.nnNorm_natCast
++ theorem RCLike.nnNorm_nnRatCast
++ theorem RCLike.nnNorm_nnqsMul
++ theorem RCLike.nnNorm_nsmul
++ theorem RCLike.nnNorm_ofNat
++ theorem RCLike.nnNorm_two
+- theorem RCLike.nnnorm_conj
+- theorem RCLike.nnnorm_natCast
+- theorem RCLike.nnnorm_nnqsmul
+- theorem RCLike.nnnorm_nnratCast
+- theorem RCLike.nnnorm_nsmul
+- theorem RCLike.nnnorm_ofNat
+- theorem RCLike.nnnorm_two
+Modified Mathlib/Analysis/SpecialFunctions/Complex/CircleMap.lean
++ theorem nnNorm_circleMap_zero
+- theorem nnnorm_circleMap_zero
+Modified Mathlib/Analysis/SpecialFunctions/ContinuousFunctionalCalculus/Rpow/Isometric.lean
++ theorem CFC.nnNorm_nnrPow
++ theorem CFC.nnNorm_rpow
++ theorem CFC.nnNorm_sqrt
+- theorem CFC.nnnorm_nnrpow
+- theorem CFC.nnnorm_rpow
+- theorem CFC.nnnorm_sqrt
+Modified Mathlib/Analysis/SpecialFunctions/Elliptic/Weierstrass.lean
+
+Modified Mathlib/Analysis/SpecialFunctions/Gaussian/GaussianIntegral.lean
+
+Modified Mathlib/Analysis/SpecialFunctions/MulExpNegMulSq.lean
++ theorem Real.nnNorm_deriv_mulExpNegMulSq_le_one
+- theorem Real.nnnorm_deriv_mulExpNegMulSq_le_one
+Modified Mathlib/Analysis/SpecialFunctions/Pow/NNReal.lean
++ theorem Real.nnNorm_rpow_of_nonneg
+- theorem Real.nnnorm_rpow_of_nonneg
+Modified Mathlib/Analysis/SpecialFunctions/Trigonometric/Bounds.lean
++ theorem Real.nnNorm_exp_I_mul_ofReal_sub_one_le
+- theorem Real.nnnorm_exp_I_mul_ofReal_sub_one_le
+Modified Mathlib/Geometry/Manifold/Riemannian/Basic.lean
++ theorem nnNorm_tangentSpace_vectorSpace
+- theorem nnnorm_tangentSpace_vectorSpace
+Modified Mathlib/InformationTheory/Hamming.lean
++ theorem Hamming.nnNorm_eq_hammingNorm
+- theorem Hamming.nnnorm_eq_hammingNorm
+Modified Mathlib/MeasureTheory/Constructions/BorelSpace/Metric.lean
++ theorem measurable_nnNorm
+- theorem measurable_nnnorm
+Modified Mathlib/MeasureTheory/Covering/Differentiation.lean
+
+Modified Mathlib/MeasureTheory/Function/ConditionalExpectation/CondexpL1.lean
+
+Modified Mathlib/MeasureTheory/Function/ConditionalExpectation/CondexpL2.lean
++ theorem MeasureTheory.lintegral_nnNorm_condExpIndSMul_le
++ theorem MeasureTheory.lintegral_nnNorm_condExpL2_indicator_le
++ theorem MeasureTheory.lintegral_nnNorm_condExpL2_indicator_le_real
++ theorem MeasureTheory.lintegral_nnNorm_condExpL2_le
+- theorem MeasureTheory.lintegral_nnnorm_condExpIndSMul_le
+- theorem MeasureTheory.lintegral_nnnorm_condExpL2_indicator_le
+- theorem MeasureTheory.lintegral_nnnorm_condExpL2_indicator_le_real
+- theorem MeasureTheory.lintegral_nnnorm_condExpL2_le
++ theorem MeasureTheory.setLIntegral_nnNorm_condExpIndSMul_le
++ theorem MeasureTheory.setLIntegral_nnNorm_condExpL2_indicator_le
+- theorem MeasureTheory.setLIntegral_nnnorm_condExpIndSMul_le
+- theorem MeasureTheory.setLIntegral_nnnorm_condExpL2_indicator_le
+Modified Mathlib/MeasureTheory/Function/ConditionalExpectation/Real.lean
+
+Modified Mathlib/MeasureTheory/Function/Holder.lean
++ theorem ContinuousLinearMap.nnNorm_holder_apply_apply_le
+- theorem ContinuousLinearMap.nnnorm_holder_apply_apply_le
+Modified Mathlib/MeasureTheory/Function/Jacobian.lean
+
+Modified Mathlib/MeasureTheory/Function/L1Space/HasFiniteIntegral.lean
+
+Modified Mathlib/MeasureTheory/Function/L2Space.lean
+
+Modified Mathlib/MeasureTheory/Function/LpSeminorm/Basic.lean
++ theorem MeasureTheory.eLpNorm'_congr_nnNorm_ae
+- theorem MeasureTheory.eLpNorm'_congr_nnnorm_ae
++ theorem MeasureTheory.eLpNorm'_mono_nnNorm_ae
+- theorem MeasureTheory.eLpNorm'_mono_nnnorm_ae
++ theorem MeasureTheory.eLpNormEssSup_le_of_ae_nnNorm_bound
+- theorem MeasureTheory.eLpNormEssSup_le_of_ae_nnnorm_bound
++ theorem MeasureTheory.eLpNormEssSup_lt_top_of_ae_nnNorm_bound
+- theorem MeasureTheory.eLpNormEssSup_lt_top_of_ae_nnnorm_bound
++ theorem MeasureTheory.eLpNormEssSup_mono_nnNorm_ae
+- theorem MeasureTheory.eLpNormEssSup_mono_nnnorm_ae
++ theorem MeasureTheory.eLpNorm_congr_nnNorm_ae
+- theorem MeasureTheory.eLpNorm_congr_nnnorm_ae
++ theorem MeasureTheory.eLpNorm_le_of_ae_nnNorm_bound
+- theorem MeasureTheory.eLpNorm_le_of_ae_nnnorm_bound
++ theorem MeasureTheory.eLpNorm_mono_nnNorm
++ theorem MeasureTheory.eLpNorm_mono_nnNorm_ae
+- theorem MeasureTheory.eLpNorm_mono_nnnorm
+- theorem MeasureTheory.eLpNorm_mono_nnnorm_ae
+Modified Mathlib/MeasureTheory/Function/LpSeminorm/CompareExp.lean
+
+Modified Mathlib/MeasureTheory/Function/LpSeminorm/Monotonicity.lean
++ theorem MeasureTheory.MemLp.of_nnNorm_le_mul
+- theorem MeasureTheory.MemLp.of_nnnorm_le_mul
+Modified Mathlib/MeasureTheory/Function/LpSeminorm/SMul.lean
+
+Modified Mathlib/MeasureTheory/Function/LpSpace/Basic.lean
++ theorem MeasureTheory.Lp.mem_Lp_of_ae_nnNorm_bound
+- theorem MeasureTheory.Lp.mem_Lp_of_ae_nnnorm_bound
++ theorem MeasureTheory.Lp.mem_Lp_of_nnNorm_ae_le
++ theorem MeasureTheory.Lp.mem_Lp_of_nnNorm_ae_le_mul
+- theorem MeasureTheory.Lp.mem_Lp_of_nnnorm_ae_le
+- theorem MeasureTheory.Lp.mem_Lp_of_nnnorm_ae_le_mul
++ theorem MeasureTheory.Lp.nnNorm_def
++ theorem MeasureTheory.Lp.nnNorm_eq_zero_iff
++ theorem MeasureTheory.Lp.nnNorm_exponent_zero
++ theorem MeasureTheory.Lp.nnNorm_le_mul_nnNorm_of_ae_le_mul
++ theorem MeasureTheory.Lp.nnNorm_le_of_ae_bound
++ theorem MeasureTheory.Lp.nnNorm_neg
++ theorem MeasureTheory.Lp.nnNorm_toLp
++ theorem MeasureTheory.Lp.nnNorm_zero
+- theorem MeasureTheory.Lp.nnnorm_def
+- theorem MeasureTheory.Lp.nnnorm_eq_zero_iff
+- theorem MeasureTheory.Lp.nnnorm_exponent_zero
+- theorem MeasureTheory.Lp.nnnorm_le_mul_nnnorm_of_ae_le_mul
+- theorem MeasureTheory.Lp.nnnorm_le_of_ae_bound
+- theorem MeasureTheory.Lp.nnnorm_neg
+- theorem MeasureTheory.Lp.nnnorm_toLp
+- theorem MeasureTheory.Lp.nnnorm_zero
+Modified Mathlib/MeasureTheory/Function/LpSpace/Complete.lean
+
+Modified Mathlib/MeasureTheory/Function/LpSpace/ContinuousFunctions.lean
++ theorem BoundedContinuousFunction.Lp_nnNorm_le
+- theorem BoundedContinuousFunction.Lp_nnnorm_le
+Modified Mathlib/MeasureTheory/Function/LpSpace/DomAct/Basic.lean
++ theorem DomMulAct.nnNorm_smul_Lp
+- theorem DomMulAct.nnnorm_smul_Lp
+Modified Mathlib/MeasureTheory/Function/LpSpace/Indicator.lean
++ theorem MeasureTheory.nnNorm_indicatorConstLp_le
+- theorem MeasureTheory.nnnorm_indicatorConstLp_le
+Modified Mathlib/MeasureTheory/Function/SimpleFuncDenseLp.lean
++ theorem MeasureTheory.SimpleFunc.nnNorm_approxOn_le
+- theorem MeasureTheory.SimpleFunc.nnnorm_approxOn_le
+Modified Mathlib/MeasureTheory/Function/StronglyMeasurable/AEStronglyMeasurable.lean
+
+Modified Mathlib/MeasureTheory/Function/StronglyMeasurable/Basic.lean
+
+Modified Mathlib/MeasureTheory/Function/UniformIntegrable.lean
+
+Modified Mathlib/MeasureTheory/Integral/Bochner/Basic.lean
+
+Modified Mathlib/MeasureTheory/Integral/Bochner/L1.lean
++ theorem MeasureTheory.L1.nnNorm_Integral_le_one
++ theorem MeasureTheory.L1.nnNorm_integral_le
+- theorem MeasureTheory.L1.nnnorm_Integral_le_one
+- theorem MeasureTheory.L1.nnnorm_integral_le
+Modified Mathlib/MeasureTheory/Integral/Bochner/Set.lean
+
+Modified Mathlib/MeasureTheory/Integral/BoundedContinuousFunction.lean
++ theorem BoundedContinuousFunction.lintegral_nnNorm_le
+- theorem BoundedContinuousFunction.lintegral_nnnorm_le
+Modified Mathlib/MeasureTheory/Integral/CircleIntegral.lean
+
+Modified Mathlib/MeasureTheory/Integral/DominatedConvergence.lean
+
+Modified Mathlib/MeasureTheory/Integral/IntegralEqImproper.lean
+
+Modified Mathlib/MeasureTheory/Integral/IntervalIntegral/FundThmCalculus.lean
+
+Modified Mathlib/MeasureTheory/Integral/Prod.lean
+
+Modified Mathlib/MeasureTheory/Integral/SetToL1/DominatedConvergence.lean
+
+Modified Mathlib/MeasureTheory/Measure/Hausdorff.lean
+
+Modified Mathlib/MeasureTheory/Measure/Portmanteau.lean
+
+Modified Mathlib/MeasureTheory/VectorMeasure/BoundedVariation.lean
+
+Modified Mathlib/MeasureTheory/VectorMeasure/Integral.lean
+
+Modified Mathlib/MeasureTheory/VectorMeasure/Prod.lean
+
+Modified Mathlib/MeasureTheory/VectorMeasure/SetIntegral.lean
+
+Modified Mathlib/MeasureTheory/VectorMeasure/Variation/Basic.lean
+
+Modified Mathlib/MeasureTheory/VectorMeasure/Variation/Semivariation.lean
++ theorem MeasureTheory.VectorMeasure.nnNorm_apply_le_bound
+- theorem MeasureTheory.VectorMeasure.nnnorm_apply_le_bound
+Modified Mathlib/MeasureTheory/VectorMeasure/WithDensityVec.lean
+
+Modified Mathlib/NumberTheory/ModularForms/Bounds.lean
+
+Modified Mathlib/NumberTheory/ModularForms/EisensteinSeries/Summable.lean
+
+Modified Mathlib/NumberTheory/NumberField/CanonicalEmbedding/Basic.lean
++ theorem NumberField.canonicalEmbedding.nnNorm_eq
+- theorem NumberField.canonicalEmbedding.nnnorm_eq
++ theorem NumberField.mixedEmbedding.nnNorm_eq_sup_normAtPlace
+- theorem NumberField.mixedEmbedding.nnnorm_eq_sup_normAtPlace
+Modified Mathlib/NumberTheory/NumberField/Discriminant/Basic.lean
+
+Modified Mathlib/NumberTheory/NumberField/House.lean
+
+Modified Mathlib/NumberTheory/Padics/Complex.lean
++ theorem PadicComplex.nnNorm_extends'
++ theorem PadicComplex.nnNorm_extends
+- theorem PadicComplex.nnnorm_extends'
+- theorem PadicComplex.nnnorm_extends
+Modified Mathlib/NumberTheory/Padics/MahlerBasis.lean
+
+Modified Mathlib/Probability/Distributions/Uniform.lean
+
+Modified Mathlib/Probability/IdentDistrib.lean
+
+Modified Mathlib/Probability/Independence/Integrable.lean
+
+Modified Mathlib/Probability/Kernel/Disintegration/Density.lean
+
+Modified Mathlib/Probability/Martingale/Convergence.lean
+
+Modified Mathlib/RingTheory/Polynomial/Cyclotomic/Eval.lean
+
+Modified Mathlib/RingTheory/RootsOfUnity/Complex.lean
++ theorem IsPrimitiveRoot.nnNorm_eq_one
+- theorem IsPrimitiveRoot.nnnorm_eq_one
+Modified Mathlib/Topology/Algebra/Polynomial.lean
+
+Modified Mathlib/Topology/Algebra/Valued/LocallyCompact.lean
++ theorem Valued.integer.exists_nnNorm_lt_one
+- theorem Valued.integer.exists_nnnorm_lt_one
+Modified Mathlib/Topology/Algebra/Valued/NormedValued.lean
+
+Modified Mathlib/Topology/CWComplex/Classical/Basic.lean
+
+Modified Mathlib/Topology/ContinuousMap/Bounded/Normed.lean
++ theorem BoundedContinuousFunction.nnDist_le_two_nnNorm
++ def BoundedContinuousFunction.nnNorm
++ theorem BoundedContinuousFunction.nnNorm_add_eq_max
++ theorem BoundedContinuousFunction.nnNorm_coeFn_eq
++ theorem BoundedContinuousFunction.nnNorm_coe_le_nnNorm
++ theorem BoundedContinuousFunction.nnNorm_const_eq
++ theorem BoundedContinuousFunction.nnNorm_const_le
++ theorem BoundedContinuousFunction.nnNorm_def
++ theorem BoundedContinuousFunction.nnNorm_eq_iSup_nnNorm
++ theorem BoundedContinuousFunction.nnNorm_le
++ theorem BoundedContinuousFunction.nnNorm_sub_eq_max
++ theorem BoundedContinuousFunction.nnNorm_sum_eq_sup
+- theorem BoundedContinuousFunction.nndist_le_two_nnnorm
+- def BoundedContinuousFunction.nnnorm
+- theorem BoundedContinuousFunction.nnnorm_add_eq_max
+- theorem BoundedContinuousFunction.nnnorm_coeFn_eq
+- theorem BoundedContinuousFunction.nnnorm_coe_le_nnnorm
+- theorem BoundedContinuousFunction.nnnorm_const_eq
+- theorem BoundedContinuousFunction.nnnorm_const_le
+- theorem BoundedContinuousFunction.nnnorm_def
+- theorem BoundedContinuousFunction.nnnorm_eq_iSup_nnnorm
+- theorem BoundedContinuousFunction.nnnorm_le
+- theorem BoundedContinuousFunction.nnnorm_sub_eq_max
+- theorem BoundedContinuousFunction.nnnorm_sum_eq_sup
+Modified Mathlib/Topology/ContinuousMap/Compact.lean
++ theorem ContinuousMap.nnNorm_add_eq_max
++ theorem ContinuousMap.nnNorm_eq_iSup_nnNorm
++ theorem ContinuousMap.nnNorm_lt_iff
++ theorem ContinuousMap.nnNorm_lt_iff_of_nonempty
++ theorem ContinuousMap.nnNorm_smul_const
++ theorem ContinuousMap.nnNorm_sub_eq_max
++ theorem ContinuousMap.nnNorm_sum_eq_sup
+- theorem ContinuousMap.nnnorm_add_eq_max
+- theorem ContinuousMap.nnnorm_eq_iSup_nnnorm
+- theorem ContinuousMap.nnnorm_lt_iff
+- theorem ContinuousMap.nnnorm_lt_iff_of_nonempty
+- theorem ContinuousMap.nnnorm_smul_const
+- theorem ContinuousMap.nnnorm_sub_eq_max
+- theorem ContinuousMap.nnnorm_sum_eq_sup
+Modified Mathlib/Topology/ContinuousMap/Ideals.lean
+
+Modified Mathlib/Topology/MetricSpace/HolderNorm.lean
+
+Modified scripts/nolints_prime_decls.txt
+
+
+
+
+2026-11-05 19:37:27 102de38
+
+feat(Tactic/Primality): adds a certificate checker for the lucas primality certificate (#45711)
+This PR adds the checker-only part of the lucas primality certificate which can be used to prove `Nat.Prime` goals.
+We are likely to follow up fairly soon with a Pocklington-based method.
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Modified Mathlib/Tactic.lean
+
+Added Mathlib/Tactic/Primality.lean
++ structure Mathlib.Tactic.Primality.Config
++ def Mathlib.Tactic.Primality.elabKnownPrimes
++ def Mathlib.Tactic.Primality.evalNumeral?
+Added Mathlib/Tactic/Primality/Cert.lean
++ inductive Mathlib.Tactic.Primality.Cert
+Added Mathlib/Tactic/Primality/Lucas.lean
++ def Mathlib.Tactic.Primality.LucasWitness.factorization?
++ structure Mathlib.Tactic.Primality.LucasWitness
++ def Mathlib.Tactic.Primality.certifyLucas
++ def Mathlib.Tactic.Primality.lucasCheck
++ def Mathlib.Tactic.Primality.powMod
++ theorem Mathlib.Tactic.Primality.powMod_def
++ theorem Mathlib.Tactic.Primality.powMod_eq_natPowMod
++ theorem Mathlib.Tactic.Primality.prime_of_lucasCheck
+Added Mathlib/Tactic/Primality/Producers.lean
++ inductive Mathlib.Tactic.Primality.CertMode
++ inductive Mathlib.Tactic.Primality.Witness
++ def Mathlib.Tactic.Primality.normNumBound
++ def Mathlib.Tactic.Primality.witnessFor
+Added MathlibTest/Tactic/Primality.lean
+
+
+
+
+2026-11-05 19:02:44 8b021e0
+
+feat(Analysis/Analytic): analytic order of a constant function and multiplying by constants (#43041)
+
+ESTIMATED CHANGES
+Modified Mathlib/Analysis/Analytic/Order.lean
++ theorem analyticOrderAt_const
++ theorem analyticOrderAt_const_mul
++ theorem analyticOrderAt_mul_const
++ theorem analyticOrderAt_one
++ theorem analyticOrderAt_smul_const
++ theorem analyticOrderNatAt_const
++ theorem analyticOrderNatAt_const_mul
++ theorem analyticOrderNatAt_mul_const
+
+
+
+2026-11-05 18:25:44 442ab0d
+
+feat(Topology/Order/SuccPred): remove `NoMaxOrder` assumption (#45609)
+
+ESTIMATED CHANGES
+Modified Mathlib/Topology/Order/SuccPred.lean
++ theorem SuccOrder.isOpen_Iic
++ theorem SuccOrder.isOpen_Ioc
++ theorem SuccOrder.isOpen_singleton_bot
++ theorem SuccOrder.isOpen_singleton_of_isMin
++/- theorem SuccOrder.isOpen_singleton_of_not_isSuccPrelimit
++/- theorem SuccOrder.nhds_of_isMin
+
+
+
+2026-11-05 17:45:59 6404897
+
+feat(Tactic/Inclusion): add integer extensions for the `dyadic_interval` tactic (#45638)
+Adds the `interval_int` inclusion family which does interval arithmetic computations on integers and enables it in the `dyadic_interval` family. Also refactors the `binSplit` inclusion parameter and the `binSplitCover` expression builder to be shared among different interval based inclusion families (supporting different types).
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Modified Mathlib/Tactic.lean
+
+Modified Mathlib/Tactic/Inclusion/Core/Elab.lean
+
+Renamed Mathlib/Tactic/Inclusion/Extension/Interval.lean to Mathlib/Tactic/Inclusion/Extension/Interval/Basic.lean
++ theorem Inclusion.Interval.map_id
++ theorem Inclusion.Interval.mem_Icc_of_mem
+Added Mathlib/Tactic/Inclusion/Extension/Interval/BinarySplit.lean
+
+Modified Mathlib/Tactic/Inclusion/Extension/IntervalDyadicReal/Basic.lean
++ theorem Inclusion.IntervalDyadicReal.intCast_mem_of_mem
+Modified Mathlib/Tactic/Inclusion/Extension/IntervalDyadicReal/BinarySplit.lean
+
+Modified Mathlib/Tactic/Inclusion/Extension/IntervalDyadicReal/Init.lean
+
+Modified Mathlib/Tactic/Inclusion/Extension/IntervalDyadicReal/Tactic.lean
+
+Added Mathlib/Tactic/Inclusion/Extension/IntervalInt/Basic.lean
++ theorem Inclusion.IntervalInt.abs_mem
++ theorem Inclusion.IntervalInt.add_mem
++ theorem Inclusion.IntervalInt.eq_mem
++ theorem Inclusion.IntervalInt.le_mem
++ theorem Inclusion.IntervalInt.lt_mem
++ theorem Inclusion.IntervalInt.mem_Icc
++ theorem Inclusion.IntervalInt.mem_Ici
++ theorem Inclusion.IntervalInt.mem_Ico
++ theorem Inclusion.IntervalInt.mem_Iic
++ theorem Inclusion.IntervalInt.mem_Iio
++ theorem Inclusion.IntervalInt.mem_Ioc
++ theorem Inclusion.IntervalInt.mem_Ioi
++ theorem Inclusion.IntervalInt.mem_Ioo
++ theorem Inclusion.IntervalInt.mul_mem
++ theorem Inclusion.IntervalInt.neg_mem
++ theorem Inclusion.IntervalInt.ofNat_mem
++ theorem Inclusion.IntervalInt.pow_mem
++ theorem Inclusion.IntervalInt.sub_mem
+Added Mathlib/Tactic/Inclusion/Extension/IntervalInt/BinarySplit.lean
++ def Inclusion.IntervalInt.binarySplit
++ def Inclusion.IntervalInt.binarySplitMap
++ theorem Inclusion.IntervalInt.mem_binarySplitMap
+Added Mathlib/Tactic/Inclusion/Extension/IntervalInt/Hypotheses.lean
++ theorem Inclusion.IntervalInt.Icc_mem_of_mem_Icc
++ theorem Inclusion.IntervalInt.Icc_mem_of_mem_Ico
++ theorem Inclusion.IntervalInt.Icc_mem_of_mem_Ioc
++ theorem Inclusion.IntervalInt.Icc_mem_of_mem_Ioo
++ theorem Inclusion.IntervalInt.Ici_mem_of_le
++ theorem Inclusion.IntervalInt.Ici_mem_of_lt
++ theorem Inclusion.IntervalInt.Ici_mem_of_mem_Ici
++ theorem Inclusion.IntervalInt.Ici_mem_of_mem_Ioi
++ theorem Inclusion.IntervalInt.Iic_mem_of_le
++ theorem Inclusion.IntervalInt.Iic_mem_of_lt
++ theorem Inclusion.IntervalInt.Iic_mem_of_mem_Iic
++ theorem Inclusion.IntervalInt.Iic_mem_of_mem_Iio
+Added Mathlib/Tactic/Inclusion/Extension/IntervalInt/Init.lean
+
+Modified MathlibTest/Tactic/Inclusion/Basic.lean
+
+
+
+
+2026-11-05 17:45:54 0e248bc
+
+feat(NumberTheory/ModularForms): more API for cusps (#45009)
+API for `CuspOrbits`: show that an inclusion of groups, or translation by GL(2, R), induces natural maps on cusp orbits. Also define a Nat-valued `regularityFactorInfty` which is 2 for irregular cusps and 1 otherwise, and use it to relate `strictWidthInfty` and `widthInfty`.
+
+ESTIMATED CHANGES
+Modified Mathlib/Analysis/Complex/UpperHalfPlane/FixedPoints.lean
+
+Modified Mathlib/GroupTheory/SpecificGroups/Cyclic.lean
++ theorem Subgroup.mabs_pow_relIndex_zpowers
+Modified Mathlib/LinearAlgebra/Matrix/GeneralLinearGroup/FinTwo.lean
++ theorem Matrix.GeneralLinearGroup.a_ne_zero_of_c_eq_zero
++ theorem Matrix.GeneralLinearGroup.d_ne_zero_of_c_eq_zero
++ theorem Matrix.GeneralLinearGroup.upperRightHom_conj_of_upperTriangular
+Modified Mathlib/NumberTheory/ModularForms/Basic.lean
+
+Modified Mathlib/NumberTheory/ModularForms/Bounds.lean
+
+Modified Mathlib/NumberTheory/ModularForms/Cusps.lean
++/- theorem CongruenceSubgroup.strictWidthInfty_Gamma
++ theorem CuspOrbits.conj_bijective
++ theorem CuspOrbits.conj_mk
++ theorem CuspOrbits.map_adjoinNegOne_bijective
++ theorem CuspOrbits.map_conj
++ theorem CuspOrbits.map_map
++ theorem CuspOrbits.map_mk
++ theorem CuspOrbits.map_surjective
++ theorem Subgroup.eq_upperRightHom_or_neg_of_upperTriangular
++ theorem Subgroup.mem_strictPeriods_conj_of_upperTriangular
++ theorem Subgroup.regularityFactorInfty_eq_one_of_isRegularAtInfty
++ theorem Subgroup.regularityFactorInfty_eq_two_of_not_isRegularAtInfty
++ theorem Subgroup.relIndex_strictPeriods_eq_regularityFactorInfty
++/- theorem Subgroup.strictWidthInfty_SL2Z
++ theorem Subgroup.strictWidthInfty_conj_of_upperTriangular
++ theorem Subgroup.strictWidthInfty_eq_of_strictPeriods_eq_zmultiples
++ theorem Subgroup.strictWidthInfty_eq_regularityFactorInfty_mul_widthInfty
++ theorem Subgroup.strictWidthInfty_of_isRegularAtInfty
++ theorem Subgroup.strictWidthInfty_of_not_isRegularAtInfty
++/- theorem Subgroup.strictWidthInfty_pos
++ theorem Subgroup.widthInfty_SL2Z
++ theorem Subgroup.widthInfty_conj_of_upperTriangular
++ theorem mem_cuspsSubMulAction
+Modified Mathlib/Topology/Compactification/OnePoint/ProjectiveLine.lean
++ theorem OnePoint.neg_smul
+
+
+
+2026-11-05 17:45:50 3487ec4
+
+feat(GroupTheory/Finiteness): `IsMulFG iSup` (#43850)
+This PR adds missing theorems for `IsMulFG iSup` that will replace the existing theorems for the old finiteness definitions.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Group/Submonoid/Defs.lean
+
+Modified Mathlib/GroupTheory/Finiteness.lean
++ theorem Subgroup.isMulFG_biSup
++ theorem Subgroup.isMulFG_biSup_finset
++ theorem Subgroup.isMulFG_finset_sup
++ theorem Submonoid.isMulFG_biSup
++ theorem Submonoid.isMulFG_biSup_finset
++ theorem Submonoid.isMulFG_finset_sup
+
+
+
+2026-11-05 16:56:18 d691cc3
+
+chore(Counterexamples): remove unused hypotheses (#45685)
+
+ESTIMATED CHANGES
+Modified Counterexamples/AharoniKorman.lean
+
+Modified Counterexamples/ZeroDivisorsInAddMonoidAlgebras.lean
+
+
+
+
+2026-11-05 16:56:13 b9d3863
+
+chore(CategoryTheory): remove unused hypothesis (#45683)
+Removes unused hypothesis from #45673 in CategoryTheory.
+
+ESTIMATED CHANGES
+Modified Mathlib/CategoryTheory/Sites/DenseSubsite/InducedTopology.lean
+
+
+
+
+2026-11-05 16:56:09 24c339e
+
+doc(AlgebraicGeometry/EllipticCurve/Reduction): c₄, not a₄, in reduction docstrings (#45669)
+The docstrings of `HasMultiplicativeReduction` and `HasAdditiveReduction` said `a₄`, but the fields test `c₄`.
+
+ESTIMATED CHANGES
+Modified Mathlib/AlgebraicGeometry/EllipticCurve/Reduction.lean
+
+
+
+
+2026-11-05 16:56:06 3ecfafb
+
+chore(Homology/ShortComplex/ModuleCat): remove tech debts (#45589)
+This PR adds `implicit_reducible` tag to `ShortComplex.cycle`, `HomologicalComplex.cycle` and related defs, then removed some set_option.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Group/Hom/Defs.lean
+
+Modified Mathlib/Algebra/Homology/ShortComplex/HomologicalComplex.lean
+
+Modified Mathlib/Algebra/Homology/ShortComplex/LeftHomology.lean
+
+Modified Mathlib/Algebra/Homology/ShortComplex/ModuleCat.lean
+
+Modified Mathlib/RepresentationTheory/Coinvariants.lean
+
+Modified Mathlib/RepresentationTheory/Homological/GroupCohomology/Basic.lean
+
+Modified Mathlib/RepresentationTheory/Homological/GroupCohomology/FiniteCyclic.lean
+
+Modified Mathlib/RepresentationTheory/Homological/GroupCohomology/Functoriality.lean
+
+Modified Mathlib/RepresentationTheory/Homological/GroupCohomology/LowDegree.lean
++ theorem groupCohomology.cocycles₁.coe_sub
++ theorem groupCohomology.cocycles₂.coe_sub
+Modified Mathlib/RepresentationTheory/Homological/GroupHomology/Basic.lean
+
+Modified Mathlib/RepresentationTheory/Homological/GroupHomology/FiniteCyclic.lean
+
+Modified Mathlib/RepresentationTheory/Homological/GroupHomology/Functoriality.lean
+
+Modified Mathlib/RepresentationTheory/Homological/GroupHomology/LowDegree.lean
+
+Modified Mathlib/RepresentationTheory/Invariants.lean
+
+Modified Mathlib/RepresentationTheory/Rep/Res.lean
++ theorem Rep.resMap_id
+
+
+
+2026-11-05 16:06:14 5c3598d
+
+feat: add `gcongr` attribute to `WithBot.coe_le_coe` (#45675)
+
+ESTIMATED CHANGES
+Modified Mathlib/Order/WithBot.lean
+
+
+
+
+2026-11-05 15:29:08 ca6c6bd
+
+fix(Tactic/Linarith): `linarith?` suggestion replaces the whole tactic call (#45254)
+Before, `linarith? [h]` would suggest replacing the first token only, giving output `linarith only [h] [h]`, which is invalid.
+
+ESTIMATED CHANGES
+Modified Mathlib/Tactic/Linarith/Frontend.lean
+
+
+
+
+2026-11-05 15:29:03 b85d402
+
+chore(Logic/Embedding): rename `oneEmbeddingEquiv` to `Equiv.embeddingUnique`, deprecate its duplicate (#44595)
+Rename `Function.Embedding.oneEmbeddingEquiv` to `Equiv.embeddingUnique` (after `Equiv.funUnique`), and deprecate both it and its duplicate `Equiv.uniqueEmbeddingEquivResult` (equal by `rfl`) in favour of the new name.
+
+ESTIMATED CHANGES
+Modified Mathlib/Data/Fintype/CardEmbedding.lean
+
+Modified Mathlib/GroupTheory/GroupAction/MultipleTransitivity.lean
+
+Modified Mathlib/Logic/Embedding/Basic.lean
++ def Equiv.embeddingUnique
+- def Function.Embedding.oneEmbeddingEquiv
+Modified Mathlib/Logic/Equiv/Embedding.lean
+- def Equiv.uniqueEmbeddingEquivResult
+
+
+
+2026-11-05 15:19:27 539ea30
+
+refactor(GroupTheory/PresentedGroup): additivize PresentedGroup without manual instance (#45614)
+- As per the comment post merge in [#45459](https://github.com/leanprover-community/mathlib4/pull/45459), I have reworked the `PresentedAddGroup` definition so that it needs no manual instance setups.
+- Made the docstring style consistent throughout the file
+
+ESTIMATED CHANGES
+Modified Mathlib/GroupTheory/PresentedGroup.lean
+
+
+
+
+2026-11-05 15:19:22 f44852d
+
+feat(NumberTheory/MulChar): multiplicative characters are local homomorphisms (#45463)
+A multiplicative character sends nonunits to zero, so it is a local homomorphism. With this instance, `simp` proves that `χ a` is a unit if and only if `a` is a unit.
+:robot: This PR was extracted from the [SKW project](https://github.com/xroblot/SKW) by Claude.
+
+ESTIMATED CHANGES
+Modified Mathlib/NumberTheory/MulChar/Basic.lean
+
+
+
+
+2026-11-05 14:35:52 b65a637
+
+chore(Geometry): remove unused hypothesis (#45688)
+
+ESTIMATED CHANGES
+Modified Mathlib/Geometry/Convex/ConvexSpace/Defs.lean
+
+Modified Mathlib/Geometry/Euclidean/Angle/Sphere.lean
+
+Modified Mathlib/Geometry/Manifold/IntegralCurve/UniformTime.lean
+
+
+
+
+2026-11-05 14:35:49 5fce94f
+
+refactor(Algebra): move from `aesop` to `grind` for IsSquare (#45262)
+* Add `grind` annotations for `IsSquare`, `Even`, and `IsSumSq` to replicate the current `aesop` functionality
+* Add `membership` annotations to resolve membership of `.square` and `.sumSq`
+* Change proofs to use `grind` or `membership` instead of `aesop`
+* Move tests to a dedicated test file
+I think these are good `grind` rules because they only fire in specific circumstances.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Group/Even.lean
++/- theorem Even.isSquare_pow
++/- theorem IsSquare.pow
++/- theorem isSquare_inv
+Modified Mathlib/Algebra/Group/Subgroup/Even.lean
+
+Modified Mathlib/Algebra/Order/Ring/Ordering/Defs.lean
+
+Modified Mathlib/Algebra/Ring/Subsemiring/Support.lean
+
+Modified Mathlib/Algebra/Ring/SumsOfSquares.lean
++/- theorem AddSubmonoid.mem_sumSq
++/- theorem IsSquare.isSumSq
++/- theorem IsSumSq.one
+Added MathlibTest/Tactic/Grind/IsSquare.lean
+
+
+
+
+2026-11-05 14:35:46 f79d07a
+
+doc: add more examples to simp_rw documentation (#44959)
+
+ESTIMATED CHANGES
+Modified Mathlib/Tactic/SimpRw.lean
+
+
+
+
+2026-11-05 14:24:37 6135ffb
+
+chore(FieldTheory): remove unused hypothesis (#45687)
+Removes unused hypothesis from #45673 in FieldTheory.
+
+ESTIMATED CHANGES
+Modified Mathlib/FieldTheory/RatFunc/AsPolynomial.lean
++/- theorem Polynomial.valuation_of_mk
+Modified Mathlib/FieldTheory/RatFunc/Basic.lean
++/- theorem RatFunc.denom_inv_dvd
+Modified Mathlib/FieldTheory/RatFunc/Degree.lean
++/- theorem RatFunc.intDegree_add_le
+Modified Mathlib/RingTheory/LaurentSeries.lean
+
+
+
+
+2026-11-05 13:57:08 0e894b5
+
+feat(MeasureTheory/Integral): layer cake formula for ENNReal-valued function (#44813)
+The LHS is now applicable to all lintegral and it allows dealing with infinity uniformly.
+
+ESTIMATED CHANGES
+Modified Mathlib/MeasureTheory/Integral/Layercake.lean
++ theorem MeasureTheory.lintegral_eq_lintegral_measure_ofReal_le
+
+
+
+2026-11-05 13:31:15 c6d1307
+
+feat(MeasureTheory): the Kolmogorov extension theorem (#44909)
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Modified Mathlib/MeasureTheory/Constructions/ClosedCompactCylinders.lean
++ theorem MeasureTheory.isClosed_of_mem_closedCompactCylinders
++ theorem MeasureTheory.isCompactSystem_closedCompactCylinders
+Added Mathlib/MeasureTheory/Constructions/KolmogorovExtension.lean
++ theorem MeasureTheory.innerRegular_projectiveFamilyContent
++ theorem MeasureTheory.isProjectiveLimit_projectiveLimit
++ theorem MeasureTheory.isSigmaSubadditive_projectiveFamilyContent
++ theorem MeasureTheory.isSigmaSubadditive_projectiveFamilyContent_of_innerRegular
++ theorem MeasureTheory.projectiveFamilyContent_iUnion_eq_tsum
++ theorem MeasureTheory.projectiveFamilyContent_iUnion_eq_tsum_of_innerRegular
+Added Mathlib/MeasureTheory/Measure/AddContent/CompactSystem.lean
++ theorem MeasureTheory.addContent_iUnion_eq_sum_of_innerRegular
++ theorem MeasureTheory.tendsto_zero_of_innerRegular_addContent
+Modified Mathlib/Topology/Compactness/CompactSystem.lean
+- def compactClosedSquareCylinders
+- theorem isCompactSystem_compactClosedSquareCylinders
+
+
+
+2026-11-05 11:23:47 e6bd550
+
+chore(Order/SuccPred/WithBot): use `to_dual` (#45578)
+
+ESTIMATED CHANGES
+Modified Mathlib/Order/SuccPred/WithBot.lean
++/- theorem WithBot.succ_bot
++/- theorem WithBot.succ_coe
++/- theorem WithBot.succ_le_succ
++/- theorem WithBot.succ_lt_succ
+- def WithTop.pred
+- theorem WithTop.pred_coe
+- theorem WithTop.pred_eq_pred
+- theorem WithTop.pred_eq_top
+- theorem WithTop.pred_le_pred
+- theorem WithTop.pred_lt_pred
+- theorem WithTop.pred_mono
+- theorem WithTop.pred_strictMono
+- theorem WithTop.pred_top
+
+
+
+2026-11-05 10:35:38 994fb8e
+
+feat(Dynamics/BirkhoffSum): add the maximal ergodic theorem (#34031)
+We prove the maximal ergodic theorem for a measure-preserving map `f` and an integrable function `g`. This is used in the proof of the pointwise ergodic theorem.
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Modified Mathlib/Dynamics/BirkhoffSum/Average.lean
++ theorem birkhoffAverage_const
+Modified Mathlib/Dynamics/BirkhoffSum/Basic.lean
++ theorem birkhoffSum_const
++/- theorem map_birkhoffSum
+Added Mathlib/Dynamics/BirkhoffSum/Integrable.lean
++ theorem aestronglyMeasurable_birkhoffAverage
++ theorem aestronglyMeasurable_birkhoffSum
++ theorem integrable_birkhoffAverage
++ theorem integrable_birkhoffSum
++ theorem measurable_birkhoffAverage
++ theorem measurable_birkhoffSum
+Added Mathlib/Dynamics/BirkhoffSum/Maximal.lean
++ theorem aestronglyMeasurable_birkhoffMax
++ def birkhoffAverageSup
++ def birkhoffMax
++ theorem birkhoffMax_apply_mono
++ theorem birkhoffMax_le_indicator_add_comp
++ theorem birkhoffMax_le_self_add_comp
++ theorem birkhoffMax_monotone
++ theorem birkhoffMax_nonneg
++ theorem birkhoffMax_succ'
++ theorem birkhoffMax_succ
++ def birkhoffSumSup
++ theorem birkhoffSumSup_eq_iSup_birkhoffMax
++ theorem integrable_birkhoffMax
++ theorem lt_birkhoffAverageSup_iff_lt_birkhoffSumSup
++ theorem lt_birkhoffAverage_iff_lt_birkhoffSum
++ theorem measurable_birkhoffMax
++ theorem mul_measureReal_lt_birkhoffAverageSup_le_integral
++ theorem mul_measureReal_lt_birkhoffAverageSup_le_norm
++ theorem setIntegral_birkhoffSumSup_nonneg
++ theorem setIntegral_support_birkhoffMax_nonneg
++ theorem setOf_birkhoffSumSup_pos_eq_iUnion_birkhoffMax_support
++ theorem tendsto_setIntegral_support_birkhoffMax
+Modified Mathlib/MeasureTheory/Function/L1Space/Integrable.lean
+
+
+
+
+2026-11-05 10:10:36 90b63cf
+
+chore(RingTheory/TwoSidedIdeal): rid the `SMulMemClass (TwoSidedIdeal R) Rᵐᵒᵖ R` non-instance from its `inst` (#41831)
+See https://github.com/leanprover-community/mathlib4/pull/40718#discussion_r3573863027.
+
+ESTIMATED CHANGES
+Modified Mathlib/RingTheory/TwoSidedIdeal/Basic.lean
+- theorem TwoSidedIdeal.instSMulMemClassMulOpposite
++ theorem TwoSidedIdeal.smulMemClass_mulOpposite
+
+
+
+2026-11-05 06:43:27 e75a902
+
+chore(Tactic): remove unused hypothesis (#45698)
+Removes unused hypothesis from #45673 in Tactic.
+
+ESTIMATED CHANGES
+Modified Mathlib/Tactic/NormNum/NatLog.lean
++/- theorem Mathlib.Meta.NormNum.nat_clog_helper
+
+
+
+2026-11-05 06:43:24 f4af23a
+
+refactor: rename `Ioc_insert_left` → `insert_left_Ioc`, etc (#45641)
+Following the naming conventions.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Order/BigOperators/Group/LocallyFinite.lean
+
+Modified Mathlib/Analysis/SpecialFunctions/Complex/Circle.lean
+
+Modified Mathlib/Combinatorics/Schnirelmann.lean
+
+Modified Mathlib/Data/Nat/Choose/Sum.lean
+
+Modified Mathlib/FieldTheory/CardinalEmb.lean
+
+Modified Mathlib/MeasureTheory/Constructions/BorelSpace/Order.lean
+
+Modified Mathlib/NumberTheory/ZetaValues.lean
+
+Modified Mathlib/Order/Interval/Finset/Basic.lean
+- theorem Finset.Ico_insert_right
+- theorem Finset.Iio_insert
+- theorem Finset.Ioc_insert_left
+- theorem Finset.Ioi_insert
+- theorem Finset.Ioo_insert_left
+- theorem Finset.Ioo_insert_right
++ theorem Finset.insert_Iio
++ theorem Finset.insert_Ioi
++ theorem Finset.insert_left_Ioc
++ theorem Finset.insert_left_Ioo
++ theorem Finset.insert_right_Ico
++ theorem Finset.insert_right_Ioo
+Modified Mathlib/Order/Interval/Multiset.lean
+
+Modified Mathlib/Order/Interval/Set/Basic.lean
+- theorem Set.Ico_insert_right
+- theorem Set.Iio_insert
+- theorem Set.Ioo_insert_left
++ theorem Set.insert_Iio
++ theorem Set.insert_left_Ioo
++ theorem Set.insert_right_Ico
+Modified Mathlib/Order/Interval/Set/OrdConnected.lean
+
+Modified Mathlib/Order/Interval/Set/SuccPred.lean
+
+Modified Mathlib/SetTheory/Cardinal/Arithmetic.lean
+
+Modified Mathlib/Topology/Order/LeftRight.lean
+
+Modified Mathlib/Topology/Order/NhdsSet.lean
+
+Modified Mathlib/Topology/Order/OrderClosed.lean
+
+
+
+
+2026-11-05 06:43:21 3a53f06
+
+chore(Algebra/Polynomial): golf normalize lemmas (#45502)
+Split from uncommitted work on #44287 using ChatGPT 5.5. All changes made by a human.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Polynomial/FieldDivision.lean
++/- theorem Polynomial.X_eq_normalize
++/- theorem Polynomial.normUnit_X
+
+
+
+2026-11-05 06:43:19 47cf7a6
+
+chore(Topology/Category/LightProfinite): deprecate restated `CompHausLike` API (#44601)
+Deprecate `LightProfinite.isClosedMap`, `LightProfinite.isIso_of_bijective` and `LightProfinite.isoOfBijective`, which restate the `CompHausLike` API that already applies to `LightProfinite`, and delete the duplicate instance `LightProfinite.forget_reflectsIsomorphisms`.
+
+ESTIMATED CHANGES
+Modified Mathlib/Topology/Category/LightProfinite/Basic.lean
+- theorem LightProfinite.isClosedMap
+- theorem LightProfinite.isIso_of_bijective
+
+
+
+2026-11-05 06:43:16 4fe3a8f
+
+fix(GroupTheory/GroupAction/SubMulAction/Combination): weaken `3 ≤ n` to `n ≠ 0` in `isPreprimitive_alternatingGroup` (#44578)
+Weaken the hypothesis `3 ≤ n` of `Set.powersetCard.isPreprimitive_alternatingGroup` to `n ≠ 0`, as its docstring says; the proof already covers `n = 1` and `n = 2`.
+
+ESTIMATED CHANGES
+Modified Mathlib/GroupTheory/GroupAction/SubMulAction/Combination.lean
++/- theorem Set.powersetCard.isPreprimitive_alternatingGroup
++/- theorem Set.powersetCard.isPreprimitive_perm
+
+
+
+2026-11-05 06:04:33 2f00617
+
+chore: update Mathlib dependencies 2026-11-05 (#45632)
+This PR updates the Mathlib dependencies.
+It is not merged automatically: a maintainer should look at what the new
+dependency revisions bring in before sending it to bors.
+
+ESTIMATED CHANGES
+Modified lake-manifest.json
+
+
+
+
+2026-11-05 05:39:39 a949576
+
+feat(GroupTheory/Abelianization/Defs): additivize Abelianization (#45505)
+- Add `to_additive` to the definitions and theorems of the `Defs.lean` file.
+- Move `Abelianization` from the root to the `Group` namespace (this makes `to_additive` behave better).
+- Replace `deriving`  with a manual `instance` due to limitations of `to_additive`.
+- Miscellaneous docstring updates.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Category/Grp/Adjunctions.lean
+
+Modified Mathlib/GroupTheory/Abelianization/Defs.lean
+- theorem Abelianization.coe_lift_symm
+- theorem Abelianization.commutator_le_ker
+- def Abelianization.equivOfComm
+- theorem Abelianization.hom_ext
+- theorem Abelianization.ker_of
+- def Abelianization.lift
+- theorem Abelianization.lift_apply_of
+- theorem Abelianization.lift_of
+- theorem Abelianization.lift_of_comp
+- theorem Abelianization.lift_symm_apply
+- theorem Abelianization.lift_unique
+- def Abelianization.map
+- theorem Abelianization.map_comp
+- theorem Abelianization.map_id
+- theorem Abelianization.map_map_apply
+- theorem Abelianization.map_of
+- theorem Abelianization.mk_eq_of
+- def Abelianization.of
+- def Abelianization
++ theorem Group.Abelianization.coe_lift_symm
++ theorem Group.Abelianization.commutator_le_ker
++ def Group.Abelianization.equivOfComm
++ theorem Group.Abelianization.hom_ext
++ theorem Group.Abelianization.ker_of
++ def Group.Abelianization.lift
++ theorem Group.Abelianization.lift_apply_of
++ theorem Group.Abelianization.lift_of
++ theorem Group.Abelianization.lift_of_comp
++ theorem Group.Abelianization.lift_symm_apply
++ theorem Group.Abelianization.lift_unique
++ def Group.Abelianization.map
++ theorem Group.Abelianization.map_comp
++ theorem Group.Abelianization.map_id
++ theorem Group.Abelianization.map_map_apply
++ theorem Group.Abelianization.map_of
++ theorem Group.Abelianization.mk_eq_of
++ def Group.Abelianization.of
++ def Group.Abelianization
++ theorem Group.abelianizationCongr_of
++ theorem Group.abelianizationCongr_refl
++ theorem Group.abelianizationCongr_symm
++ theorem Group.abelianizationCongr_trans
++/- def MulEquiv.abelianizationCongr
+- theorem abelianizationCongr_of
+- theorem abelianizationCongr_refl
+- theorem abelianizationCongr_symm
+- theorem abelianizationCongr_trans
+Modified Mathlib/GroupTheory/Abelianization/Finite.lean
+
+Modified Mathlib/GroupTheory/Focal.lean
+
+Modified Mathlib/GroupTheory/FreeAbelianGroup.lean
+
+Modified Mathlib/GroupTheory/Schreier.lean
+
+Modified Mathlib/GroupTheory/Solvable.lean
+
+Modified Mathlib/GroupTheory/SpecificGroups/ZGroup.lean
+
+Modified Mathlib/RepresentationTheory/Homological/GroupHomology/LowDegree.lean
++/- def groupHomology.H1ToTensorOfIsTrivial
++/- def groupHomology.mkH1OfIsTrivial
+Modified Mathlib/SetTheory/Cardinal/Free.lean
+
+Modified docs/overview.yaml
+
+
+
+
 2026-11-04 22:49:31 805bbc4
 
 chore: adapt to leanprover-community/batteries#2051 (#45634)
