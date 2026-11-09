@@ -1,3 +1,569 @@
+2026-11-09 02:14:19 ff2494e
+
+chore: remove unnecessary set_option lines (#45821)
+I removed 49 unnecessary `set_option` line(s) across 24 file(s).
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Homology/Embedding/RestrictionHomology.lean
+
+Modified Mathlib/Algebra/Homology/Embedding/TruncGEHomology.lean
+
+Modified Mathlib/Algebra/Homology/Homotopy.lean
+
+Modified Mathlib/Algebra/Homology/HomotopyCategory/ShiftSequence.lean
+
+Modified Mathlib/Algebra/Homology/ShortComplex/Basic.lean
+
+Modified Mathlib/Algebra/Homology/ShortComplex/FunctorEquivalence.lean
+
+Modified Mathlib/Algebra/Homology/ShortComplex/HomologicalComplex.lean
+
+Modified Mathlib/Algebra/Homology/ShortComplex/LeftHomology.lean
+
+Modified Mathlib/Algebra/Homology/ShortComplex/Limits.lean
+
+Modified Mathlib/Algebra/Homology/ShortComplex/RightHomology.lean
+
+Modified Mathlib/Algebra/Order/Nonneg/Lattice.lean
+
+Modified Mathlib/Algebra/Polynomial/AlgebraMap.lean
+
+Modified Mathlib/AlgebraicTopology/SimplicialSet/Homology/HomologyZero.lean
+
+Modified Mathlib/CategoryTheory/Comma/StructuredArrow/Functor.lean
+
+Modified Mathlib/CategoryTheory/Filtered/CostructuredArrow.lean
+
+Modified Mathlib/CategoryTheory/Functor/KanExtension/Adjunction.lean
+
+Modified Mathlib/CategoryTheory/WithTerminal/Basic.lean
+
+Modified Mathlib/LinearAlgebra/UnitaryGroup.lean
+
+Modified Mathlib/RepresentationTheory/Homological/GroupCohomology/Basic.lean
+
+Modified Mathlib/RepresentationTheory/Homological/GroupCohomology/FiniteCyclic.lean
+
+Modified Mathlib/RepresentationTheory/Homological/GroupCohomology/LongExactSequence.lean
+
+Modified Mathlib/RepresentationTheory/Homological/GroupHomology/Basic.lean
+
+Modified Mathlib/RepresentationTheory/Homological/GroupHomology/LongExactSequence.lean
+
+Modified MathlibTest/matrix.lean
+
+
+
+
+2026-11-09 00:22:45 b56d541
+
+chore(NumberTheory/LSeries): make two proofs comprehensible (#45639)
+
+ESTIMATED CHANGES
+Modified Mathlib/NumberTheory/LSeries/HurwitzZetaValues.lean
+
+
+
+
+2026-11-08 22:08:56 93c3294
+
+chore(Tactic/Linter/HaveLetLinter): delete foldInfoM (#45768)
+The function `Mathlib.Linter.haveLet.InfoTree.foldInfoM` is deleted. The code automatically fallbacks to `Lean.Elab.InfoTree.foldInfoM`, which is now available.
+
+ESTIMATED CHANGES
+Modified Mathlib/Tactic/Linter/HaveLetLinter.lean
+- def Mathlib.Linter.haveLet.InfoTree.foldInfoM
+
+
+
+2026-11-08 22:08:53 6adcc64
+
+refactor: remove norm assumption for polynomial limits (#44338)
+* Change proofs about limits of polynomials to avoid having to assume a norm on the field.
+* Split the non-norm material from `Mathlib.Analysis.Polynomial.Basic`.
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Modified Mathlib/Algebra/Polynomial/Inductions.lean
++ def Polynomial.recOnHornerConst
+Modified Mathlib/Algebra/Polynomial/Roots.lean
++ theorem Polynomial.eventually_atBot_not_isRoot
++ theorem Polynomial.eventually_atTop_not_isRoot
+Modified Mathlib/Analysis/Polynomial/Basic.lean
+- theorem Polynomial.abs_div_tendsto_atBot_atTop_of_degree_gt
+- theorem Polynomial.abs_div_tendsto_atTop_atTop_of_degree_gt
+- theorem Polynomial.abs_tendsto_atBot
+- theorem Polynomial.abs_tendsto_atBot_iff
+- theorem Polynomial.abs_tendsto_atTop
+- theorem Polynomial.abs_tendsto_atTop_iff
+- theorem Polynomial.div_tendsto_atBot_leadingCoeff_div_of_degree_eq
+- theorem Polynomial.div_tendsto_atBot_of_degree_gt'
+- theorem Polynomial.div_tendsto_atBot_of_degree_gt
+- theorem Polynomial.div_tendsto_atBot_zero_iff_degree_lt
+- theorem Polynomial.div_tendsto_atBot_zero_of_degree_lt
+- theorem Polynomial.div_tendsto_atTop_leadingCoeff_div_of_degree_eq
+- theorem Polynomial.div_tendsto_atTop_of_degree_gt'
+- theorem Polynomial.div_tendsto_atTop_of_degree_gt
+- theorem Polynomial.div_tendsto_atTop_zero_iff_degree_lt
+- theorem Polynomial.div_tendsto_atTop_zero_of_degree_lt
+- theorem Polynomial.eventually_atBot_not_isRoot
+- theorem Polynomial.eventually_atTop_not_isRoot
+- theorem Polynomial.isBoundedUnder_abs_atBot_iff
+- theorem Polynomial.isBoundedUnder_abs_atTop_iff
+- theorem Polynomial.tendsto_atBot_iff_leadingCoeff_nonpos
+- theorem Polynomial.tendsto_atBot_of_leadingCoeff_nonpos
+- theorem Polynomial.tendsto_atTop_iff_leadingCoeff_nonneg
+- theorem Polynomial.tendsto_atTop_of_leadingCoeff_nonneg
+- theorem Polynomial.tendsto_nhds_iff
+Modified Mathlib/Topology/Algebra/Order/Field.lean
++ theorem Filter.tendsto_atBot_iff_of_tendsto_div_nhds_one
++ theorem Filter.tendsto_atTop_iff_of_tendsto_div_nhds_one
++ theorem Filter.tendsto_nhds_iff_of_tendsto_div_nhds_one
++ theorem tendsto_const_mul_zpow_atTop_atTop_iff
+Added Mathlib/Topology/Algebra/Order/Polynomial.lean
++ theorem Polynomial.abs_div_tendsto_atBot_atTop_of_degree_gt
++ theorem Polynomial.abs_div_tendsto_atTop_atTop_of_degree_gt
++ theorem Polynomial.abs_tendsto_atBot
++ theorem Polynomial.abs_tendsto_atBot_iff
++ theorem Polynomial.abs_tendsto_atTop
++ theorem Polynomial.abs_tendsto_atTop_iff
++ theorem Polynomial.div_tendsTo_atBot_div_nhds_one
++ theorem Polynomial.div_tendsTo_atTop_div_nhds_one
++ theorem Polynomial.div_tendsto_atBot_iff_degree_gt
++ theorem Polynomial.div_tendsto_atBot_leadingCoeff_div_of_degree_eq
++ theorem Polynomial.div_tendsto_atBot_of_degree_gt'
++ theorem Polynomial.div_tendsto_atBot_of_degree_gt
++ theorem Polynomial.div_tendsto_atBot_zero_iff_degree_lt
++ theorem Polynomial.div_tendsto_atBot_zero_of_degree_lt
++ theorem Polynomial.div_tendsto_atTop_iff_degree_gt
++ theorem Polynomial.div_tendsto_atTop_leadingCoeff_div_iff_degree_eq
++ theorem Polynomial.div_tendsto_atTop_leadingCoeff_div_of_degree_eq
++ theorem Polynomial.div_tendsto_atTop_of_degree_gt'
++ theorem Polynomial.div_tendsto_atTop_of_degree_gt
++ theorem Polynomial.div_tendsto_atTop_zero_iff_degree_lt
++ theorem Polynomial.div_tendsto_atTop_zero_of_degree_lt
++ theorem Polynomial.isBoundedUnder_abs_atBot_iff
++ theorem Polynomial.isBoundedUnder_abs_atTop_iff
++ theorem Polynomial.tendsTo_atBot_div_nhds_one
++ theorem Polynomial.tendsTo_atTop_div_nhds_leadingCoeff
++ theorem Polynomial.tendsTo_atTop_div_nhds_one
++ theorem Polynomial.tendsto_atBot_iff_leadingCoeff_nonpos
++ theorem Polynomial.tendsto_atBot_of_leadingCoeff_nonpos
++ theorem Polynomial.tendsto_atTop_iff_leadingCoeff_nonneg
++ theorem Polynomial.tendsto_atTop_of_leadingCoeff_nonneg
++ theorem Polynomial.tendsto_nhds_iff
+
+
+
+2026-11-08 21:00:24 c201833
+
+perf(Linter): move `extendedBinder` linter to `SyntaxBased` (#45780)
+This PR combines the extended binder linter with the syntax based linters, giving a significant speedup.
+The import of the extended binder notation is also made into a private import.
+
+ESTIMATED CHANGES
+Modified Mathlib/Tactic/Linter/Style.lean
+- def Mathlib.Linter.Style.extendedBinder.extendedBinderLinter
+Modified Mathlib/Tactic/Linter/SyntaxBased.lean
+
+Modified MathlibTest/Linter/ExtendedBinder.lean
+
+
+
+
+2026-11-08 17:56:55 6ea2192
+
+feat(FunctionsBoundedAtImInfty): easy lemmas (#45663)
+Simple lemmas on `isBoundedAtImInfty`, from sphere packing project (see [here](https://github.com/thefundamentaltheor3m/Sphere-Packing-Lean/blob/d00d937eb5e4da0d3ce5e7687e5801ab4d73b1a4/SpherePacking/ForMathlib/AtImInfty.lean#L31) and [here](https://github.com/thefundamentaltheor3m/Sphere-Packing-Lean/blob/d00d937eb5e4da0d3ce5e7687e5801ab4d73b1a4/SpherePacking/ForMathlib/FunctionsBoundedAtInfty.lean#L15); do not ask why there are two files...) I think there could be more theorems can be added, similar to these, but I'm not sure what would be the best.
+
+ESTIMATED CHANGES
+Modified Mathlib/Analysis/Complex/UpperHalfPlane/FunctionsBoundedAtInfty.lean
++/- def UpperHalfPlane.IsBoundedAtImInfty
++/- theorem UpperHalfPlane.IsZeroAtImInfty.isBoundedAtImInfty
++/- def UpperHalfPlane.IsZeroAtImInfty
++/- theorem UpperHalfPlane.isBoundedAtImInfty_iff
++ theorem UpperHalfPlane.isBoundedAtImInfty_neg_iff
++/- theorem UpperHalfPlane.isZeroAtImInfty_iff
++ theorem UpperHalfPlane.isZeroAtImInfty_neg_iff
++/- theorem UpperHalfPlane.zero_form_isBoundedAtImInfty
+Modified Mathlib/Order/Filter/ZeroAndBoundedAtFilter.lean
++ theorem Filter.boundedAtFilter_neg_iff
++ theorem Filter.zeroAtFilter_neg_iff
+Modified Mathlib/Topology/Separation/Basic.lean
++ theorem Filter.Tendsto.ne_const
++ theorem Filter.Tendsto.ne_one
+
+
+
+2026-11-08 15:51:21 1c2b155
+
+chore(NumberTheory): move declarations from namespace `RingOfIntegers` to `NumberField.RingOfIntegers` (#45809)
+(Most of) the declarations about `NumberField.RingOfIntegers` in `Mathlib.NumberTheory.NumberField.Norm`,
+`Mathlib.NumberTheory.NumberField.ClassNumber` and `Mathlib.NumberTheory.NumberField.Ideal.KummerDedekind`
+were in the namespace `RingOfIntegers` rather than in `NumberField.RingOfIntegers`. This
+prevented dot notation, and it looks like a forgotten `namespace NumberField`. The other files
+about rings of integers already use `NumberField.RingOfIntegers`.
+This PR moves these 26 declarations into `NumberField.RingOfIntegers`:
+- `Norm`: `norm` and the eight lemmas about it (`coe_norm`, `dvd_norm`, `isUnit_norm`, …);
+- `ClassNumber`: the five `isPrincipalIdealRing_of_…` criteria;
+- `Ideal.KummerDedekind`: `exponent`, `ZModXQuotSpanEquivQuotSpan`,
+  `ZModXQuotSpanEquivQuotSpanPair`, `monicFactorsMod` and the lemmas about them.
+The old names are deprecated aliases, collected at the end of each file. References in the
+module docstrings use the new names.
+Downstream changes:
+- `Cyclotomic/PID`: the two uses of `RingOfIntegers.isPrincipalIdealRing_of_abs_discr_lt` now
+  use the full name. A qualified name resolves to the root declaration first, so during the
+  deprecation period it would pick the deprecated alias.
+- `Cyclotomic/Ideal`: `open … NumberField RingOfIntegers` becomes
+  `open … NumberField NumberField.RingOfIntegers`. With `NumberField` open, `open RingOfIntegers`
+  opens both the root namespace and `NumberField.RingOfIntegers`, which would make bare
+  `exponent` ambiguous between the alias and the new declaration.
+- `Units/Basic` (second commit): now that dot notation is available, `RingOfIntegers.norm ℚ x`
+  becomes `x.norm ℚ`.
+Zulip discussion: [#mathlib4 > RingOfIntegers: namespace question @ 💬](https://leanprover.zulipchat.com/#narrow/channel/287929-mathlib4/topic/RingOfIntegers.3A.20namespace.20question/near/638407705)
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+ESTIMATED CHANGES
+Modified Mathlib/NumberTheory/NumberField/ClassNumber.lean
++ theorem NumberField.RingOfIntegers.isPrincipalIdealRing_of_abs_discr_lt
++ theorem NumberField.RingOfIntegers.isPrincipalIdealRing_of_isPrincipal_of_lt_or_isPrincipal_of_mem_primesOver_of_mem_Icc
++ theorem NumberField.RingOfIntegers.isPrincipalIdealRing_of_isPrincipal_of_norm_le
++ theorem NumberField.RingOfIntegers.isPrincipalIdealRing_of_isPrincipal_of_norm_le_of_isPrime
++ theorem NumberField.RingOfIntegers.isPrincipalIdealRing_of_isPrincipal_of_pow_le_of_mem_primesOver_of_mem_Icc
+- theorem RingOfIntegers.isPrincipalIdealRing_of_abs_discr_lt
+- theorem RingOfIntegers.isPrincipalIdealRing_of_isPrincipal_of_lt_or_isPrincipal_of_mem_primesOver_of_mem_Icc
+- theorem RingOfIntegers.isPrincipalIdealRing_of_isPrincipal_of_norm_le
+- theorem RingOfIntegers.isPrincipalIdealRing_of_isPrincipal_of_norm_le_of_isPrime
+- theorem RingOfIntegers.isPrincipalIdealRing_of_isPrincipal_of_pow_le_of_mem_primesOver_of_mem_Icc
+Modified Mathlib/NumberTheory/NumberField/Cyclotomic/Ideal.lean
+
+Modified Mathlib/NumberTheory/NumberField/Cyclotomic/PID.lean
+
+Modified Mathlib/NumberTheory/NumberField/Ideal/KummerDedekind.lean
++ def NumberField.RingOfIntegers.ZModXQuotSpanEquivQuotSpan
++ def NumberField.RingOfIntegers.ZModXQuotSpanEquivQuotSpanPair
++ theorem NumberField.RingOfIntegers.ZModXQuotSpanEquivQuotSpan_mk_apply
++ def NumberField.RingOfIntegers.exponent
++ theorem NumberField.RingOfIntegers.exponent_eq_one_iff
++ theorem NumberField.RingOfIntegers.exponent_eq_sInf
++ theorem NumberField.RingOfIntegers.irreducible_monicFactorsMod
++ theorem NumberField.RingOfIntegers.mem_monicFactorsMod_iff
++ theorem NumberField.RingOfIntegers.monicFactorsMod_dvd_map_minpoly
++ theorem NumberField.RingOfIntegers.monic_monicFactorsMod
++ theorem NumberField.RingOfIntegers.not_dvd_exponent_iff
+- def RingOfIntegers.ZModXQuotSpanEquivQuotSpan
+- def RingOfIntegers.ZModXQuotSpanEquivQuotSpanPair
+- theorem RingOfIntegers.ZModXQuotSpanEquivQuotSpan_mk_apply
+- def RingOfIntegers.exponent
+- theorem RingOfIntegers.exponent_eq_one_iff
+- theorem RingOfIntegers.exponent_eq_sInf
+- theorem RingOfIntegers.irreducible_monicFactorsMod
+- theorem RingOfIntegers.mem_monicFactorsMod_iff
+- theorem RingOfIntegers.monicFactorsMod_dvd_map_minpoly
+- theorem RingOfIntegers.monic_monicFactorsMod
+- theorem RingOfIntegers.not_dvd_exponent_iff
+Modified Mathlib/NumberTheory/NumberField/Norm.lean
++ theorem NumberField.RingOfIntegers.algebraMap_norm_algebraMap
++ theorem NumberField.RingOfIntegers.coe_algebraMap_norm
++ theorem NumberField.RingOfIntegers.coe_norm
++ theorem NumberField.RingOfIntegers.dvd_norm
++ theorem NumberField.RingOfIntegers.isUnit_norm
++ theorem NumberField.RingOfIntegers.isUnit_norm_of_isGalois
++ theorem NumberField.RingOfIntegers.norm_algebraMap
++ theorem NumberField.RingOfIntegers.norm_norm
+- theorem RingOfIntegers.algebraMap_norm_algebraMap
+- theorem RingOfIntegers.coe_algebraMap_norm
+- theorem RingOfIntegers.coe_norm
+- theorem RingOfIntegers.dvd_norm
+- theorem RingOfIntegers.isUnit_norm
+- theorem RingOfIntegers.isUnit_norm_of_isGalois
+- theorem RingOfIntegers.norm_algebraMap
+- theorem RingOfIntegers.norm_norm
+Modified Mathlib/NumberTheory/NumberField/Units/Basic.lean
+
+
+
+
+2026-11-08 15:25:11 089be9f
+
+chore(Algebra/Module/Projective): seperate `Projective.tensorProduct` from the definition of `Module.Projective` (#45656)
+Move `Projective.tensorProduct` from `Algebra/Module/Projective.lean` to `LinearAlgebra/TensorProduct/Projective.lean` as it is not required to define the projectivity. This reduces `public import Mathlib.LinearAlgebra.TensorProduct.Basis`.
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Modified Mathlib/Algebra/Azumaya/Matrix.lean
+
+Modified Mathlib/Algebra/Category/ModuleCat/Ext/DimensionShifting.lean
+
+Modified Mathlib/Algebra/Lie/TensorProduct.lean
+
+Modified Mathlib/Algebra/Module/FinitePresentation.lean
+
+Modified Mathlib/Algebra/Module/Projective.lean
+
+Modified Mathlib/LinearAlgebra/BilinearForm/TensorProduct.lean
+
+Modified Mathlib/LinearAlgebra/GeneralLinearGroup/AlgEquiv.lean
+
+Modified Mathlib/LinearAlgebra/Span/TensorProduct.lean
+
+Modified Mathlib/LinearAlgebra/TensorProduct/Matrix.lean
+
+Added Mathlib/LinearAlgebra/TensorProduct/Projective.lean
+
+Modified Mathlib/RingTheory/Flat/Basic.lean
+
+Modified Mathlib/RingTheory/TensorProduct/Free.lean
+
+Modified Mathlib/RingTheory/Unramified/Finite.lean
+
+
+
+
+2026-11-08 15:25:09 601ab7a
+
+doc: mention alternate name for Scott-Hausdorff topology (#45655)
+This name comes from the paper [𝖣-completions and the 𝑑-topology](https://www.sciencedirect.com/science/article/pii/S0168007208001619) by Keimel and Lawson.
+
+ESTIMATED CHANGES
+Modified Mathlib/Topology/Order/ScottTopology.lean
+
+
+
+
+2026-11-08 15:25:06 29ade01
+
+refactor(Topology/Algebra/OpenSubgroup): drop T1 assumption in `tendsto_coe_cofinite_of_isDiscrete` (#45089)
+This lemma was previously proved using `isClosed_of_isDiscrete`, which needs `[T1Space G]`. But actually, there's a direct proof avoiding that assumption, using `exists_nhds_eq_one_of_image_mulRight_inter_nonempty` and `compact_covered_by_mul_left_translates`.
+
+ESTIMATED CHANGES
+Modified Mathlib/Topology/Algebra/OpenSubgroup.lean
++/- theorem MonoidHom.tendsto_coe_cofinite_of_isDiscrete
++/- theorem Subgroup.tendsto_coe_cofinite_of_isDiscrete
+
+
+
+2026-11-08 14:31:03 daf1a36
+
+chore: adapt to leanprover-community/batteries#2060 (#45750)
+Adaptations for https://github.com/leanprover-community/batteries/pull/2060.
+The bot updates the Batteries dependency after successful Batteries CI.
+To contribute adaptations, open a PR against this branch from a fork of `leanprover-community/mathlib4-adaptations`, as described in the [Batteries contributor guide](https://github.com/leanprover-community/batteries#mathlib-adaptations).
+After the Batteries PR is merged, the bot restores the main dependency and marks this PR ready for review.
+
+ESTIMATED CHANGES
+Modified Mathlib/CategoryTheory/Limits/ExactFunctor.lean
+
+Modified lake-manifest.json
+
+
+
+
+2026-11-08 14:14:06 a8d0dfe
+
+feat(LinearAlgebra/MultilinearMap): generalize `MultilinearMap` with common `RingHom` (#42534)
+Generalizes multilinear maps to multi-semilinear maps.
+In analogy with `LinearMap σ M N`, `MultilinearMap σ M N` is the space of multilinear maps from the `R`-module `∀ i, M i` to the `S`-module `N` over a ring homomorphism `σ : R →+* S`: fixing all but one coordinate gives a map `M i →ₛₗ[σ] N`.
+Adds the notation `(Π i, M i) →ₘₛₗ[σ] N` for `MultilinearMap σ M N`, complementing the notation `(Π i, M i) →ₘₗ[R] N` for the previous multilinear map which is the special case with `σ = RingHom.id R`.
+**Breaking change**: to use the previous multilinear map, change `MultilinearMap R M N` to `MultilinearMap (.id R) M N` or `(Π i, M i) →ₘₗ[R] N`.
+Both `ContinuousMultilinearMap` and `AlternatingMap` extend `MultilinearMap` and are left defined in terms of `RingHom.id`.
+
+ESTIMATED CHANGES
+Modified Mathlib/Analysis/Analytic/Composition.lean
+
+Modified Mathlib/Analysis/Analytic/Inverse.lean
+
+Modified Mathlib/Analysis/Calculus/ContDiff/FaaDiBruno.lean
+
+Modified Mathlib/Analysis/Normed/Module/Multilinear/Basic.lean
++/- theorem MultilinearMap.continuous_of_bound
++/- theorem MultilinearMap.norm_image_sub_le_of_bound'
++/- theorem MultilinearMap.norm_image_sub_le_of_bound
++/- theorem MultilinearMap.norm_map_coord_zero
++/- theorem MultilinearMap.restr_norm_le
+Modified Mathlib/LinearAlgebra/Alternating/Basic.lean
+
+Modified Mathlib/LinearAlgebra/Multilinear/Basic.lean
++/- def LinearEquiv.multilinearMapCongrLeft
++/- def LinearEquiv.multilinearMapCongrRight
++/- theorem LinearMap.add_compMultilinearMap
++/- theorem LinearMap.coe_compMultilinearMap
++/- def LinearMap.compMultilinearMap
++/- theorem LinearMap.compMultilinearMap_add
++/- theorem LinearMap.compMultilinearMap_apply
++/- theorem LinearMap.compMultilinearMap_codRestrict
++/- theorem LinearMap.compMultilinearMap_domDomCongr
++/- theorem LinearMap.compMultilinearMap_smul
++ theorem LinearMap.compMultilinearMap_smulₛₗ
++/- theorem LinearMap.compMultilinearMap_zero
++/- def LinearMap.compMultilinearMapₗ
++/- theorem LinearMap.comp_compMultilinearMap
++/- theorem LinearMap.id_compMultilinearMap
++/- theorem LinearMap.smul_compMultilinearMap
++/- theorem LinearMap.subtype_compMultilinearMap_codRestrict
++/- theorem LinearMap.zero_compMultilinearMap
++/- def MultilinearMap.codRestrict
++/- theorem MultilinearMap.coe_inj
++/- theorem MultilinearMap.coe_injective
++/- theorem MultilinearMap.coe_mk
++/- theorem MultilinearMap.coe_restrictScalars
++/- def MultilinearMap.compLinearMap
++/- theorem MultilinearMap.compLinearMap_apply
++/- theorem MultilinearMap.compLinearMap_assoc
++/- theorem MultilinearMap.compLinearMap_id
++/- theorem MultilinearMap.compLinearMap_inj
++/- theorem MultilinearMap.compLinearMap_injective
++/- def MultilinearMap.compLinearMapₗ
++/- def MultilinearMap.compMultilinearMap
++/- theorem MultilinearMap.comp_linearEquiv_eq_zero_iff
++/- theorem MultilinearMap.congr_fun
++/- theorem MultilinearMap.cons_add
++/- theorem MultilinearMap.cons_smul
++/- def MultilinearMap.constLinearEquivOfIsEmpty
++/- def MultilinearMap.constOfIsEmpty
++/- def MultilinearMap.domDomCongr
++/- def MultilinearMap.domDomCongrEquiv
++/- def MultilinearMap.domDomCongrLinearEquiv'
++/- def MultilinearMap.domDomCongrLinearEquiv
++/- theorem MultilinearMap.domDomCongr_eq_iff
++/- theorem MultilinearMap.domDomCongr_mul
++/- theorem MultilinearMap.domDomCongr_trans
++/- def MultilinearMap.domDomRestrict
++/- theorem MultilinearMap.domDomRestrict_apply
++/- def MultilinearMap.domDomRestrictₗ
++/- theorem MultilinearMap.ext
++/- theorem MultilinearMap.ext_ring
++/- def MultilinearMap.linearDeriv
++/- theorem MultilinearMap.linearDeriv_apply
++/- def MultilinearMap.map
++/- theorem MultilinearMap.map_add_eq_map_add_linearDeriv_add
++/- theorem MultilinearMap.map_add_sub_map_add_sub_linearDeriv
++/- theorem MultilinearMap.map_add_univ
++/- theorem MultilinearMap.map_coord_zero
++/- theorem MultilinearMap.map_insertNth_add
++/- theorem MultilinearMap.map_insertNth_smul
++/- theorem MultilinearMap.map_nonempty
++/- theorem MultilinearMap.map_piecewise_add
++/- theorem MultilinearMap.map_piecewise_smul
++/- theorem MultilinearMap.map_piecewise_sub_map_piecewise
++/- theorem MultilinearMap.map_smul_univ
++/- theorem MultilinearMap.map_sub_map_piecewise
++/- theorem MultilinearMap.map_update
++/- theorem MultilinearMap.map_update_neg
++/- theorem MultilinearMap.map_update_sub
++/- theorem MultilinearMap.map_update_sum
++/- theorem MultilinearMap.map_update_zero
++/- def MultilinearMap.mk'
++/- theorem MultilinearMap.mkPiAlgebra_apply
++/- theorem MultilinearMap.mkPiRing_apply
++/- theorem MultilinearMap.mkPiRing_apply_one_eq_self
++/- theorem MultilinearMap.mkPiRing_eq_iff
++/- theorem MultilinearMap.mkPiRing_eq_zero_iff
++/- theorem MultilinearMap.mkPiRing_zero
++/- theorem MultilinearMap.mk_coe
++/- def MultilinearMap.ofSubsingleton
++/- def MultilinearMap.ofSubsingletonₗ
++/- def MultilinearMap.pi
++/- def MultilinearMap.prod
++/- def MultilinearMap.range
++/- def MultilinearMap.restr
++/- def MultilinearMap.restrictScalars
++/- def MultilinearMap.smulRight
++/- theorem MultilinearMap.smulRight_apply
++/- theorem MultilinearMap.snoc_add
++/- theorem MultilinearMap.snoc_smul
++/- def MultilinearMap.toLinearMap
++/- theorem MultilinearMap.zero_compLinearMap
++/- structure MultilinearMap
+Modified Mathlib/LinearAlgebra/Multilinear/Basis.lean
++/- theorem Module.Basis.ext_multilinear
+Modified Mathlib/LinearAlgebra/Multilinear/Curry.lean
++/- theorem LinearMap.curry_uncurryLeft
++/- def LinearMap.uncurryLeft
++/- theorem LinearMap.uncurryLeft_apply
++/- def LinearMap.uncurryMid
++/- theorem MultilinearMap.coe_currySumEquiv
++/- theorem MultilinearMap.coe_currySumEquiv_symm
++/- def MultilinearMap.curryLeft
++/- theorem MultilinearMap.curryLeft_apply
++/- def MultilinearMap.curryMid
++/- def MultilinearMap.curryRight
++/- theorem MultilinearMap.curryRight_apply
++/- def MultilinearMap.currySum
++/- theorem MultilinearMap.currySum_add
++/- theorem MultilinearMap.currySum_apply
++/- theorem MultilinearMap.currySum_smul
++/- theorem MultilinearMap.currySum_uncurrySum
++/- theorem MultilinearMap.uncurryMid_curryMid
++/- def MultilinearMap.uncurryRight
++/- def MultilinearMap.uncurrySum
++/- theorem MultilinearMap.uncurrySum_add
++/- theorem MultilinearMap.uncurrySum_apply
++/- theorem MultilinearMap.uncurrySum_currySum
++/- theorem MultilinearMap.uncurrySum_smul
++/- theorem MultilinearMap.uncurry_curryLeft
++/- theorem MultilinearMap.uncurry_curryRight
+Modified Mathlib/LinearAlgebra/Multilinear/DFinsupp.lean
++/- def MultilinearMap.dfinsuppFamily
++/- theorem MultilinearMap.dfinsuppFamily_add
++/- theorem MultilinearMap.dfinsupp_ext
++/- theorem MultilinearMap.fromDFinsuppEquiv_symm_apply
+Modified Mathlib/LinearAlgebra/Multilinear/DirectSum.lean
+
+Modified Mathlib/LinearAlgebra/Multilinear/FiniteDimensional.lean
+
+Modified Mathlib/LinearAlgebra/Multilinear/Pi.lean
++/- def MultilinearMap.piFamily
++/- theorem MultilinearMap.piFamily_add
++/- theorem MultilinearMap.piFamily_zero
+Modified Mathlib/LinearAlgebra/Multilinear/TensorProduct.lean
++/- theorem MultilinearMap.domCoprod'_apply
++/- def MultilinearMap.domCoprod
++/- theorem MultilinearMap.domCoprodDep'_apply
++/- def MultilinearMap.domCoprodDep
++/- theorem MultilinearMap.domCoprod_domDomCongr_sumCongr
+Modified Mathlib/LinearAlgebra/PiTensorProduct/Basic.lean
+
+Modified Mathlib/LinearAlgebra/PiTensorProduct/DFinsupp.lean
+
+Modified Mathlib/LinearAlgebra/TensorPower/Symmetric.lean
+
+Modified Mathlib/RingTheory/PiTensorProduct.lean
+
+Modified Mathlib/Topology/Algebra/Module/Multilinear/Basic.lean
+
+Modified MathlibTest/LinearAlgebra/Multilinear.lean
+
+
+
+
+2026-11-08 13:01:24 7ed8130
+
+feat(scripts/add_deprecations): do not deprecate `private` declarations (#45774)
+This PR improves the `add_deprecations` script so that it doesn't try to make a deprecation for a `private` declaration. Since the script is text-based, this only works if there is an actual `private` keyword.
+The way this works is that it loops through the words in the removed/modified line, and if it encounters the word `private` before encountering `theorem`/`def`/`instance`/..., it breaks from the loop.
+
+ESTIMATED CHANGES
+Modified scripts/add_deprecations.sh
+
+
+
+
+2026-11-08 12:53:38 34603cc
+
+feat(ModularForms): derivative of discriminant form (#44029)
+
+ESTIMATED CHANGES
+Modified Mathlib/NumberTheory/ModularForms/DedekindEta.lean
++ theorem ModularForm.deriv_eta_eq_E2_mul_eta
+Modified Mathlib/NumberTheory/ModularForms/Discriminant.lean
++ theorem ModularForm.normalizedDerivOfComplex_discriminant
++ theorem ModularForm.serreDerivative_discriminant
+
+
+
 2026-11-08 00:18:03 6da929d
 
 chore(scripts): update nolints.json (#45790)
