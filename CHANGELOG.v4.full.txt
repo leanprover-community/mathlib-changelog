@@ -1,3 +1,343 @@
+2026-11-10 00:48:09 2ddf59c
+
+chore: update Mathlib dependencies 2026-11-10 (#45856)
+This PR updates the Mathlib dependencies.
+It is not merged automatically: a maintainer should look at what the new
+dependency revisions bring in before sending it to bors.
+
+ESTIMATED CHANGES
+Modified .github/actions/get-mathlib-ci/action.yml
+
+
+
+
+2026-11-09 21:35:17 612433b
+
+feat(Analysis/Complex): the equality case of the triangle inequality (#39915)
+The equality case of the triangle inequality for a finite sum
+Part of the Perron–Frobenius formalization (with @or4nge19).
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Added Mathlib/Analysis/Convex/TriangleEquality.lean
++ theorem norm_sum_eq_iff_exists_smul
++ theorem norm_sum_eq_iff_pairwise_sameRay
++ theorem norm_sum_eq_of_pairwise_sameRay
++ theorem normalize_eq_of_pairwise_sameRay
++ theorem sum_ne_zero_of_pairwise_sameRay
+Modified Mathlib/Analysis/Normed/Module/Normalize.lean
++ theorem NormedSpace.SameRay.of_normalize_eq
++ theorem NormedSpace.sameRay_iff_normalize_eq
++ theorem NormedSpace.sameRay_iff_normalize_eq_of_ne
+Modified Mathlib/LinearAlgebra/Ray.lean
++ theorem SameRay.sum_left
++ theorem SameRay.sum_right
++ theorem sameRay_sum_right_of_pairwise
+
+
+
+2026-11-09 20:56:24 957a4aa
+
+chore: replace numeric projections in Mathlib/Algebra/* (#45722)
+This PR replaces numeric projections with their field names in Mathlib/Algebra/* in preparation for the upcoming numeric projections linter in #45389.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/AddConstMap/Basic.lean
++/- theorem AddConstMap.mk_coe
+Modified Mathlib/Algebra/AddConstMap/Equiv.lean
+
+Modified Mathlib/Algebra/Algebra/Operations.lean
+
+Modified Mathlib/Algebra/Algebra/Tower.lean
+
+Modified Mathlib/Algebra/BigOperators/Group/Finset/Defs.lean
++/- theorem Finset.prod_map_val
++/- theorem Finset.prod_val
+Modified Mathlib/Algebra/BigOperators/ModEq.lean
+
+Modified Mathlib/Algebra/BigOperators/Ring/Finset.lean
+
+Modified Mathlib/Algebra/Category/BialgCat/Basic.lean
+
+Modified Mathlib/Algebra/Category/BialgCat/Monoidal.lean
+
+Modified Mathlib/Algebra/Category/CoalgCat/Basic.lean
+
+Modified Mathlib/Algebra/Category/CoalgCat/ComonEquivalence.lean
+
+Modified Mathlib/Algebra/Category/CoalgCat/Monoidal.lean
+
+Modified Mathlib/Algebra/Category/CommAlgCat/FiniteType.lean
+
+Modified Mathlib/Algebra/Category/Grp/LeftExactFunctor.lean
+
+Modified Mathlib/Algebra/Category/HopfAlgCat/Basic.lean
+
+Modified Mathlib/Algebra/Category/HopfAlgCat/Monoidal.lean
+
+Modified Mathlib/Algebra/Category/ModuleCat/Presheaf/Generator.lean
+
+Modified Mathlib/Algebra/Category/ModuleCat/Presheaf/Sheafify.lean
+
+Modified Mathlib/Algebra/Category/ModuleCat/Sheaf.lean
+
+Modified Mathlib/Algebra/Category/ModuleCat/Sheaf/Quasicoherent.lean
+
+Modified Mathlib/Algebra/Category/ModuleCat/Topology/Basic.lean
+
+Modified Mathlib/Algebra/Category/ModuleCat/Topology/Homology.lean
+
+Modified Mathlib/Algebra/Category/Ring/Constructions.lean
+
+Modified Mathlib/Algebra/Category/Ring/Epi.lean
+
+Modified Mathlib/Algebra/Category/Ring/FilteredColimits.lean
++/- def SemiRingCat.FilteredColimits.colimitCoconeIsColimit.descAddMonoidHom
++/- def SemiRingCat.FilteredColimits.colimitCoconeIsColimit.descMonoidHom
+Modified Mathlib/Algebra/Category/Ring/FilteredColimitsLocal.lean
+
+Modified Mathlib/Algebra/Central/Basic.lean
+
+Modified Mathlib/Algebra/Central/TensorProduct.lean
+
+Modified Mathlib/Algebra/CharP/Algebra.lean
+
+Modified Mathlib/Algebra/CharP/CharAndCard.lean
+
+Modified Mathlib/Algebra/CharP/LinearMaps.lean
+
+Modified Mathlib/Algebra/CharP/Quotient.lean
+
+Modified Mathlib/Algebra/Field/Equiv.lean
+
+Modified Mathlib/Algebra/Free.lean
++/- theorem FreeSemigroup.head_mul
++/- theorem FreeSemigroup.tail_mul
+Modified Mathlib/Algebra/GCDMonoid/Basic.lean
++/- theorem normUnit_coe_units
+Modified Mathlib/Algebra/GCDMonoid/Finset.lean
++/- theorem Finset.gcd_def
++/- theorem Finset.lcm_def
+Modified Mathlib/Algebra/Group/ConjFinite.lean
+
+Modified Mathlib/Algebra/Group/Pi/Units.lean
++/- theorem IsUnit.val_inv_apply
+Modified Mathlib/Algebra/Group/Submonoid/BigOperators.lean
+
+Modified Mathlib/Algebra/Group/Submonoid/Saturation.lean
+
+Modified Mathlib/Algebra/Group/Submonoid/Units.lean
+
+Modified Mathlib/Algebra/Group/UniqueProds/Basic.lean
+
+Modified Mathlib/Algebra/Group/Units/Defs.lean
+
+Modified Mathlib/Algebra/Group/Units/Opposite.lean
+
+Modified Mathlib/Algebra/GroupWithZero/Associated.lean
+
+Modified Mathlib/Algebra/GroupWithZero/NonZeroDivisors.lean
+
+Modified Mathlib/Algebra/GroupWithZero/Range.lean
++/- theorem MonoidWithZeroHom.inv_mem_valueGroup
++/- theorem MonoidWithZeroHom.mem_valueGroup
+Modified Mathlib/Algebra/Homology/CochainComplexMinus.lean
+
+Modified Mathlib/Algebra/Homology/CochainComplexPlus.lean
+
+Modified Mathlib/Algebra/Homology/DerivedCategory/Plus.lean
+
+Modified Mathlib/Algebra/Homology/Embedding/TruncGEHomology.lean
+
+Modified Mathlib/Algebra/Homology/ExactSequence.lean
+
+Modified Mathlib/Algebra/Homology/Factorizations/CM5a.lean
+
+Modified Mathlib/Algebra/Homology/GrothendieckAbelian.lean
+
+Modified Mathlib/Algebra/Homology/Homotopy.lean
+
+Modified Mathlib/Algebra/Homology/HomotopyCategory/HomComplex.lean
+
+Modified Mathlib/Algebra/Homology/HomotopyCategory/HomComplexCohomology.lean
+
+Modified Mathlib/Algebra/Homology/LocalCohomology.lean
+
+Modified Mathlib/Algebra/Homology/ModelCategory/Lifting.lean
+
+Modified Mathlib/Algebra/Homology/ShortComplex/Abelian.lean
+
+Modified Mathlib/Algebra/Homology/ShortComplex/ExactFunctor.lean
+
+Modified Mathlib/Algebra/Homology/SpectralObject/Page.lean
+
+Modified Mathlib/Algebra/Lie/Weights/Basic.lean
+
+Modified Mathlib/Algebra/Lie/Weights/Chain.lean
+
+Modified Mathlib/Algebra/Lie/Weights/RootSystem.lean
+
+Modified Mathlib/Algebra/Module/FinitePresentation.lean
+
+Modified Mathlib/Algebra/Module/LinearMap/Defs.lean
+
+Modified Mathlib/Algebra/Module/LocalizedModule/Basic.lean
+
+Modified Mathlib/Algebra/Module/Projective.lean
+
+Modified Mathlib/Algebra/Module/Submodule/Invariant.lean
+
+Modified Mathlib/Algebra/Module/Torsion/Free.lean
+
+Modified Mathlib/Algebra/Module/ZLattice/Summable.lean
+
+Modified Mathlib/Algebra/Order/AddGroupWithTop.lean
+
+Modified Mathlib/Algebra/Order/GroupWithZero/Range.lean
+
+Modified Mathlib/Algebra/Order/Monoid/LocallyFiniteOrder.lean
+
+Modified Mathlib/Algebra/Order/Monoid/Unbundled/OrderDual.lean
+
+Modified Mathlib/Algebra/Order/Nonneg/Field.lean
+
+Modified Mathlib/Algebra/Order/UpperLower.lean
+
+Modified Mathlib/Algebra/Polynomial/BigOperators.lean
+
+Modified Mathlib/Algebra/Polynomial/FieldDivision.lean
+
+Modified Mathlib/Algebra/Polynomial/Monic.lean
+
+Modified Mathlib/Algebra/QuadraticAlgebra/Defs.lean
+
+Modified Mathlib/Algebra/Ring/NonZeroDivisors.lean
+
+Modified Mathlib/Algebra/Ring/Regular.lean
+
+Modified Mathlib/Algebra/Ring/Subgroup.lean
+
+Modified Mathlib/Algebra/Squarefree/Basic.lean
+
+
+
+
+2026-11-09 13:13:37 9bac2d0
+
+doc(Tactic/Algebraize): tweak module doc-string (#45760)
+Make the title a level one header.
+Remove a subsection that feels redundant to me (happy to revert that one).
+
+ESTIMATED CHANGES
+Modified Mathlib/Tactic/Algebraize.lean
+
+
+
+
+2026-11-09 12:48:28 931ecd3
+
+chore(ci): explain and link the weekly linting report, with message locations (#44033)
+This PR makes the weekly linting report posted to Zulip explain itself: the message now says it is `lake build` with the `linter.weeklyLintSet` linters enabled, and links to the linter set, this workflow and the reporting script at the commit that was built. Messages occurring at most twice list their locations, linked to the source, tables are capped at 20 rows so the message stays under Zulip's limit (this week's post was truncated), and a full report with every location goes to the GitHub job summary.
+All of this needs https://github.com/leanprover-community/mathlib-ci/pull/77 and the automatic bump of the pinned mathlib-ci ref; until then the extra variables are ignored and the report is unchanged.
+- [ ] depends on: https://github.com/leanprover-community/mathlib-ci/pull/77
+🤖 Prepared with Claude Code
+
+ESTIMATED CHANGES
+Modified .github/workflows/weekly-lints.yml
+
+
+
+
+2026-11-09 12:01:08 97d39dd
+
+refactor: split `Group.IsApply` and `Module.FunLike` files (#45474)
+Trying to use the `IsApply` classes, I met some `assert_not_exists` statement that prevents this because the `Algebra.Module.FunLike` file puts group actions, group with zero actions and modules all in the same file. This PR splits this file to solve the issue.
+Same for `Algebra.Group.IsApply` to avoid importing `Monoid` in some files.
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Modified Mathlib/Algebra/AddConstMap/Basic.lean
+
+Added Mathlib/Algebra/Group/Action/FunLike.lean
+
+Modified Mathlib/Algebra/Group/FunLike.lean
+
+Modified Mathlib/Algebra/Group/IsApply.lean
++/- theorem FunLike.coe_one_iff
+- theorem FunLike.coe_pow_eq_iterate
+Added Mathlib/Algebra/Group/PowIterate.lean
++ theorem FunLike.coe_pow_eq_iterate
+Added Mathlib/Algebra/GroupWithZero/Action/FunLike.lean
+
+Modified Mathlib/Algebra/GroupWithZero/FunLike.lean
+
+Modified Mathlib/Algebra/Module/FunLike.lean
+
+Modified Mathlib/Algebra/Module/LinearMap/End.lean
+
+Modified Mathlib/Analysis/Normed/Group/Seminorm.lean
+
+Modified Mathlib/Geometry/Convex/AffineMap/Module.lean
+
+Modified Mathlib/LinearAlgebra/AffineSpace/Basis.lean
+
+Modified Mathlib/LinearAlgebra/Alternating/Basic.lean
+
+Modified Mathlib/LinearAlgebra/Basis/SMul.lean
+
+Modified Mathlib/LinearAlgebra/Multilinear/Basic.lean
+
+Modified Mathlib/MeasureTheory/OuterMeasure/Operations.lean
+
+Modified Mathlib/RingTheory/Derivation/Basic.lean
+
+Modified Mathlib/Topology/Algebra/Module/ContinuousLinearMap/Basic.lean
+
+
+
+
+2026-11-09 10:33:51 139105d
+
+feat(MeasureTheory): generalize `QuasiMeasurePreserving` to `AEMeasurable` (#43191)
+We relax the definition of `QuasiMeasurePreserving` from assuming the map is `Measurable` to assuming it is `AEMeasurable`. This comes as a first step for doing the same for `MeasurePreserving`.
+A motivation for the change of both definitions is that `Measure.map` has a meaningful value for all `AEMeasurable` maps, and it would make the measure-preserving definition equivalent to the `HasLaw` definition, allowing more shared API.
+
+ESTIMATED CHANGES
+Modified Mathlib/Dynamics/Ergodic/Action/OfMinimal.lean
+
+Modified Mathlib/Dynamics/Ergodic/Ergodic.lean
++ theorem PreErgodic.of_preimage_eq_of_isComplete
++ theorem PreErgodic.of_preimage_eq_of_measurable
++ theorem QuasiErgodic.of_preimage_eq_of_isComplete
++ theorem QuasiErgodic.of_preimage_eq_of_measurable
++/- theorem QuasiErgodic.zero_measure
+Modified Mathlib/Dynamics/Ergodic/Extreme.lean
+
+Modified Mathlib/Dynamics/Ergodic/MeasurePreserving.lean
+
+Modified Mathlib/MeasureTheory/Constructions/Pi.lean
+
+Modified Mathlib/MeasureTheory/Function/AEEqFun.lean
+
+Modified Mathlib/MeasureTheory/Function/StronglyMeasurable/AEStronglyMeasurable.lean
+
+Modified Mathlib/MeasureTheory/Group/Prod.lean
+
+Modified Mathlib/MeasureTheory/Measure/Lebesgue/EqHaar.lean
+
+Modified Mathlib/MeasureTheory/Measure/Prod.lean
+
+Modified Mathlib/MeasureTheory/Measure/QuasiMeasurePreserving.lean
++ theorem MeasureTheory.QuasiMeasurePreserving.exists_preimage_eq_of_preimage_ae₀
+Modified Mathlib/Probability/Density.lean
++ theorem MeasureTheory.HasPDF.quasiMeasurePreserving
+Modified Mathlib/Probability/Kernel/CondDistrib.lean
+
+
+
+
 2026-11-09 02:14:19 ff2494e
 
 chore: remove unnecessary set_option lines (#45821)
