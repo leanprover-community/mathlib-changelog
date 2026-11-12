@@ -1,39 +1,31 @@
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
-import { ItemChangeHistory } from "../../../components/ItemChangeHistory";
+import { useRouter } from "next/router";
+import ClientItemPage from "../../../components/ClientItemPage";
 import Layout from "../../../components/Layout";
-import { getDef } from "../../../data/database";
-import { ChangelogItemData } from "../../../data/extractDataFromChangelog";
+import Spinner from "../../../components/Spinner";
 
 export const getStaticPaths: GetStaticPaths = () => ({
   paths: [],
-  fallback: "blocking",
+  fallback: false,
 });
 
-interface DefProps {
-  def: ChangelogItemData;
-}
+export const getStaticProps: GetStaticProps = () => ({ props: {} });
 
-export const getStaticProps: GetStaticProps<DefProps> = (context) => {
-  if (!context.params?.name || Array.isArray(context.params.name)) {
-    return { notFound: true };
+const DefPage: NextPage = () => {
+  const router = useRouter();
+  const name = router.query.name as string | undefined;
+
+  if (!router.isReady || !name) {
+    return (
+      <Layout version="v4">
+        <div className="flex justify-center py-12">
+          <Spinner size={10} />
+        </div>
+      </Layout>
+    );
   }
-  const def = getDef("v4", context.params.name);
-  if (!def) return { notFound: true };
-  return { props: { def } };
+
+  return <ClientItemPage version="v4" itemType="def" name={name} />;
 };
 
-const Def: NextPage<DefProps> = ({ def }) => {
-  return (
-    <Layout version="v4">
-      <h1 className="text-xl">
-        <span className="text-gray-400">Def</span> {def.name}
-      </h1>
-      <h4 className="text-sm mt-4">Modification history</h4>
-      <div>
-        <ItemChangeHistory item={def} version="v4" />
-      </div>
-    </Layout>
-  );
-};
-
-export default Def;
+export default DefPage;

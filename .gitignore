@@ -137,6 +137,8 @@ crawler/parse_cache.*.pkl
 website/public/searchItems.*.json
 website/public/robots.txt
 website/public/sitemap*.xml
+website/public/data/
+website/out/
 
 # misc
 .vscode

@@ -1,0 +1,21 @@
+# Legacy redirects (previously in next.config.js)
+/                    /v4                     302
+/changelog           /v4/changelog/1         302
+/commit/:sha         /v3/commit/:sha         302
+/def/:name           /v3/def/:name           302
+/inductive/:name     /v3/inductive/:name     302
+/structure/:name     /v3/structure/:name     302
+/theorem/:name       /v3/theorem/:name       302
+/changelog/:page     /v3/changelog/:page     302
+
+# SPA fallback for client-rendered routes
+/v3/commit/*         /v3/commit.html         200
+/v4/commit/*         /v4/commit.html         200
+/v3/theorem/*        /v3/theorem.html        200
+/v4/theorem/*        /v4/theorem.html        200
+/v3/def/*            /v3/def.html            200
+/v4/def/*            /v4/def.html            200
+/v3/structure/*      /v3/structure.html      200
+/v4/structure/*      /v4/structure.html      200
+/v3/inductive/*      /v3/inductive.html      200
+/v4/inductive/*      /v4/inductive.html      200

@@ -1,39 +1,31 @@
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
-import { ItemChangeHistory } from "../../../components/ItemChangeHistory";
+import { useRouter } from "next/router";
+import ClientItemPage from "../../../components/ClientItemPage";
 import Layout from "../../../components/Layout";
-import { getStructure } from "../../../data/database";
-import { ChangelogItemData } from "../../../data/extractDataFromChangelog";
+import Spinner from "../../../components/Spinner";
 
 export const getStaticPaths: GetStaticPaths = () => ({
   paths: [],
-  fallback: "blocking",
+  fallback: false,
 });
 
-interface StructureProps {
-  structure: ChangelogItemData;
-}
+export const getStaticProps: GetStaticProps = () => ({ props: {} });
 
-export const getStaticProps: GetStaticProps<StructureProps> = (context) => {
-  if (!context.params?.name || Array.isArray(context.params.name)) {
-    return { notFound: true };
+const StructurePage: NextPage = () => {
+  const router = useRouter();
+  const name = router.query.name as string | undefined;
+
+  if (!router.isReady || !name) {
+    return (
+      <Layout version="v4">
+        <div className="flex justify-center py-12">
+          <Spinner size={10} />
+        </div>
+      </Layout>
+    );
   }
-  const structure = getStructure("v4", context.params.name);
-  if (!structure) return { notFound: true };
-  return { props: { structure } };
+
+  return <ClientItemPage version="v4" itemType="structure" name={name} />;
 };
 
-const Structure: NextPage<StructureProps> = ({ structure }) => {
-  return (
-    <Layout version="v4">
-      <h1 className="text-xl">
-        <span className="text-gray-400">Structure</span> {structure.name}
-      </h1>
-      <h4 className="text-sm mt-4">Modification history</h4>
-      <div>
-        <ItemChangeHistory item={structure} version="v4" />
-      </div>
-    </Layout>
-  );
-};
-
-export default Structure;
+export default StructurePage;
