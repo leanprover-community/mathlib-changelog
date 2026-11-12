@@ -1,3 +1,605 @@
+2026-11-12 02:47:05 1d2d28f
+
+feat: basic results about `LieHom` (#45757)
+Also, replace `Type u`s with `Type*`.
+From [Ado.ForMathlib.LieMap](https://komyyy.github.io/ado/docs/Ado/ForMathlib/LieMap.html) in [Komyyy/ado](https://github.com/Komyyy/ado)
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Lie/Ideal.lean
++ theorem LieEquiv.coe_mk
++ theorem LieEquiv.coe_symm_mk
++ theorem LieEquiv.comp_symm
++ theorem LieEquiv.ker_eq
++ theorem LieEquiv.symm_comp
++ theorem LieEquiv.toLieHom_refl
++ theorem LieHom.comap_bot
++ theorem LieHom.ker_comp
++ theorem LieIdeal.coe_map_equiv
++ theorem LieIdeal.comap_comp
++ theorem LieIdeal.comap_equiv_eq_map_symm
++ theorem LieIdeal.comap_id
++ theorem LieIdeal.map_comp
++ theorem LieIdeal.map_equiv_eq_comap_symm
++ theorem LieIdeal.map_id
++ theorem LieIdeal.mem_map_equiv
++ theorem LieIdeal.surjective_map_of_surjective
+
+
+
+2026-11-12 01:45:20 8be46f0
+
+chore(Logic/Function/Const): reduce imports (#45884)
+by moving `Setoid.ker_eq_top` to a better location (and renaming it to `Setoid.ker_eq_top_iff` while at it).
+This was causing a large import warning in #45869.
+
+ESTIMATED CHANGES
+Modified Mathlib/Logic/Function/Const.lean
+- theorem Setoid.ker_eq_top
+Modified Mathlib/Order/Setoid/Basic.lean
++ theorem Setoid.ker_eq_top_iff
+
+
+
+2026-11-11 23:02:05 b977629
+
+feat(LinearAlgebra/Matrix/PosDef): drop finiteness from many theorems (#45897)
+This adds `Matrix.posSemidef_iff_submatrix_finset` and `Matrix.posDef_iff_submatrix_finset`,
+and uses them to:
+* drop finiteness assumptions on `conjTranspose_mul_mul_same`, `posSemidef_conjTranspose_mul_self`, `posSemidef_vecMulVec_*`, `fromBlocks₁₁/₂₂`, `kronecker`, Gram matrix positivity/linear independence lemmas, and `posSemidef_matrix_measure_inter`.
+* Golf the proofs of `PosSemidef.hadamard`, `PosDef.hadamard`, and `posSemidef_opNorm_smul_gram_sub_gram`.
+Written with assistance from Gemini 4 Carbon.
+
+ESTIMATED CHANGES
+Modified Mathlib/Analysis/InnerProductSpace/GramMatrix.lean
++/- theorem Matrix.posSemidef_gram
++/- theorem Matrix.submatrix_gram
+Modified Mathlib/Analysis/Matrix/Order.lean
+
+Modified Mathlib/Data/Matrix/Block.lean
++ theorem Matrix.fromBlocks_submatrix_sumMap
+Modified Mathlib/LinearAlgebra/Matrix/Hermitian.lean
++ theorem Matrix.isHermitian_iff_submatrix_finset
+Modified Mathlib/LinearAlgebra/Matrix/PosDef.lean
++ theorem Matrix.posDef_iff_submatrix_finset
++ theorem Matrix.posDef_iff_submatrix_of_forall_finset
++ theorem Matrix.posSemidef_iff_submatrix_finset
++ theorem Matrix.posSemidef_iff_submatrix_of_forall_finset
+Modified Mathlib/MeasureTheory/Function/L2Space.lean
++/- theorem MeasureTheory.posSemidef_matrix_measure_inter
+
+
+
+2026-11-11 23:02:02 7b1df80
+
+ci: upload the declarations dump as one directory, with api.jsonl in place of decls.txt (#45710)
+mathlib-ci#98 adds an API dump, `api.jsonl`, to `dumpReasonableDecls.lean` and lets the `decls-diff` action read directories instead of files. This PR switches mathlib4's CI over to both:
+* `build_template.yml`: run the declaration dump with the new `--out-dir` argument, which writes `api.jsonl` and `imports.json` into `$RUNNER_TEMP/import-graph`. (The existing `import_graph.dot` and `pr_number.txt` files also go into that directory). The directory is checked for symlinks and other non-regular files, and for missing outputs, and then uploaded as the `import-graph` artifact before getting removed. The artifact contains the same files as before, except that `api.jsonl` replaces `decls.txt`.
+* `decls-diff.yml`: passes the two downloaded artifacts to the action as `reference-dir` / `new-dir` instead of four file paths. Master artifacts are kept for 90 days, so for a while some merge bases will only have `decls.txt`. The action takes their names from that file.
+The PR summary comment does not change: the Lean diff is computed from the same names as before. Future new fields in `api.jsonl` and new files in the artifact will only need a mathlib-ci change, not a change here.
+Prepared with Claude Code.
+
+ESTIMATED CHANGES
+Modified .github/actions/get-mathlib-ci/action.yml
+
+Modified .github/workflows/build_template.yml
+
+Modified .github/workflows/decls-diff.yml
+
+
+
+
+2026-11-11 23:01:59 1c1b51c
+
+feat(Analysis/Normed/Unbundled/GelfandRadiusNorm): the Gelfand radius as an algebra norm (#44983)
+This PR uses the Gelfand radius to construct an algebra norm. This is used in #42985 to construct extensions of absolute values.
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Modified Mathlib/Analysis/Matrix/GelfandRadius.lean
++ theorem LinearMap.gelfandRadius_toMatrix_eq
+Added Mathlib/Analysis/Normed/Unbundled/GelfandRadiusNorm.lean
++ theorem Module.Basis.gelfandRadiusNorm_apply
++ theorem gelfandRadiusNorm_algebraMap
++ theorem gelfandRadiusNorm_def
++ theorem gelfandRadiusNorm_eq_norm
++ theorem gelfandRadiusNorm_map
++ theorem gelfandRadiusNorm_one
++ theorem isPowMul_gelfandRadiusNorm
+
+
+
+2026-11-11 23:01:56 861b994
+
+feat(Topology/Sets): `ClosedIciTopology` and `OrderClosedTopology` instances for `Compacts` (#43637)
+
+ESTIMATED CHANGES
+Modified Mathlib/Topology/Sets/VietorisTopology.lean
++ theorem TopologicalSpace.Compacts.closedIciTopology_iff
++ theorem TopologicalSpace.Compacts.isClosed_setOfPred_mem
++ theorem TopologicalSpace.Compacts.isClosed_supersets
++ theorem TopologicalSpace.Compacts.orderClosedTopology_iff
++ theorem TopologicalSpace.NonemptyCompacts.closedIciTopology_iff
++ theorem TopologicalSpace.NonemptyCompacts.isClosed_setOfPred_mem
++ theorem TopologicalSpace.NonemptyCompacts.isClosed_supersets
++ theorem TopologicalSpace.NonemptyCompacts.orderClosedTopology_iff
++ theorem TopologicalSpace.vietoris.isClosed_supersets
+
+
+
+2026-11-11 19:03:04 25af27f
+
+ci: validate dependency pins in lake-manifest.json (#45507)
+The Build job validates `lake-manifest.json` before it downloads dependencies. It uses [`validate-lake-manifest`](https://github.com/leanprover-community/mathlib-ci/tree/e08feb664fe178b59a3fff5de1aa9893535b8a6c/.github/actions/validate-lake-manifest) from leanprover-community/mathlib-ci#96, pinned to the merged commit `e08feb6`.
+The action checks allowed repositories and references, and requires full commit hashes. For new dependencies or changes to `url`, `inputRev`, or `rev`, it checks each pin against its branch or tag. Branch pins must also descend from the base pin when `url` and `inputRev` are unchanged. This catches accidental dependency downgrades and pins from unmerged dependency PRs. The action's README lists the full rules.
+Malformed pins and an unreadable target manifest always fail. Other violations and errors in pin checks fail on `staging` and `trying`, and warn on other runs. This lets adaptation PRs test unmerged dependencies while bors blocks their merge.
+For intentional reverts, an admin sets `MATHLIB_ALLOW_OLDER_DEPENDENCY_PINS` to `true` so older-pin violations only warn. The admin deletes the variable after the revert merges.
+The step skips `bump/*` branches, PRs into them, and repositories other than `leanprover-community/mathlib4`. Bors batches still run the check. An unchanged manifest needs three GitHub API calls, without retries.
+Validation: `actionlint` and whitespace checks pass. The validator passes against this PR's manifest in strict mode using the live GitHub API. Fork PR runs use master's workflow, so they do not test the new step.
+🤖
+
+ESTIMATED CHANGES
+Modified .github/workflows/build_template.yml
+
+
+
+
+2026-11-11 18:16:14 99fb99c
+
+feat(NumberTheory/LSeries): the (weak) prime number theorem (#43238)
+This PR adds `Mathlib/NumberTheory/LSeries/WeakPNT.lean`, deducing the prime
+number theorem from the Wiener–Ikehara Tauberian theorem (#43233):
+- `Chebyshev.isEquivalent_psi_id`: `ψ x ~ x`
+- `Chebyshev.isEquivalent_theta_id`: `θ x ~ x`
+- `Chebyshev.isEquivalent_primeCounting`: **the prime number theorem** `π x ~ x / log x`
+- consecutive-prime asymptotics and prime-gap existence
+A version of the first three items for arithmetic progressions is also given.
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Modified Mathlib/Analysis/Asymptotics/Lemmas.lean
++ theorem Asymptotics.isLittleO_id_iff_tendsto
+Modified Mathlib/NumberTheory/Chebyshev.lean
++ theorem Chebyshev.isLittleO_card_prime_with_mul_log_sum_prime_log_with
++ theorem Chebyshev.isLittleO_primeCounting_mul_log_sub_theta
++ theorem Chebyshev.isLittleO_psi_sub_theta_id
++ theorem Chebyshev.isLittleO_sum_vonMangoldt_with_sum_prime_log_with
++ theorem Chebyshev.sum_range_vonMangoldt_le
+Added Mathlib/NumberTheory/LSeries/WeakPNT.lean
++ theorem ArithmeticFunction.vonMangoldt.tendsto_sum_modEq_div_atTop
++ theorem ArithmeticFunction.vonMangoldt.tendsto_sum_residueClass_div_atTop
++ theorem Chebyshev.exists_prime_of_theta_lt
++ theorem Chebyshev.isEquivalent_psi_id
++ theorem Chebyshev.isEquivalent_theta_id
++ theorem Chebyshev.tendsto_psi_div_atTop
++ theorem Chebyshev.tendsto_sum_log_prime_modEq_div_atTop
++ theorem Chebyshev.tendsto_theta_div_atTop
++ theorem Nat.eventually_exists_prime_mem_Ioc
++ theorem Nat.eventually_exists_prime_mem_Ioc_sub
++ theorem Nat.isEquivalent_card_prime_modEq
++ theorem Nat.isEquivalent_log_lcmUpto_id
++ theorem Nat.isEquivalent_log_primorial_id
++ theorem Nat.isEquivalent_nth_prime_succ
++ theorem Nat.isEquivalent_primeCounting
++ theorem Nat.tendsto_card_prime_modEq_mul_log_div_atTop
++ theorem Nat.tendsto_log_lcmUpto_div_atTop
++ theorem Nat.tendsto_log_primorial_div_atTop
+Modified docs/1000.yaml
+
+
+
+
+2026-11-11 17:28:36 17987eb
+
+perf(GroupTheory/IsPerfect): make `subsingleton_of_isMulCommutative` a theorem (#45864)
+The discussion in [#45731](https://github.com/leanprover-community/mathlib4/pull/45731) indicated that the instance `Group.IsPerfect.subsingleton_of_isMulCommutative` slows down mathlib’s linting. This PR makes it a theorem instead, which via `to_additive` also covers `AddGroup.IsPerfect.subsingleton_of_isAddCommutative`.
+The only file importing `Mathlib.GroupTheory.IsPerfect` so far is `Mathlib/LinearAlgebra/Projectivization/PSL/PSL2.lean`, which does not rely on this instance, so nothing downstream needed changing. Since the file is relatively new, it’s good to make this change before this issue snowballs.
+
+ESTIMATED CHANGES
+Modified Mathlib/GroupTheory/IsPerfect.lean
++ theorem Group.IsPerfect.subsingleton_of_isMulCommutative
+
+
+
+2026-11-11 17:28:33 cf6b1c9
+
+feat(Geometry/Manifold/VectorBundle/Basic): small missing API lemmas (#45448)
+For all three of them, the analogous lemmas already exists for differentiable sections. From the project on the fundamental of Riemannian geometry: Ehresmann connections, curvature and geodesics.
+
+ESTIMATED CHANGES
+Modified Mathlib/Geometry/Manifold/VectorBundle/Basic.lean
++ theorem Bundle.Trivialization.contMDiffAt
++ theorem Bundle.Trivialization.contMDiffAt_snd_comp_iff₂
++ theorem Bundle.Trivialization.contMDiffAt_symm
+Modified Mathlib/Geometry/Manifold/VectorBundle/MDifferentiable.lean
+
+
+
+
+2026-11-11 17:28:30 2d833a6
+
+fix: scope some pointwise `Set` instances (#45154)
+While working on relation algebras in CSLib, I noticed that a few pointwise data carrying instances on `Set` were not scoped. In particular, this includes `Set.instInvolutiveStar`, `Set.involutiveInv`, `Set.sdiv`, and their `to_additive` equivalents. I have changed these to `instance_reducible` definitions that are scoped instances under `Pointwise`. The names remain the same, and the only other changes are to add `open scoped Pointwise` as required in a few modules.
+I originally asked about this at [mathlib4 > unscoped pointwise instances on Set](https://leanprover.zulipchat.com/#narrow/channel/287929-mathlib4/topic/unscoped.20pointwise.20instances.20on.20Set/with/633732819)
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Group/Pointwise/Set/Basic.lean
++ def Set.involutiveInv
+Modified Mathlib/Algebra/Group/Pointwise/Set/Scalar.lean
++ def Set.sdiv
+Modified Mathlib/Algebra/Lie/Subalgebra.lean
+
+Modified Mathlib/Algebra/Module/Submodule/Basic.lean
+
+Modified Mathlib/Algebra/Order/Ring/Ordering/Defs.lean
+
+Modified Mathlib/Algebra/Star/Center.lean
+
+Modified Mathlib/Algebra/Star/Conjneg.lean
+
+Modified Mathlib/Algebra/Star/LinearMap.lean
+
+Modified Mathlib/Algebra/Star/NonUnitalSubalgebra.lean
+
+Modified Mathlib/Algebra/Star/Pointwise.lean
++ def Set.instInvolutiveStar
+Modified Mathlib/Algebra/Star/Subalgebra.lean
+
+Modified Mathlib/Analysis/CStarAlgebra/Basic.lean
+
+Modified Mathlib/Analysis/CStarAlgebra/Fuglede.lean
+
+Modified Mathlib/Analysis/Convex/Extreme.lean
+
+Modified Mathlib/Combinatorics/Additive/Dissociation.lean
+
+Modified Mathlib/Combinatorics/SimpleGraph/Cayley.lean
+
+Modified Mathlib/Combinatorics/SimpleGraph/Circulant.lean
+
+Modified Mathlib/FieldTheory/Minpoly/ConjRootClass.lean
+
+Modified Mathlib/GroupTheory/Coxeter/Basic.lean
+
+Modified Mathlib/LinearAlgebra/AffineSpace/AffineMap.lean
+
+Modified Mathlib/LinearAlgebra/Matrix/Cartan/Realisation.lean
+
+Modified Mathlib/LinearAlgebra/RootSystem/WeylGroup.lean
+
+Modified Mathlib/MeasureTheory/Group/Integral.lean
+
+Modified Mathlib/Topology/Algebra/ValuativeRel/Completion.lean
+
+
+
+
+2026-11-11 17:28:27 da062e9
+
+feat(Combinatorics/Design/Defs): definitions of combinatorial designs (#41823)
+This PR adds the definitions of combinatorial designs.
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Added Mathlib/Combinatorics/Design/Defs.lean
++ theorem IncidenceSystem.IsUniform.finite_block
++ theorem IncidenceSystem.IsUniform.nonempty_block
++ structure IncidenceSystem.IsUniform
++ theorem IncidenceSystem.biUnion_block_subset
++ def IncidenceSystem.discrete
++ def IncidenceSystem.indiscrete
++ theorem IncidenceSystem.mem_of_mem_block
++ def IncidenceSystem.ofHypergraph
++ def IncidenceSystem.toHypergraph
++ theorem IncidenceSystem.toHypergraph_ofHypergraph
++ structure IncidenceSystem
+
+
+
+2026-11-11 17:28:24 fd27cf6
+
+feat(Combinatorics/SimpleGraph/Subgraph): `neighborSet` of `coe`/`spanningCoe` (#41629)
+
+ESTIMATED CHANGES
+Modified Mathlib/Combinatorics/SimpleGraph/Subgraph.lean
++ theorem SimpleGraph.Subgraph.image_neighborSet_coe
++ theorem SimpleGraph.Subgraph.neighborSet_coe
++ theorem SimpleGraph.Subgraph.neighborSet_spanningCoe
+
+
+
+2026-11-11 17:06:29 ab19bac
+
+feat(Combinatorics/SimpleGraph/Paths): more length upper bounds (#41478)
+Bound the lengths of trails/paths/circuits/cycles by `ENat.card V`/`Nat.card V`/`G.edgeSet.encard`/`G.edgeSet.ncard`.
+
+ESTIMATED CHANGES
+Modified Mathlib/Combinatorics/SimpleGraph/Paths.lean
++ theorem SimpleGraph.Walk.IsCycle.length_le_enatCard
++ theorem SimpleGraph.Walk.IsCycle.length_le_natCard
++ theorem SimpleGraph.Walk.IsPath.length_lt_enatCard
++ theorem SimpleGraph.Walk.IsPath.length_lt_natCard
++/- theorem SimpleGraph.Walk.IsTrail.length_le_card_edgeFinset
++ theorem SimpleGraph.Walk.IsTrail.length_le_encard_edgeSet
++ theorem SimpleGraph.Walk.IsTrail.length_le_ncard_edgeSet
++/- theorem SimpleGraph.Walk.exists_isPath_forall_isPath_length_le_length
++/- theorem SimpleGraph.Walk.exists_isTrail_forall_isTrail_length_le_length
+
+
+
+2026-11-11 16:55:30 fd7fdb1
+
+feat: definition and basic API for `IsStarOrtho`, star-orthogonality in star rings (#45485)
+This PR defines `IsStarOrtho a b` as a structure with fields for `a * star b = 0` and `star b * a = 0`, and provides it with the scoped (to `StarRing`) notation `a ⋆⟂ b`. This concept arises frequently in C⋆-algebra theory.
+One key thing we can do with it (in a future PR, already prepared) is to generalize `IsStarNormal.norm_add_eq_max` to `IsStarOrtho` (as the *only* hypothesis on `a` and `b`), and then we can deprecate all the closely related existing versions of that theorem.
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Modified Mathlib/Algebra/Star/Basic.lean
++ structure IsStarOrtho
++ theorem isStarOrtho_comm
++ theorem isStarOrtho_iff'
+Added Mathlib/Algebra/Star/Orthogonal.lean
++ theorem IsSelfAdjoint.isStarOrtho_iff_mul_eq_zero
++ theorem IsStarNormal.isStarOrtho_iff_mul_eq_zero
++ theorem IsStarNormal.isStarOrtho_star_left_iff
++ theorem IsStarNormal.isStarOrtho_star_right_iff
++ theorem IsStarOrtho.add_left
++ theorem IsStarOrtho.add_mul_star_add
++ theorem IsStarOrtho.add_right
++ theorem IsStarOrtho.commute_star
++ theorem IsStarOrtho.isStarProjection_add
++ theorem IsStarOrtho.list_sum_left
++ theorem IsStarOrtho.list_sum_right
++ theorem IsStarOrtho.map_iff
++ theorem IsStarOrtho.mul_left'
++ theorem IsStarOrtho.mul_left
++ theorem IsStarOrtho.mul_mul
++ theorem IsStarOrtho.mul_right'
++ theorem IsStarOrtho.mul_right
++ theorem IsStarOrtho.mul_star_self
++ theorem IsStarOrtho.multiset_sum_left
++ theorem IsStarOrtho.multiset_sum_right
++ theorem IsStarOrtho.neg_left_iff
++ theorem IsStarOrtho.neg_right_iff
++ theorem IsStarOrtho.op_iff
++ theorem IsStarOrtho.pow_left
++ theorem IsStarOrtho.pow_pow
++ theorem IsStarOrtho.pow_right
++ theorem IsStarOrtho.smul_left'
++ theorem IsStarOrtho.smul_left
++ theorem IsStarOrtho.smul_right'
++ theorem IsStarOrtho.smul_right
++ theorem IsStarOrtho.star_add_mul_add
++ theorem IsStarOrtho.star_commute
++ theorem IsStarOrtho.star_iff
++ theorem IsStarOrtho.star_left_of_isStarNormal
++ theorem IsStarOrtho.star_mul_self
++ theorem IsStarOrtho.star_right_of_isStarNormal
++ theorem IsStarOrtho.sub_left
++ theorem IsStarOrtho.sub_right
++ theorem IsStarOrtho.sum_left
++ theorem IsStarOrtho.sum_right
++ theorem IsStarOrtho.unop_iff
++ theorem IsStarOrtho.zero_left
++ theorem IsStarOrtho.zero_right
++ theorem IsStarProjection.add_iff_isStarOrtho
++ theorem IsStarProjection.isStarOrtho_one_sub
++ theorem IsStarProjection.one_sub_isStarOrtho
++ theorem IsStarProjection.sum
++ theorem Pairwise.star_sum_mul_sum_of_isStarOrtho
++ theorem Pairwise.sum_mul_star_sum_of_isStarOrtho
++ theorem Set.Pairwise.star_sum_mul_sum_of_isStarOrtho
++ theorem Set.Pairwise.sum_mul_star_sum_of_isStarOrtho
++ theorem isStarOrtho_iff_mul_eq_zero_of_comm
++ theorem isStarOrtho_natCast_left
++ theorem isStarOrtho_natCast_right
++ theorem isStarOrtho_ofNat_left
++ theorem isStarOrtho_ofNat_right
++ theorem isStarOrtho_one_left
++ theorem isStarOrtho_one_right
++ theorem isStarOrtho_self_iff
++ theorem isStarOrtho_star_left_iff
++ theorem isStarOrtho_star_right_iff
+Modified Mathlib/Algebra/Star/Pi.lean
++ theorem IsStarOrtho.pi_iff
+Modified Mathlib/Algebra/Star/Prod.lean
++ theorem IsStarOrtho.prod_iff
+Modified Mathlib/Algebra/Star/SelfAdjoint.lean
+
+
+
+
+2026-11-11 16:55:27 e8af9c8
+
+feat(SimpleGraph/Trails): a walk is Eulerian iff it is a trail of length `G.edgeSet.encard` (#41623)
+
+ESTIMATED CHANGES
+Modified Mathlib/Combinatorics/SimpleGraph/Paths.lean
++ theorem SimpleGraph.Walk.isTrail_iff_encard_edgeSet_eq_length
++ theorem SimpleGraph.Walk.isTrail_iff_ncard_edgeSet_eq_length
+Modified Mathlib/Combinatorics/SimpleGraph/Trails.lean
++ theorem SimpleGraph.Walk.IsEulerian.finite_edgeSet
++ theorem SimpleGraph.Walk.IsEulerian.length_eq_ncard_edgeSet
++/- theorem SimpleGraph.Walk.IsTrail.isEulerian_iff
++ theorem SimpleGraph.Walk.isEulerian_iff_isTrail_and_edgeSet_eq
++ theorem SimpleGraph.Walk.isEulerian_iff_isTrail_and_length_eq_encard_edgeSet
+
+
+
+2026-11-11 12:19:52 2e9cd83
+
+chore(Analysis/SchwartzMap): unify style for `mkCLM` uses (#36015)
+Avoid using `refine` for definitions in favour of `where finally` and unify the indentation.
+
+ESTIMATED CHANGES
+Modified Mathlib/Analysis/Distribution/SchwartzSpace/Basic.lean
++/- def SchwartzMap.integralCLM
+Modified Mathlib/Analysis/Distribution/SchwartzSpace/Deriv.lean
+
+Modified Mathlib/Analysis/Distribution/SchwartzSpace/Fourier.lean
++/- def SchwartzMap.fourierTransformCLM
+
+
+
+2026-11-11 12:01:30 c07b9ee
+
+fix(Topology/Compactness/Lindelof): correct the hypothesis of `IsLindelof.inter_iInter_nonempty` (#45879)
+The hypothesis was `∀ u : Set ι, u.Countable ∧ (s ∩ ⋂ i ∈ u, t i).Nonempty`, which says that every set of indices is countable and gives the conclusion at `u = univ`. Replace `∧` by `→`, requiring nonempty intersections only for countable subfamilies. This gives the countable analogue of `IsCompact.inter_iInter_nonempty`.
+
+ESTIMATED CHANGES
+Modified Mathlib/Topology/Compactness/Lindelof.lean
+
+
+
+
+2026-11-11 11:54:10 10a613c
+
+chore: fix style of `where finally` (#45901)
+
+ESTIMATED CHANGES
+Modified Mathlib/Analysis/Normed/Lp/lpHolder.lean
+
+Modified Mathlib/NumberTheory/Padics/Measure/Basic.lean
+
+
+
+
+2026-11-11 11:36:31 99109e5
+
+fix(CategoryTheory/Yoneda): correct the unification hints for `uliftCoyoneda` (#45886)
+The hints `uliftCoyoneda_obj_obj_eq_hom` and `uliftCoyoneda_obj_obj_eq_hom'` have the arrow reversed: `(uliftCoyoneda.obj X).obj Y` is `ULift (unop X ⟶ Y)`, not `ULift (Y ⟶ unop X)`. Correct both hints and their docstrings, write `=` for `≃` in the docstring of `uliftYoneda_obj_obj_eq_hom`, and add a test that each hint of the file holds by `rfl` once its constraints are solved.
+
+ESTIMATED CHANGES
+Modified Mathlib/CategoryTheory/Yoneda.lean
+
+Added MathlibTest/CategoryTheory/Yoneda.lean
+
+
+
+
+2026-11-11 11:02:41 f596813
+
+chore(CategoryTheory): improve some `ConcreteCategory` instances (#39037)
+Two instances involving concrete categories have the wrong synthesis order. This is fixed by using a different binder info for the `FunLike` instance.
+Previously, type class search would end up with a goal of the form `∀ x y, FunLike (?FV x y) _ _`. The metavariable then caused the type class search to explode.
+Lean has an algorithm for determining the right synthOrder, which usually works well, but failed in these two cases. This is becase the type `FV` appears in the conclusion, so it thinks that the `?FV` metavariable will get assigned. But it ends up not being assigned in practice.
+The `FunLike` parameter of `ConcreteCategory` is an `outParam`, which means that it can be inferred by synthesizing the `ConcreteCategory` instance.
+
+ESTIMATED CHANGES
+Modified Mathlib/CategoryTheory/Action/Concrete.lean
+
+Modified Mathlib/CategoryTheory/Limits/Shapes/ConcreteCategory.lean
+
+
+
+
+2026-11-11 10:06:54 f46c687
+
+feat(Algebra/TotalMonoidAlgebra): add unit and multiplication (#45570)
+We added unit and multiplication of total monoid algebras.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/MonoidAlgebra/Defs.lean
++ theorem MonoidAlgebra.coeff_mul_natCast
++ theorem MonoidAlgebra.coeff_mul_ofNat
++ theorem MonoidAlgebra.coeff_natCast_mul
++ theorem MonoidAlgebra.coeff_ofNat_mul
+Modified Mathlib/Algebra/TotalMonoidAlgebra/Defs.lean
++ theorem TotalMonoidAlgebra.coeff_mul
++ theorem TotalMonoidAlgebra.coeff_mul_natCast
++ theorem TotalMonoidAlgebra.coeff_mul_ofNat
++ theorem TotalMonoidAlgebra.coeff_mul_single_eq_coeff_mul
++ theorem TotalMonoidAlgebra.coeff_mul_single_of_forall_mul_ne
++ theorem TotalMonoidAlgebra.coeff_mul_single_one
++ theorem TotalMonoidAlgebra.coeff_natCast
++ theorem TotalMonoidAlgebra.coeff_natCast_mul
++ theorem TotalMonoidAlgebra.coeff_ofNat
++ theorem TotalMonoidAlgebra.coeff_ofNat_mul
++ theorem TotalMonoidAlgebra.coeff_one_one
++ theorem TotalMonoidAlgebra.coeff_single_mul_eq_mul_coeff
++ theorem TotalMonoidAlgebra.coeff_single_mul_of_forall_mul_ne
++ theorem TotalMonoidAlgebra.coeff_single_one_mul
++ theorem TotalMonoidAlgebra.mul_def
++ theorem TotalMonoidAlgebra.natCast_def
++ def TotalMonoidAlgebra.of
++ def TotalMonoidAlgebra.ofMagma
++ theorem TotalMonoidAlgebra.ofNat_def
++ theorem TotalMonoidAlgebra.of_commute
++ theorem TotalMonoidAlgebra.of_injective
++ theorem TotalMonoidAlgebra.one_def
++ def TotalMonoidAlgebra.singleHom
++ def TotalMonoidAlgebra.singleOneRingHom
++ theorem TotalMonoidAlgebra.single_commute
++ theorem TotalMonoidAlgebra.single_commute_single
++ theorem TotalMonoidAlgebra.single_mul_single
++ theorem TotalMonoidAlgebra.single_pow
+
+
+
+2026-11-11 07:35:17 5d0d3c0
+
+chore(GroupTheory/Coxeter/Basic): clean up `set_option` (#45806)
+We make `CoxeterSystem.Group` into an `abbrev`, so the `PresentedGroup` API can be used directly for it.
+
+ESTIMATED CHANGES
+Modified Mathlib/GroupTheory/Coxeter/Basic.lean
+- def CoxeterMatrix.simple
++ theorem CoxeterMatrix.subgroupClosure_range_simple
++ theorem CoxeterSystem.injective_simple
++ theorem CoxeterSystem.mulEquiv_simple
++ theorem CoxeterSystem.mulEquiv_symm_simple
++/- def CoxeterSystem.simple
+- theorem CoxeterSystem.simple_determines_coxeterSystem
++ theorem CoxeterSystem.subgroupClosure_range_simple
+- theorem CoxeterSystem.subgroup_closure_range_simple
++ theorem CoxeterSystem.submonoidClosure_range_simple
+- theorem CoxeterSystem.submonoid_closure_range_simple
+
+
+
+2026-11-11 04:18:47 dc2a600
+
+refactor(Algebra/Group): split homomorphism definitions from `Lemmas` (#45888)
+Despite the name, `Algebra.Group.Pi.Lemmas` contains a lot of definitions. Some of them are needed for `FunLike` constructions and importing `Lemmas` generates a circular imports. Therefore, we split some of the definitions into a new file.
+We do not move `MulHom.coeFn` and `MonoidHom.coeFn` since they would require more imports (and also they we be deprecated in favour of `FunLike` definitions).
+Minor changes:
+* remove explicit universes
+* adapt module docstring
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Added Mathlib/Algebra/Group/Pi/Hom.lean
++ def MonoidHom.pi
++ def MonoidHom.piMap
++ theorem MonoidHom.pi_injective
++ def MulHom.pi
++ def MulHom.piMap
++ theorem MulHom.pi_injective
++ theorem Pi.coe_evalMonoidHom
++ def Pi.constMonoidHom
++ def Pi.constMulHom
++ def Pi.evalMonoidHom
++ def Pi.evalMulHom
+Modified Mathlib/Algebra/Group/Pi/Lemmas.lean
+- def MonoidHom.pi
+- def MonoidHom.piMap
+- theorem MonoidHom.pi_injective
+- def MulHom.pi
+- def MulHom.piMap
+- theorem MulHom.pi_injective
+- theorem Pi.coe_evalMonoidHom
+- def Pi.constMonoidHom
+- def Pi.constMulHom
+- def Pi.evalMonoidHom
+- def Pi.evalMulHom
+
+
+
 2026-11-11 01:06:43 c9f8023
 
 feat(Logic/Function): define `Function.IsConstOn` predicate (#45867)
