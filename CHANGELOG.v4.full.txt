@@ -1,3 +1,290 @@
+2026-11-12 22:03:42 2657306
+
+chore(Sites/Whiskering): add implicit_reducible to sheafCompose (#45837)
+Extracted from [Stacks Project](https://github.com/AxiomMath/Stacks) formalization.
+co-authored-by: Axiom Formalization team
+
+ESTIMATED CHANGES
+Modified Mathlib/AlgebraicGeometry/Modules/Tilde.lean
+
+Modified Mathlib/CategoryTheory/Sites/Adjunction.lean
+
+Modified Mathlib/CategoryTheory/Sites/ConstantSheaf.lean
+
+Modified Mathlib/CategoryTheory/Sites/PreservesSheafification.lean
+
+Modified Mathlib/CategoryTheory/Sites/Whiskering.lean
+
+Modified Mathlib/Geometry/RingedSpace/SheafedSpace.lean
+
+
+
+
+2026-11-12 20:14:39 e8ba86f
+
+chore(Analysis/InnerProductSpace/l2space): update proof of toOrthonormalBasis addressing ToDo (#45850)
+When `HilbertBasis.toOrthonormalBasis` was added, a note was left saying that the proof should be replaced once the identification of `lp (fun i : ι => 𝕜) p` with `PiLp p (fun i : ι => 𝕜)` is part of Mathlib. This PR makes this replacement.
+
+ESTIMATED CHANGES
+Modified Mathlib/Analysis/InnerProductSpace/l2Space.lean
++ theorem HilbertBasis.repr_toOrthonormalBasis
+Modified Mathlib/Analysis/Normed/Lp/LpEquiv.lean
++ theorem lpPiLpₗᵢ_symm_single
+
+
+
+2026-11-12 19:53:13 a7003ff
+
+feat(Analysis/InnerProductSpace/Positive): add norm_map_le_iff_adjoint_comp_self(_le_id) (#45593)
+This PR add the theorem `norm_map_le_iff_adjoint_comp_self`, which states that `‖p x‖ ≤ ‖q x‖` holds if and only if `adjoint p ∘L p ≤ adjoint q ∘L q` is true, and the corollary of this for `q = .id 𝕜 E` named `norm_map_le_iff_adjoint_comp_self_le_id`.
+
+ESTIMATED CHANGES
+Modified Mathlib/Analysis/InnerProductSpace/Positive.lean
++ theorem ContinuousLinearMap.norm_map_le_norm_iff_le
++ theorem ContinuousLinearMap.norm_map_le_norm_map_iff_le
+
+
+
+2026-11-12 19:00:36 83940d9
+
+chore(Analysis): remove unused hypothesis (#45680)
+Removes unused hypothesis from #45673 in Analysis.
+
+ESTIMATED CHANGES
+Modified Mathlib/Analysis/Analytic/Constructions.lean
+
+Modified Mathlib/Analysis/Analytic/OfScalars.lean
++/- theorem FormalMultilinearSeries.inv_le_ofScalars_radius_of_tendsto
+Modified Mathlib/Analysis/Analytic/Order.lean
+
+Modified Mathlib/Analysis/Calculus/Taylor.lean
++/- theorem exists_taylor_mean_remainder_bound
++/- theorem taylorWithinEval_hasDerivAt_Ioo
++/- theorem taylor_mean_remainder_bound
+Modified Mathlib/Analysis/Complex/JensenFormula.lean
++/- theorem AnalyticOnNhd.circleAverage_log_norm
+Modified Mathlib/Analysis/ConstantSpeed.lean
++/- theorem unique_unit_speed_on_Icc_zero
+Modified Mathlib/Analysis/Convex/Strict/Extreme.lean
+
+Modified Mathlib/Analysis/MeanInequalities.lean
++/- theorem Real.harm_mean_le_geom_mean
++/- theorem Real.harm_mean_le_geom_mean_weighted
+Modified Mathlib/Analysis/Meromorphic/Order.lean
++/- theorem meromorphicOrderAt_logDeriv_eq_neg_one
+Modified Mathlib/Analysis/Normed/Algebra/GelfandFormula.lean
+
+Modified Mathlib/Analysis/Normed/Algebra/Spectrum.lean
+
+Modified Mathlib/Analysis/Normed/Module/Convex.lean
+
+Modified Mathlib/Analysis/Normed/Operator/Basic.lean
+
+Modified Mathlib/Analysis/Normed/Unbundled/SeminormFromConst.lean
++/- theorem seminormFromConst_seq_zero
+Modified Mathlib/Analysis/PSeries.lean
+
+Modified Mathlib/Analysis/Polynomial/MahlerMeasure.lean
++/- theorem Polynomial.mahlerMeasure_C_mul_X_add_C
+Modified Mathlib/Analysis/SpecialFunctions/ImproperIntegrals.lean
+
+Modified Mathlib/Analysis/SpecialFunctions/Integrals/Basic.lean
++/- theorem integral_log_from_zero_of_pos
+Modified Mathlib/Analysis/SpecialFunctions/Pochhammer.lean
+
+Modified Mathlib/Analysis/SpecialFunctions/Pow/Complex.lean
++/- theorem Complex.pow_cpow_nat_inv
+Modified Mathlib/Analysis/SpecialFunctions/Pow/Deriv.lean
++/- theorem Complex.deriv_ofReal_cpow_const
+Modified Mathlib/Analysis/SpecialFunctions/Pow/NNReal.lean
++ theorem ENNReal.one_le_rpow_of_le_one_of_neg
+- theorem ENNReal.one_le_rpow_of_pos_of_le_one_of_neg
++ theorem ENNReal.one_lt_rpow_of_lt_one_of_neg
+- theorem ENNReal.one_lt_rpow_of_pos_of_lt_one_of_neg
+- theorem NNReal.le_rpow_inv_iff_of_pos
+- theorem NNReal.lt_rpow_inv_iff_of_pos
+- theorem NNReal.rpow_inv_le_iff_of_pos
+- theorem NNReal.rpow_inv_lt_iff_of_pos
+Modified Mathlib/Analysis/SpecialFunctions/Pow/NthRootLemmas.lean
++/- theorem Nat.exists_pow_eq_iff'
+Modified Mathlib/Analysis/SpecialFunctions/Trigonometric/Chebyshev/RootsExtrema.lean
++/- theorem Polynomial.Chebyshev.eval_T_real_eq_neg_one_iff
++/- theorem Polynomial.Chebyshev.isExtrOn_T_real
++/- theorem Polynomial.Chebyshev.isLocalExtr_T_real
++/- theorem Polynomial.Chebyshev.isLocalMax_T_real
++/- theorem Polynomial.Chebyshev.isLocalMin_T_real
++/- theorem Polynomial.Chebyshev.isMaxOn_T_real
++/- theorem Polynomial.Chebyshev.isMinOn_T_real
+Modified Mathlib/Analysis/SpecialFunctions/Trigonometric/EulerSineProd.lean
++/- theorem EulerSine.integral_sin_mul_sin_mul_cos_pow_eq
+Modified Mathlib/NumberTheory/LSeries/SumCoeff.lean
+
+
+
+
+2026-11-12 13:14:30 af6dcfb
+
+feat(LinearAlgebra): symmetrizable matices (#45801)
+This introduces symmetrizable matrices and positively symmetrizable matrices. Provides an API that comes in handy while working with Cartan matrices and generalized Cartan matrices.
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Added Mathlib/LinearAlgebra/Matrix/Symmetrizable.lean
++ theorem Matrix.IsPosSymmetrizable.isSymmetrizable
++ theorem Matrix.IsPosSymmetrizable.mk_of_forall_ne
++ theorem Matrix.IsPosSymmetrizable.submatrix
++ theorem Matrix.IsPosSymmetrizable.transpose
++ def Matrix.IsPosSymmetrizable
++ theorem Matrix.IsSymm.IsPosSymmetrizable
++ theorem Matrix.IsSymm.IsSymmetrizable
++ theorem Matrix.IsSymmetrizable.apply_eq_zero_iff
++ theorem Matrix.IsSymmetrizable.submatrix
++ theorem Matrix.IsSymmetrizable.transpose
++ def Matrix.IsSymmetrizable
++ theorem Matrix.isPosSymmetrizable_iff
++ theorem Matrix.isPosSymmetrizable_iff_add_diagonal
++ theorem Matrix.isPosSymmetrizable_iff_of_pairwise_eq
++ theorem Matrix.isPosSymmetrizable_transpose_iff
++ theorem Matrix.isSymmetrizable_iff'
++ theorem Matrix.isSymmetrizable_iff
++ theorem Matrix.isSymmetrizable_iff_add_diagonal
++ theorem Matrix.isSymmetrizable_iff_of_pairwise_eq
++ theorem Matrix.isSymmetrizable_transpose_iff
+
+
+
+2026-11-12 12:11:16 3b957bc
+
+feat(Topology/CompactOpen): add prodMk lemmas (#45907)
+
+ESTIMATED CHANGES
+Modified Mathlib/Topology/CompactOpen.lean
++ theorem ContinuousMap.continuous_prodMk_of_locallyCompactPair
++ def ContinuousMap.prodHomeomorph'
++ def ContinuousMap.prodHomeomorph
+Modified Mathlib/Topology/Compactness/LocallyCompact.lean
++ theorem exists_mem_nhdsWithin_isCompact_mapsTo
+Modified Mathlib/Topology/ContinuousMap/Basic.lean
++ def ContinuousMap.prodEquiv
+
+
+
+2026-11-12 11:24:59 201a1e5
+
+feat(Geometry/Convex): the simplicial set of affine simplices of a convex space (#43528)
+Let `Y` be a `R`-convex space. In this file, we introduce the simplicial set `toSSet R Y` whose `n`-simplices are affine maps from the standard `n`-dimensional simplex to `Y`. (When `R := ℝ` and `Y` has a suitable topology, this identifies to a subcomplex of the singular simplicial set of the topological space `Y`.)
+From https://github.com/joelriou/excision
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Modified Mathlib/AlgebraicTopology/SimplexCategory/Basic.lean
++ theorem SimplexCategory.δ_apply
++ theorem SimplexCategory.σ_apply
+Modified Mathlib/AlgebraicTopology/SimplicialSet/Basic.lean
+
+Added Mathlib/Geometry/Convex/ConvexSpace/ToSSet.lean
++ theorem Convexity.ConvexSpace.AffineMap.cone_naturality
++ def Convexity.ConvexSpace.AffineMap.toSSetMap
++ def Convexity.ConvexSpace.toSSet.cone
++ theorem Convexity.ConvexSpace.toSSet.cone_comp_d_eq_sub
++ theorem Convexity.ConvexSpace.toSSet.d_comp_cone_add_cone_comp_d
++ theorem Convexity.ConvexSpace.toSSet.d_comp_cone_eq_sub
++ def Convexity.ConvexSpace.toSSet.extraDegeneracy
++ theorem Convexity.ConvexSpace.toSSet.δ_affineMapMk
++ theorem Convexity.ConvexSpace.toSSet.δ_zero
++ theorem Convexity.ConvexSpace.toSSet.ι_cone
+
+
+
+2026-11-12 08:21:06 e1545eb
+
+feat(GroupTheory/Abelianization/Defs): abelianization of a quotient (#45834)
+- Adds `Group.Abelianization.quotientMulEquiv`: for a normal subgroup `N` of `G`,
+the abelianization of `G ⧸ N` is isomorphic to the quotient of the abelianization of `G`
+by the image of `N`. 
+- Also adds simp lemmas describing the equivalence
+and its inverse on elements of the group, and additive versions via `to_additive`.
+- Adds the lemma `Group.Abelianization.map_ker_le_ker_map` to help with the above.
+
+ESTIMATED CHANGES
+Modified Mathlib/GroupTheory/Abelianization/Defs.lean
++ theorem Group.Abelianization.map_ker_eq_ker_map
++ theorem Group.Abelianization.map_ker_le_ker_map
++ def Group.Abelianization.quotientMulEquiv
++ theorem Group.Abelianization.quotientMulEquiv_of_mk
++ theorem Group.Abelianization.quotientMulEquiv_symm_mk
+
+
+
+2026-11-12 06:49:39 2270f87
+
+feat(Analysis/Normed/Field/WithAbs): the degree of an extension of absolute values (#45192)
+This PR adds the definition of the degree of an extension of absolute values.
+This is part of a larger project to formalize the general ramification theory of absolute values.
+
+ESTIMATED CHANGES
+Modified Mathlib/Analysis/Normed/Field/WithAbs.lean
++ theorem AbsoluteValue.Completion.map_comp_map
++ theorem AbsoluteValue.Completion.map_map
++ theorem AbsoluteValue.degree_eq
++ theorem AbsoluteValue.degree_mul_degree
+Modified Mathlib/Analysis/Normed/Ring/WithAbs.lean
+
+
+
+
+2026-11-12 06:11:47 29d0cda
+
+chore(Topology/CantorBendixson): minor cleanup (#43963)
+`CantorBendixson` is not a type, and the names in this file shouldn't clash with anything else, so we un-namespace the material in this file. 
+We also rewrap some lines and perform minor golfs.
+
+ESTIMATED CHANGES
+Modified Mathlib/Topology/CantorBendixson.lean
+- theorem CantorBendixson.isClosed_iteratedDerivedSet
+- theorem CantorBendixson.isClosed_perfectKernel
+- def CantorBendixson.iteratedDerivedSet
+- theorem CantorBendixson.iteratedDerivedSet_antitone
+- theorem CantorBendixson.iteratedDerivedSet_constant_iff_preperfect
+- theorem CantorBendixson.iteratedDerivedSet_limit
+- theorem CantorBendixson.iteratedDerivedSet_mem_fixedPoints
+- theorem CantorBendixson.iteratedDerivedSet_mono
+- theorem CantorBendixson.iteratedDerivedSet_succ
+- theorem CantorBendixson.iteratedDerivedSet_zero
+- theorem CantorBendixson.mem_fixedPoints_of_iteratedDerivedSet_succ_eq
+- def CantorBendixson.perfectKernel
+- theorem CantorBendixson.perfectKernel_empty
+- theorem CantorBendixson.perfectKernel_eq_iteratedDerivedSet_of_mem_fixedPoints
+- theorem CantorBendixson.perfectKernel_idem
+- theorem CantorBendixson.perfectKernel_mono
+- theorem CantorBendixson.perfectKernel_subset
+- theorem CantorBendixson.perfectKernel_subset_iteratedDerivedSet
+- theorem CantorBendixson.perfect_perfectKernel
++/- theorem Perfect.subset_perfectKernel
++ theorem isClosed_iteratedDerivedSet
++ theorem isClosed_perfectKernel
++ def iteratedDerivedSet
++ theorem iteratedDerivedSet_antitone
++ theorem iteratedDerivedSet_constant_iff_preperfect
++ theorem iteratedDerivedSet_limit
++ theorem iteratedDerivedSet_mem_fixedPoints
++ theorem iteratedDerivedSet_mono
++ theorem iteratedDerivedSet_succ
++ theorem iteratedDerivedSet_zero
++ theorem mem_fixedPoints_of_iteratedDerivedSet_succ_eq
++ def perfectKernel
++ theorem perfectKernel_empty
++ theorem perfectKernel_eq_iteratedDerivedSet_of_mem_fixedPoints
++ theorem perfectKernel_idem
++ theorem perfectKernel_mono
++ theorem perfectKernel_subset
++ theorem perfectKernel_subset_iteratedDerivedSet
++ theorem perfect_perfectKernel
+
+
+
 2026-11-12 02:47:05 1d2d28f
 
 feat: basic results about `LieHom` (#45757)
