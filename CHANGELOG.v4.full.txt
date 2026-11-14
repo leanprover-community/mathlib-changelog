@@ -1,3 +1,448 @@
+2026-11-13 22:24:45 6526be5
+
+chore(Algebra/Polynomial/Degree/TrailingDegree): automated extraction from #45998 (#46003)
+This PR was automatically created from PR #45998 by @tomaz1502 via a [review comment](https://github.com/leanprover-community/mathlib4/pull/45998#discussion_r4569047629) by @ocfnash.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Polynomial/Degree/TrailingDegree.lean
++ theorem Polynomial.trailingCoeff_X_pow
++ theorem Polynomial.trailingCoeff_neg
+
+
+
+2026-11-13 22:24:42 f0cad29
+
+chore(Algebra/Polynomial/Taylor): automated extraction from #45998 (#46002)
+This PR was automatically created from PR #45998 by @tomaz1502 via a [review comment](https://github.com/leanprover-community/mathlib4/pull/45998#discussion_r4569045693) by @ocfnash.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Polynomial/Taylor.lean
++ theorem Polynomial.taylor_X_sub_C
++ theorem Polynomial.taylor_derivative
+
+
+
+2026-11-13 22:24:39 13d6cc0
+
+ci: read the bump commit's cache from forks in the daily checks (#46001)
+This PR makes the daily checks read the oleans of the bump commit from the `forks` cache container.
+CI uploads the oleans of a `bump/*` commit to the `forks` container, under the commit. lean-action sets `MATHLIB_CACHE_GET_URL` to the `master` URL when the variable is unset, so the bump jobs in `daily.yml` read only `master` and miss almost every file.
+The workflow sets `MATHLIB_CACHE_GET_URL` to an empty value, which makes lean-action unset it. It also sets `MATHLIB_CACHE_FROM` to `master,forks`. `lake exe cache get` then reads `master`, and then reads `forks` at the checked-out commit for the files that `master` does not have. The master jobs find all files in `master` and do not read `forks`.
+mathlib-ci#97 makes a similar change for the nightly docgen workflow.
+🤖
+
+ESTIMATED CHANGES
+Modified .github/workflows/daily.yml
+
+
+
+
+2026-11-13 21:54:14 189ce94
+
+feat(Data/Matrix,LinearAlgebra/Matrix): generalize basic lemmas to rectangular matrices (#45927)
+Generalize 40 square-matrix (`Matrix n n`) lemmas in place to rectangular matrices:
+- `Analysis`
+  - `InnerProductSpace/PiL2`: `inner_matrix_row_row`, `inner_matrix_col_col`
+  - `Normed`
+    - `Lp/PiLp`: `PiLp.basis_toMatrix_basisFun_mul`
+    - `Module/FiniteDimension`: `Module.Basis.continuous_toMatrix`
+- `Combinatorics/SimpleGraph/AdjMatrix`: `SimpleGraph.adjMatrix_mul_apply`, `SimpleGraph.mul_adjMatrix_apply`
+- `Data/Matrix`
+  - `Basis`: `Matrix.single_neg`, `Matrix.single_mulVec_eq`
+  - `Block`: `Matrix.comp_diagonal`
+  - `Mul`: `Matrix.vecMulVec_zero`, `Matrix.vecMulVec_ne_zero`, `Matrix.vecMulVec_eq_zero`, `Matrix.mul_mul_apply`, `Matrix.submatrix_mul_transpose_submatrix`
+  - `PEquiv`: `PEquiv.toMatrix_toPEquiv_eq`
+- `LinearAlgebra`
+  - `AffineSpace/Matrix`: `AffineBasis.toMatrix_vecMul_coords`, `AffineBasis.toMatrix_mul_toMatrix`
+  - `Matrix`
+    - `Basis`: `Module.Basis.coePiBasisFun.toMatrix_eq_transpose`, `Module.Basis.toMatrix_smul`, `basis_toMatrix_basisFun_mul`, `Module.Basis.toMatrix_reindex`, `Module.Basis.toMatrix_map`
+    - `Defs`: `Matrix.map_smul'`, `Matrix.map_op_smul'`
+    - `Integer`: `Matrix.map_mul_natCast`, `Matrix.map_mul_intCast`, `Matrix.map_mul_ratCast`
+    - `NonsingularInverse`: `Matrix.right_inv_eq_left_inv`
+    - `RowCol`: `Matrix.replicateRow_mul_replicateCol`, `Matrix.replicateRow_mul_replicateCol_apply`
+    - `SemiringInverse`: `Matrix.isAddUnit_mul`
+    - `Symmetric`: `Matrix.isSymm_mul_transpose_self`, `Matrix.isSymm_transpose_mul_self`
+    - `ToLin`: `Matrix.ker_toLin'_eq_bot_iff`, `LinearMap.toMatrix_eq_toMatrix'`, `LinearMap.toMatrix_singleton`
+    - `Transvection`: `Matrix.TransvectionStruct.sumInl_toMatrix_prod_mul`, `Matrix.TransvectionStruct.mul_sumInl_toMatrix_prod`
+- `RingTheory/Trace/Basic`: `Algebra.traceMatrix_of_matrix_vecMul`, `Algebra.traceMatrix_of_matrix_mulVec`
+Found using a (small) Gemini 4 Carbon swarm, asked to write metaprograms to spot accidental square specializations with trivial fixes.
+
+ESTIMATED CHANGES
+Modified Mathlib/Analysis/InnerProductSpace/PiL2.lean
++/- theorem inner_matrix_col_col
++/- theorem inner_matrix_row_row
+Modified Mathlib/Analysis/Normed/Lp/PiLp.lean
+
+Modified Mathlib/Analysis/Normed/Module/FiniteDimension.lean
++/- theorem Module.Basis.continuous_toMatrix
+Modified Mathlib/Combinatorics/SimpleGraph/AdjMatrix.lean
++/- theorem SimpleGraph.adjMatrix_mul_apply
++/- theorem SimpleGraph.mul_adjMatrix_apply
+Modified Mathlib/Data/Matrix/Basis.lean
++/- theorem Matrix.single_mulVec_eq
++/- theorem Matrix.single_neg
+Modified Mathlib/Data/Matrix/Block.lean
++/- theorem Matrix.comp_diagonal
+Modified Mathlib/Data/Matrix/Mul.lean
++/- theorem Matrix.mul_mul_apply
++/- theorem Matrix.submatrix_mul_transpose_submatrix
++/- theorem Matrix.vecMulVec_eq_zero
++/- theorem Matrix.vecMulVec_ne_zero
++/- theorem Matrix.vecMulVec_zero
+Modified Mathlib/Data/Matrix/PEquiv.lean
++/- theorem PEquiv.toMatrix_toPEquiv_eq
+Modified Mathlib/LinearAlgebra/AffineSpace/Matrix.lean
++/- theorem AffineBasis.toMatrix_mul_toMatrix
++/- theorem AffineBasis.toMatrix_vecMul_coords
+Modified Mathlib/LinearAlgebra/Matrix/Basis.lean
++/- theorem Module.Basis.toMatrix_map
++/- theorem Module.Basis.toMatrix_reindex
++/- theorem basis_toMatrix_basisFun_mul
+Modified Mathlib/LinearAlgebra/Matrix/Defs.lean
++/- theorem Matrix.map_op_smul'
++/- theorem Matrix.map_smul'
+Modified Mathlib/LinearAlgebra/Matrix/Integer.lean
++/- theorem Matrix.map_mul_intCast
++/- theorem Matrix.map_mul_natCast
++/- theorem Matrix.map_mul_ratCast
+Modified Mathlib/LinearAlgebra/Matrix/NonsingularInverse.lean
++/- theorem Matrix.right_inv_eq_left_inv
+Modified Mathlib/LinearAlgebra/Matrix/RowCol.lean
++/- theorem Matrix.replicateRow_mul_replicateCol
++/- theorem Matrix.replicateRow_mul_replicateCol_apply
+Modified Mathlib/LinearAlgebra/Matrix/SemiringInverse.lean
++/- theorem Matrix.isAddUnit_mul
+Modified Mathlib/LinearAlgebra/Matrix/Symmetric.lean
++/- theorem Matrix.isSymm_mul_transpose_self
++/- theorem Matrix.isSymm_transpose_mul_self
+Modified Mathlib/LinearAlgebra/Matrix/ToLin.lean
++/- theorem LinearMap.toMatrix_singleton
++/- theorem Matrix.ker_toLin'_eq_bot_iff
+Modified Mathlib/LinearAlgebra/Matrix/Transvection.lean
++/- theorem Matrix.TransvectionStruct.mul_sumInl_toMatrix_prod
++/- theorem Matrix.TransvectionStruct.sumInl_toMatrix_prod_mul
+Modified Mathlib/LinearAlgebra/PerfectPairing/Restrict.lean
+
+Modified Mathlib/RingTheory/Trace/Basic.lean
++/- theorem Algebra.traceMatrix_of_matrix_mulVec
++/- theorem Algebra.traceMatrix_of_matrix_vecMul
+
+
+
+2026-11-13 21:46:18 9a7251a
+
+fix(LinearAlgebra/Matrix/Symmetrizable): fix a few lemma names (#45943)
+No deprecations because #45801 was just merged
+
+ESTIMATED CHANGES
+Modified Mathlib/LinearAlgebra/Matrix/Symmetrizable.lean
+- theorem Matrix.IsSymm.IsPosSymmetrizable
+- theorem Matrix.IsSymm.IsSymmetrizable
++ theorem Matrix.IsSymm.isPosSymmetrizable
++ theorem Matrix.IsSymm.isSymmetrizable
++ theorem Matrix.isPosSymmetrizable_add_diagonal_iff
+- theorem Matrix.isPosSymmetrizable_iff_add_diagonal
++ theorem Matrix.isSymmetrizable_add_diagonal_iff
+- theorem Matrix.isSymmetrizable_iff_add_diagonal
+
+
+
+2026-11-13 21:46:15 33a9e1f
+
+doc(Combinatorics/SimpleGraph/Walk/Decomp): typo (#45910)
+Change "path" to "walk" in some places in the docustring
+
+ESTIMATED CHANGES
+Modified Mathlib/Combinatorics/SimpleGraph/Walk/Decomp.lean
+
+
+
+
+2026-11-13 21:46:12 86c55ad
+
+feat: the norm of the sum of star-orthogonal elements in a C⋆-algebra is the max of their norms (#45491)
+With the new `IsStarOrtho` API, we are able to replace all the duplicated conditions across several lemmas (`CommCStarAlgebra`, `IsStarNormal`, `IsSelfAdjoint`) with precisely one condition (`IsStarOrtho`), which is simultaneously more general than all the existing ones. We deprecate the pre-existing lemmas in favor of the new ones.
+
+ESTIMATED CHANGES
+Modified Mathlib/Analysis/CStarAlgebra/GelfandDuality.lean
++/- theorem CommCStarAlgebra.norm_add_eq_max
++/- theorem CommCStarAlgebra.norm_sub_eq_max
++/- theorem IsStarNormal.nnNorm_add_eq_max
++/- theorem IsStarNormal.nnNorm_sub_eq_max
++/- theorem IsStarNormal.norm_add_eq_max
++/- theorem IsStarNormal.norm_sub_eq_max
++ theorem IsStarOrtho.nnNorm_add
++ theorem IsStarOrtho.nnNorm_sub
++ theorem IsStarOrtho.nnNorm_sum
++ theorem IsStarOrtho.norm_add
++ theorem IsStarOrtho.norm_sub
+
+
+
+2026-11-13 21:38:48 c2a9a1b
+
+feat(Algebra/MonoidAlgebra/Grading): add decomposition lemma (#42808)
+Adds a `simp` lemma about the decomposition of the `AddMonoidAlgebra R M` grading.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/MonoidAlgebra/Grading.lean
++ theorem AddMonoidAlgebra.grade.decompose_apply
+
+
+
+2026-11-13 21:07:35 6e9ac0a
+
+ci: add resolved url to crossrefs.json (#45902)
+Adds the resolved url to the exported cross-reference database. Note this has been necessary since the addition of pi-base, since the urls cannot be trivially extracted from the currently exported data. Also fixes a number of doc comments to align them with the rest of the documentation for cross-references.
+
+ESTIMATED CHANGES
+Modified .github/workflows/export_crossrefs.yml
+
+Modified scripts/README.md
+
+Modified scripts/export_crossrefs.lean
+
+
+
+
+2026-11-13 20:26:37 b066bbe
+
+chore(Analysis/Matrix/Order): generalize to rectangular matrices (#45924)
+A semidefinite matrix induces an inner product on rectangular matrices, not just square ones.
+This also takes the liberty of cleaning up a nearby `omit`.
+
+ESTIMATED CHANGES
+Modified Mathlib/Analysis/Matrix/Order.lean
+
+
+
+
+2026-11-13 19:12:02 269f35c
+
+chore(Data/Matrix/Mul): automated extraction from #45410 (#45997)
+This PR was automatically created from PR #45410 by @Rida-Hamadani via a [review comment](https://github.com/leanprover-community/mathlib4/pull/45410#discussion_r4567196531) by @ocfnash.
+
+ESTIMATED CHANGES
+Modified Mathlib/Data/Matrix/Mul.lean
++ theorem Matrix.dotProduct_diagonal_mul_mulVec
+
+
+
+2026-11-13 16:55:32 65d730f
+
+feat(GroupTheory/Abelianization/Defs): equivalences between additive and multiplicative abelianizations (#45970)
+Adds `Group.Abelianization.abelianizationEquivMultiplicative` and `AddGroup.Abelianization.abelianizationEquivAdditive` which translate back and forth between additive and multiplicative abelianization, with corresponding simp lemmas.
+
+ESTIMATED CHANGES
+Modified Mathlib/GroupTheory/Abelianization/Defs.lean
++ def AddGroup.Abelianization.abelianizationEquivAdditive
++ theorem AddGroup.Abelianization.abelianizationEquivAdditive_of
++ theorem AddGroup.Abelianization.abelianizationEquivAdditive_symm_ofMul_of
++ def Group.Abelianization.abelianizationEquivMultiplicative
++ theorem Group.Abelianization.abelianizationEquivMultiplicative_of
++ theorem Group.Abelianization.abelianizationEquivMultiplicative_symm_ofAdd_of
+
+
+
+2026-11-13 16:25:04 527b85a
+
+feat(MvPowerSeries/Order): order of a difference of products (#44996)
+In this PR, we add some lemmas about `MvPowerSeries.order`.
+- `coeff_eq_of_lt_weightedOrder_sub`: if `weight w d < (f - g).weightedOrder w`, then `coeff d f = coeff d g`.
+- `le_weightedOrder_prod_sub_prod`: if `n ≤ (a i - b i).weightedOrder w` for all `i ∈ s`, then `n ≤ (∏ i ∈ s, a i - ∏ i ∈ s, b i).weightedOrder w`.
+- `add_nsmul_le_weightedOrder_prod_sub_prod`: if, in addition, every `a i` and `b i` has weighted order at least `k`, the bound becomes `n + (#s - 1) • k`.
+We also add the corresponding `order` versions: `coeff_eq_of_lt_order_sub`, `le_order_prod_sub_prod` and `add_nsmul_le_order_prod_sub_prod`.
+
+ESTIMATED CHANGES
+Modified Mathlib/RingTheory/MvPowerSeries/Order.lean
++ theorem MvPowerSeries.add_nsmul_le_order_prod_sub_prod
++ theorem MvPowerSeries.add_nsmul_le_weightedOrder_prod_sub_prod
++ theorem MvPowerSeries.coeff_eq_of_lt_order_sub
++ theorem MvPowerSeries.coeff_eq_of_lt_weightedOrder_sub
++ theorem MvPowerSeries.le_order_prod_sub_prod
++ theorem MvPowerSeries.le_weightedOrder_prod_sub_prod
+
+
+
+2026-11-13 15:36:44 475f746
+
+feat(GroupTheory/Abelianization/Defs): add `ker_map` and golf `map_ker_eq_ker_map` (#45934)
+Follow-up to [#45834](https://github.com/leanprover-community/mathlib4/pull/45834), implementing a review suggestion by @tb65536:
+- adds `Abelianization.ker_map`, describing the kernel of `Abelianization.map f` as the image under `of` of the preimage of the commutator subgroup.
+- adds `map_comp_of` and `surjective_of`.
+- golfs `map_ker_le_ker_map` and `map_ker_eq_ker_map` as consequences of `ker_map`.
+
+ESTIMATED CHANGES
+Modified Mathlib/GroupTheory/Abelianization/Defs.lean
++ theorem Group.Abelianization.ker_map
++ theorem Group.Abelianization.map_comp_of
++/- def Group.Abelianization.of
++ theorem Group.Abelianization.surjective_of
+
+
+
+2026-11-13 15:19:19 28fa0f1
+
+feat(MeasureTheory): one-sided continuous functions are measurable (#42164)
+The following lemmas are proved in this PR:
+- `IsRightContinuousOn.separableSpace_image`, `IsRightContinuous.separableSpace_range`: the image of a set of a second-countable linear order under a right-continuous function is a
+separable space.
+- `IsRightContinuous.measurable`: a right continuous function is measurable.
+- `IsRightContinuous.stronglyMeasurable`: a right continuous function is strongly measurable.
+The corresponding statements for left continuous functions are also included, via `to_dual`.
+Note: the statement that a right continuous function is strongly measurable is actually true even in the case that the codomain is not assumed to be pseudometrizable, and this can be proved through an explicit construction of an approximating sequence of simple functions. However, this proof is definitely more lengthy, and I believe in practice we only care about strongly measurable functions in the case of integrating banach space valued functions. This is why I decide to assume pseudometrizability so that a simpler proof is available through the use of [stronglyMeasurable_iff_measurable_separable](https://leanprover-community.github.io/mathlib4_docs/Mathlib/MeasureTheory/Function/StronglyMeasurable/Basic.html#stronglyMeasurable_iff_measurable_separable).
+Importing `Topology/Order/Cadlag.lean` into `BorelSpace/Order.lean` pulled `Analysis.Normed.Group.Continuity` into the import closure of `Lebesgue/Basic.lean`, breaking its `assert_not_exists Norm`. `Cadlag.lean` uses no norms, so its import is replaced by `Topology.Algebra.GroupWithZero` and `Topology.MetricSpace.Bounded`. That import had also been transitively supplying the `push ←` attribute on `Function.comp_def` that `@[to_fun]` needs to eta-expand `g ∘ f`, so the file now declares it itself, as `Order/ScottContinuity.lean` does (see #40183).
+
+ESTIMATED CHANGES
+Modified Mathlib/MeasureTheory/Constructions/BorelSpace/Order.lean
++ theorem IsRightContinuous.measurable
+- theorem MeasurableSet.of_mem_nhdsGT_aux
+Modified Mathlib/MeasureTheory/Function/SimpleFuncDenseLp.lean
+
+Modified Mathlib/MeasureTheory/Function/StronglyMeasurable/AEStronglyMeasurable.lean
+
+Modified Mathlib/MeasureTheory/Function/StronglyMeasurable/Basic.lean
++ theorem IsRightContinuous.stronglyMeasurable
+Modified Mathlib/Topology/Order/Cadlag.lean
++ theorem IsRightContinuous.separableSpace_range
++ theorem IsRightContinuousOn.separableSpace_image
+Modified Mathlib/Topology/Order/LeftRightNhds.lean
++ theorem exists_countable_subset_mem_closure_inter_Ici
+
+
+
+2026-11-13 12:05:24 7bcc5e9
+
+ci: retire the legacy Lean nightly pipeline (#45594)
+Stop the daily merge into `mathlib4-nightly-testing`. Remove the legacy toolchain updater and the workflow that reports nightly results and creates tags and adaptation PRs.
+The daily checks test `master` and the newest `bump/v4.*.0` branch. On the bump branch, they test the newest commit with a successful build, so the cache has its oleans. The Zulip reports show that commit. If no recent bump commit has a successful build, only the `master` checks run, and a Zulip message reports that the bump branch was skipped. Bump failure messages link to `downstream-lean4`, which receives the fixes.
+Move `AesopTest` from the fork-only step in `build_template.yml` into a separate daily job. Report success and failure to Zulip. Keep the daily leanchecker, test executable, and nanoda checks. Build `lean4export` and `nanoda_lib` from their `master` branches.
+Update the workflow reference and remove obsolete helper examples.
+Validation: Actionlint and `git diff --check` pass. Branch resolution ran locally against the live repository. Full scheduled builds await deployment.
+
+ESTIMATED CHANGES
+Modified .github/actions/get-mathlib-ci/README.md
+
+Modified .github/workflows/build_template.yml
+
+Modified .github/workflows/daily-master-tag.yml
+
+Modified .github/workflows/daily.yml
+
+Modified .github/workflows/decls-diff.yml
+
+Deleted .github/workflows/nightly_bump_toolchain.yml
+
+Deleted .github/workflows/nightly_detect_failure.yml
+
+Deleted .github/workflows/nightly_merge_master.yml
+
+Modified .github/workflows/publish_tools.yml
+
+Modified .github/workflows/zulip_emoji_reconcile.yml
+
+Deleted .github/zulip-emoji-config-nightly.json
+
+Modified docs/workflows.md
+
+
+
+
+2026-11-13 11:38:33 d9aae7c
+
+feat(CategoryTheory): module structure on ext groups (#42716)
+In this PR, we construct an R module structure on Ext A G n given a ring homomorphism (φ : R →+* End G). We also show that this module structure agrees with the existing module structure on Ext A G n in the case where the ambient category is R linear.
+The main motivation for doing this is that until we have some nice comparison lemmas going between cohomology taken in the category of sheaves of modules and cohomology taken in the category of sheaf of abelian groups, I think it will be more useful to work with the cohomology of the underlying sheaf of abelian groups of a sheaf of modules. However, the category of sheaves of abelian groups is not R linear for most R, so we do not immediately inherit R-module structure on the cohomology groups from this machinery.
+AI disclosure: I had AI perform some cleanups and edits to some code originally written by me, as well as having it move things into the correct files. I also had it create this branch from another branch which I decided had too much content for a single PR.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Homology/DerivedCategory/Ext/Linear.lean
++ theorem CategoryTheory.Abelian.Ext.comp_end_smul
++ theorem CategoryTheory.Abelian.Ext.mk₀_end_smul
++ theorem CategoryTheory.Abelian.Ext.smul_end_def
+
+
+
+2026-11-13 09:58:07 048fffa
+
+style(Order/Heyting): rename inf_himp to inf_himp_self (#44798)
+Rename `inf_himp` to `inf_himp_self` to align with its dual `sup_sdiff_self` and companion lemma `himp_inf_self`, resolving an in-code TODO. Add a deprecated alias `inf_himp`.
+
+ESTIMATED CHANGES
+Modified Mathlib/Order/Heyting/Basic.lean
++/- theorem himp_inf_self
+- theorem inf_himp
++ theorem inf_himp_self
+
+
+
+2026-11-13 08:50:44 3d48751
+
+chore(Algebra/Homology): change abbrev to reducible def (#45833)
+This change speeds up the kernel check, it's discovered from formalizing [Stacks Project](https://github.com/AxiomMath/Stacks).
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Homology/Bifunctor.lean
++ def HomologicalComplex.HasMapBifunctor
+
+
+
+2026-11-13 08:05:48 77743dc
+
+chore(LinearAlgebra/ExteriorPower/BilinForm): make bilinForm_ιMulti_ιMulti public (#45723)
+
+ESTIMATED CHANGES
+Modified Mathlib/LinearAlgebra/ExteriorPower/BilinForm.lean
+- theorem LinearMap.BilinForm.bilinForm_ιMulti_ιMulti
+
+
+
+2026-11-13 05:26:26 f718b57
+
+feat(Calculus/FDeriv): chain rules for continuous linear maps (#44204)
+Add special cases of the chain rule for composition with a continuous
+linear map on the left (`ContinuousLinearMap.comp_hasFDerivAtFilter` and
+friends) and on the right (`HasFDerivAtFilter.comp_continuousLinearMap`
+and friends).
+Also add `ContinuousLinearEquiv.comp_hasFDerivAtFilter_iff` and use it to
+golf the `comp_has*FDeriv*_iff` lemmas, and use the new lemmas in a few
+places.
+Extracted by Claude from a larger refactor written by Yury.
+
+ESTIMATED CHANGES
+Modified Mathlib/Analysis/Calculus/FDeriv/Analytic.lean
+
+Modified Mathlib/Analysis/Calculus/FDeriv/ContinuousAlternatingMap.lean
+
+Modified Mathlib/Analysis/Calculus/FDeriv/Equiv.lean
++ theorem ContinuousLinearEquiv.comp_hasFDerivAtFilter_iff
+Modified Mathlib/Analysis/Calculus/FDeriv/Linear.lean
++ theorem ContinuousLinearMap.comp_differentiable
++ theorem ContinuousLinearMap.comp_differentiableAt
++ theorem ContinuousLinearMap.comp_differentiableOn
++ theorem ContinuousLinearMap.comp_differentiableWithinAt
++ theorem ContinuousLinearMap.comp_hasFDerivAt
++ theorem ContinuousLinearMap.comp_hasFDerivAtFilter
++ theorem ContinuousLinearMap.comp_hasFDerivWithinAt
++ theorem ContinuousLinearMap.comp_hasStrictFDerivAt
++ theorem ContinuousLinearMap.fderivWithin_comp_left
++ theorem ContinuousLinearMap.fderiv_comp_left
++ theorem Differentiable.comp_continuousLinearMap
++ theorem DifferentiableAt.comp_continuousLinearMap
++ theorem DifferentiableOn.comp_continuousLinearMap
++ theorem DifferentiableWithinAt.comp_continuousLinearMap
++ theorem HasFDerivAt.comp_continuousLinearMap
++ theorem HasFDerivAt.comp_continuousLinearMap_of_eq
++ theorem HasFDerivAtFilter.comp_continuousLinearMap
++ theorem HasFDerivWithinAt.comp_continuousLinearMap
++ theorem HasFDerivWithinAt.comp_continuousLinearMap_of_eq
++ theorem HasStrictFDerivAt.comp_continuousLinearMap
++ theorem HasStrictFDerivAt.comp_continuousLinearMap_of_eq
+Modified Mathlib/Analysis/Calculus/Implicit.lean
+
+
+
+
 2026-11-12 22:03:42 2657306
 
 chore(Sites/Whiskering): add implicit_reducible to sheafCompose (#45837)
