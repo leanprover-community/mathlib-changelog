@@ -1,3 +1,302 @@
+2026-11-14 22:25:49 4cf60f1
+
+feat: bundlings of `fun r x ↦ r * x * star r` in star-ordered rings (#45923)
+Upstreamed from [LeanOA](https://j-loreaux.github.io/LeanOA/)
+
+ESTIMATED CHANGES
+Modified Mathlib.lean
+
+Modified Mathlib/Algebra/Order/Star/Basic.lean
++ theorem monotone_conjugate_star_left
++ theorem monotone_conjugate_star_right
+Added Mathlib/Algebra/Order/Star/Conjugate.lean
++ theorem IsGLB.conjugate_star_left_of_isUnit
++ theorem IsGLB.conjugate_star_right_of_isUnit
++ theorem IsLUB.conjugate_star_left_of_isUnit
++ theorem IsLUB.conjugate_star_right_of_isUnit
++ def StarOrderedRing.conjOrderHom
++ def StarOrderedRing.conjOrderHomMonoidHom
++ def StarOrderedRing.conjOrderHomMulHom
++ theorem StarOrderedRing.conjOrderHom_mul
++ theorem StarOrderedRing.conjOrderHom_one
++ def StarOrderedRing.conjPositiveLinearMap
++ def StarOrderedRing.conjUnitsOrderIso
++ theorem StarOrderedRing.conjUnitsOrderIso_apply_symm_apply
++ theorem StarOrderedRing.toMulHom_conjOrderHomMonoidHom
++ theorem StarOrderedRing.toOrderHom_conjPositiveLinearMap
+
+
+
+2026-11-14 18:16:11 2bf9a6d
+
+chore(Order): make intervals implicit_reducible (#44304)
+A bunch of `set_option backward.isDefEq.respectsTransparency false` I ran into could be removed by this:
+In some personal project, automation got stuck because of the difference between `j ≤ i` and `j ∈ Set.Iic i` at implicit_reducible transparency.
+I’m myself not convinced making these intervals `implicit_reducible` is the best, but declaring `j ≤ i = j ∈ Set.Iic i` as a true defeq-abuse (and hunting down every instance of this, adding `Set.mem_Iic.mpr <|` in every place that needs it) seems like overkill and a net regression on user experience.
+Note that more generally, the question could arise for every semireducible declaration of type `Set α` where the body is `{ x | P x}` for some `P : α → Prop`.
+
+ESTIMATED CHANGES
+Modified Mathlib/Order/Interval/Set/Defs.lean
+
+
+
+
+2026-11-14 17:43:12 7692d7f
+
+feat(Algebra): right-divisibility under a hom (#45245)
+Also move `map_dvd_iff` to the same file and deprecate `map_dvd_iff_dvd_symm` in favor of the same lemma but turned around and stated in terms of `MulEquiv` directly instead of `MulEquivClass.toMulEquiv`.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Divisibility/Hom.lean
+- theorem MonoidHom.map_dvd
+- theorem MulHom.map_dvd
++ theorem dvd_map_symm
++/- theorem map_dvd
++ theorem map_dvd_iff
++ theorem map_dvd_iff_dvd_symm
++ theorem map_rightDvd
++ theorem map_rightDvd_iff
++ theorem map_symm_dvd
+Modified Mathlib/Algebra/Ring/Divisibility/Basic.lean
+- theorem map_dvd_iff
+- theorem map_dvd_iff_dvd_symm
+Modified Mathlib/RingTheory/UniqueFactorizationDomain/NormalizedFactors.lean
+
+
+
+
+2026-11-14 14:43:16 bb3798b
+
+chore: update Mathlib dependencies 2026-11-14 (#45967)
+This PR updates the Mathlib dependencies.
+It is not merged automatically: a maintainer should look at what the new
+dependency revisions bring in before sending it to bors.
+
+ESTIMATED CHANGES
+Modified .github/actions/get-mathlib-ci/action.yml
+
+Modified lake-manifest.json
+
+
+
+
+2026-11-14 11:13:48 bbff295
+
+feat: split `transfiniteIterate` into `sup` and `inf` versions (#43857)
+We rename `transfiniteIterate` to `supTransfiniteIterate` and create the analogous `infTransfiniteIterate` in its place. One of them uses suprema to compute the value at limit points, and the other uses infima.
+The plan is to then use both of these definitions to deprecate `OrdinalApprox.lfpApprox` and `OrdinalApprox.gfpApprox`, which are simply specializations of these.
+I've also removed the requirement for `SuccOrder` and `OrderBot` typeclasses. The adaptations for this is where most of the diff comes from.
+
+ESTIMATED CHANGES
+Modified Mathlib/CategoryTheory/Abelian/GrothendieckCategory/EnoughInjectives.lean
++/- theorem CategoryTheory.IsGrothendieckAbelian.generatingMonomorphisms.top_mem_range
+Modified Mathlib/CategoryTheory/ObjectProperty/LimitsClosure.lean
++/- theorem CategoryTheory.ObjectProperty.le_strictLimitsClosureIter
++ theorem CategoryTheory.ObjectProperty.strictLimitsClosureIter_bot
++ theorem CategoryTheory.ObjectProperty.strictLimitsClosureIter_of_isMin
+Modified Mathlib/CategoryTheory/Presentable/SharplyLT/Basic.lean
++ theorem Cardinal.SharplyLT.existsIsCardinalFilteredSetOfExistsCofinal.hasCardinalLT_supTransfiniteIterate_φ
+- theorem Cardinal.SharplyLT.existsIsCardinalFilteredSetOfExistsCofinal.hasCardinalLT_transfiniteIterate_φ
+- theorem Cardinal.SharplyLT.existsIsCardinalFilteredSetOfExistsCofinal.monotone_transfiniteIterate_φ
++/- theorem Cardinal.SharplyLT.existsIsCardinalFilteredSetOfExistsCofinal.subset_iUnion
++ theorem Cardinal.SharplyLT.existsIsCardinalFilteredSetOfExistsCofinal.supTransfiniteIterate_φ_monotone
+Modified Mathlib/Order/TransfiniteIteration.lean
++ theorem infTransfiniteIterate_antitone
+- theorem monotone_transfiniteIterate
++ theorem supTransfiniteIterate_bot
++ theorem supTransfiniteIterate_dual
++ theorem supTransfiniteIterate_limit
++ theorem supTransfiniteIterate_mono
++ theorem supTransfiniteIterate_monotone
++ theorem supTransfiniteIterate_of_isMin
++ theorem supTransfiniteIterate_succ
++ theorem supTransfiniteIterate_succ_of_not_isMax
++ theorem top_mem_range_supTransfiniteIterate
+- theorem top_mem_range_transfiniteIterate
+- theorem transfiniteIterate_bot
+- theorem transfiniteIterate_limit
+- theorem transfiniteIterate_succ
+
+
+
+2026-11-14 11:06:19 e05bd5a
+
+feat(Computability/Primrec/List): add theorems showing that List.all, List.any and List.sum are primitive recursive (#42178)
+Add `list_all`, `list_any` and `list_sum` (for lists of natural numbers), parameterized in the style of the existing `list_map`, `list_foldr` and `list_findIdx`.
+These lemmas avoid repeated derivations from `list_foldr`. Corresponding local lemmas simplify proofs across three files in [cameronfreer/computable-analysis](https://github.com/cameronfreer/computable-analysis/commit/a6898b5).
+
+ESTIMATED CHANGES
+Modified Mathlib/Computability/Primrec/List.lean
++ theorem Primrec.list_all
++ theorem Primrec.list_any
++ theorem Primrec.list_sum
+
+
+
+2026-11-14 10:59:06 461f237
+
+refactor(AlgebraicGeometry/Birational): phase out `Scheme.Over` for rational maps (#42402)
+Split off from #40871
+We refactor `PartialMap.IsOver` to not use `Scheme.Hom.IsOver`, which is being phased out. We still keep it as class with one field for now (as opposed to making it an abbrev for the morphism equation directly). This is because I think it's still useful to have instances for `PartialMap.restrict` and `PartialMap.toRationalMap`. However, some things which used to be instances (`isOver_comp` and `IsOver.compHom`) now need to be lemmas.
+
+ESTIMATED CHANGES
+Modified Mathlib/AlgebraicGeometry/Birational/Composition.lean
++ theorem AlgebraicGeometry.Scheme.RationalMap.isOver_comp
+Modified Mathlib/AlgebraicGeometry/Birational/RationalMap.lean
++ theorem AlgebraicGeometry.Scheme.Hom.isOver_toPartialMap
++ theorem AlgebraicGeometry.Scheme.PartialMap.IsOver.compHom
++/- theorem AlgebraicGeometry.Scheme.PartialMap.equiv_iff_of_domain_eq_of_isSeparated
++/- theorem AlgebraicGeometry.Scheme.PartialMap.equiv_iff_of_isSeparated
++/- theorem AlgebraicGeometry.Scheme.PartialMap.equiv_iff_of_isSeparated_of_le
++/- theorem AlgebraicGeometry.Scheme.PartialMap.equiv_toPartialMap_iff_of_isSeparated
++/- theorem AlgebraicGeometry.Scheme.PartialMap.exists_restrict_isOver
++/- theorem AlgebraicGeometry.Scheme.PartialMap.fromSpecStalkOfMem_ofFromSpecStalk
++/- theorem AlgebraicGeometry.Scheme.PartialMap.isOver_iff
++/- theorem AlgebraicGeometry.Scheme.PartialMap.isOver_iff_eq_restrict
++/- theorem AlgebraicGeometry.Scheme.PartialMap.isOver_toRationalMap_iff_of_isSeparated
++/- theorem AlgebraicGeometry.Scheme.PartialMap.mem_domain_ofFromSpecStalk
++/- def AlgebraicGeometry.Scheme.PartialMap.ofFromSpecStalk
++/- theorem AlgebraicGeometry.Scheme.PartialMap.ofFromSpecStalk_comp
++ theorem AlgebraicGeometry.Scheme.PartialMap.over
++ theorem AlgebraicGeometry.Scheme.RationalMap.IsOver.compHom
+- def AlgebraicGeometry.Scheme.RationalMap.equivFunctionField
+- def AlgebraicGeometry.Scheme.RationalMap.equivFunctionFieldOver
++/- theorem AlgebraicGeometry.Scheme.RationalMap.exists_partialMap_over
++/- theorem AlgebraicGeometry.Scheme.RationalMap.fromFunctionField_ofFunctionField
++/- theorem AlgebraicGeometry.Scheme.RationalMap.isOver_iff
++/- def AlgebraicGeometry.Scheme.RationalMap.ofFunctionField
+
+
+
+2026-11-14 10:12:22 74c6142
+
+doc(Algebra/Module/Projective): remove outdated paragraph (#45743)
+Remove a paragraph in the module docstring of `Mathlib/Algebra/Module/Projective.lean`, which is no longer true since leanprover-community/mathlib3#16750.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Module/Projective.lean
+
+
+
+
+2026-11-14 10:12:19 35ef46b
+
+chore(Algebra/Homology/ShortComplex): remove `set_option` (#44011)
+This PR removes all the `set_option` in the `Algebra/Homology/ShortComplex/` files.
+This reverts part of #45589 which made too many things globally `implicit_reducible` in my opinion. In this PR, we make the definition `ShortComplex.homology` (also `leftHomology`, `rightHomology`, `cycles` and `opcycles`) locally implicit reducible **only** in order to set up the homology API of short complexes. Ultimately, it would be interesting to make these definitions unexposed (which may be tricky because the definitions are scattered over several files).
+In the follow-up PR #45277, we shall make `HomologicalComplex.homology` `implicit_reducible`, which roughly means that it will be ok to unfold the definition of the homology of homological complexes (i.e. to see through the fact that it is defined as the homology of certain short complexes), but when playing with the homology (or cycles and opcycles) of homological complexes, it should not be considered ok to further unfold the definition of `ShortComplex.homology`.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Homology/ShortComplex/Ab.lean
+
+Modified Mathlib/Algebra/Homology/ShortComplex/Abelian.lean
+
+Modified Mathlib/Algebra/Homology/ShortComplex/Basic.lean
++/- def CategoryTheory.ShortComplex.fFunctor
++/- def CategoryTheory.ShortComplex.gFunctor
+Modified Mathlib/Algebra/Homology/ShortComplex/ConcreteCategory.lean
+
+Modified Mathlib/Algebra/Homology/ShortComplex/Exact.lean
+
+Modified Mathlib/Algebra/Homology/ShortComplex/FunctorEquivalence.lean
+
+Modified Mathlib/Algebra/Homology/ShortComplex/HomologicalComplex.lean
+
+Modified Mathlib/Algebra/Homology/ShortComplex/Homology.lean
+
+Modified Mathlib/Algebra/Homology/ShortComplex/LeftHomology.lean
++/- def CategoryTheory.ShortComplex.LeftHomologyData.copy
+Modified Mathlib/Algebra/Homology/ShortComplex/Limits.lean
+
+Modified Mathlib/Algebra/Homology/ShortComplex/Preadditive.lean
+
+Modified Mathlib/Algebra/Homology/ShortComplex/PreservesHomology.lean
+
+Modified Mathlib/Algebra/Homology/ShortComplex/QuasiIso.lean
+
+Modified Mathlib/Algebra/Homology/ShortComplex/RightHomology.lean
++/- def CategoryTheory.ShortComplex.RightHomologyData.copy
+Modified Mathlib/Algebra/Homology/ShortComplex/ShortExact.lean
+
+Modified Mathlib/Algebra/Homology/ShortComplex/SnakeLemma.lean
++/- theorem CategoryTheory.ShortComplex.SnakeInput.L₁_f_φ₁
+Modified Mathlib/RepresentationTheory/Homological/GroupCohomology/LowDegree.lean
+
+Modified Mathlib/RepresentationTheory/Homological/GroupHomology/LowDegree.lean
+
+
+
+
+2026-11-14 10:12:16 c699123
+
+feat(RingTheory/DedekindDomain/AdicValuation): adic valuations are trivial on subfields (#42771)
+This PR adds two results with applications to a Dedekind domains `R` that contain a field `k`:
+1. Given `v` a height one prime of `R`, the `v`-adic valuation is trivial on `k`.
+2. An element of `a` of `R` which is not a unit nor a zero divisor is transcendental over `k`. In particular, we obtain that a nonzero element of an ideal of `R` which is not `⊤` is transcendental over `k`.
+AI disclaimer: I used AI to suggest placement in the file and docstring. Lemmas are mine.
+
+ESTIMATED CHANGES
+Modified Mathlib/RingTheory/Algebraic/Integral.lean
++/- theorem IsAlgebraic.of_mul
++/- theorem IsAlgebraic.of_smul
++ theorem Transcendental.of_mem_ne_top
++ theorem Transcendental.of_mem_nonZeroDivisors_of_not_isUnit
++ theorem Transcendental.of_not_isUnit
+Modified Mathlib/RingTheory/DedekindDomain/AdicValuation/Valuation.lean
+
+
+
+
+2026-11-14 09:54:21 a647c99
+
+feat(IntermediateField/Basic): algebra instance for `IntermediateField.restrictScalars` (#42624)
+This PR adds `Algebra` / `IsScalarTower` instances for `IntermediateField.restrictScalars`.
+These are defined as the instances on the underlying intermediate field.
+E.g. given some class `C`, `instance : C (E.restrictScalars _) := inferInstanceAs (C E)`.
+This simplifies a proof in `FunctionField.lean`:
+` let : Algebra F⟮y⟯ Fyx := F⟮y⟯⟮x⟯.algebra` is now supplied by the instances described above.
+The declarations
+```
+let : Module F⟮y⟯ Fyx := Algebra.toModule
+let : SMul F⟮y⟯ Fyx := Algebra.toSMul
+```
+were only there to speed up the search are are no longer necessary so they are removed.
+I also tried to hunt for another similar application and found one in `Mathlib.FieldTheory.Extension`.
+AI disclaimer: I asked an AI assistant to suggest an improvement to the proof in the FunctionField.lean file. This PR is the result of this discussion.
+
+ESTIMATED CHANGES
+Modified Mathlib/FieldTheory/Extension.lean
+
+Modified Mathlib/FieldTheory/IntermediateField/Basic.lean
+
+Modified Mathlib/NumberTheory/FunctionField.lean
+
+
+
+
+2026-11-14 09:43:25 9a20b96
+
+feat(NumberTheory/Cyclotomic/Basic): drop integrality assumption in `intermediateField_adjoin_isCyclotomicExtension` (#45992)
+Remove the hypothesis `[Algebra.IsIntegral K L]` from `IsPrimitiveRoot.intermediateField_adjoin_isCyclotomicExtension`: a primitive root of unity is always integral, so `K⟮ζ⟯` is a cyclotomic extension of `K` without any assumption on `L/K`.
+:robot: This PR was extracted from the [SKW project](https://github.com/xroblot/SKW) by Claude.
+
+ESTIMATED CHANGES
+Modified Mathlib/NumberTheory/Cyclotomic/Basic.lean
+
+
+
+
+2026-11-14 07:03:57 c17f2bb
+
+chore(RingTheory/NoetherNormalization): automated extraction from #43372 (#46013)
+This PR was automatically created from PR #43372 by @plp127 via a [review comment](https://github.com/leanprover-community/mathlib4/pull/43372#discussion_r4572064175) by @jcommelin.
+
+ESTIMATED CHANGES
+Modified Mathlib/RingTheory/NoetherNormalization.lean
+
+
+
+
 2026-11-13 22:24:45 6526be5
 
 chore(Algebra/Polynomial/Degree/TrailingDegree): automated extraction from #45998 (#46003)
