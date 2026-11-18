@@ -1,39 +1,31 @@
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
-import { ItemChangeHistory } from "../../../components/ItemChangeHistory";
+import { useRouter } from "next/router";
+import ClientItemPage from "../../../components/ClientItemPage";
 import Layout from "../../../components/Layout";
-import { getTheorem } from "../../../data/database";
-import { ChangelogItemData } from "../../../data/extractDataFromChangelog";
+import Spinner from "../../../components/Spinner";
 
 export const getStaticPaths: GetStaticPaths = () => ({
   paths: [],
-  fallback: "blocking",
+  fallback: false,
 });
 
-interface TheoremProps {
-  theorem: ChangelogItemData;
-}
+export const getStaticProps: GetStaticProps = () => ({ props: {} });
 
-export const getStaticProps: GetStaticProps<TheoremProps> = (context) => {
-  if (!context.params?.name || Array.isArray(context.params.name)) {
-    return { notFound: true };
+const TheoremPage: NextPage = () => {
+  const router = useRouter();
+  const name = router.query.name as string | undefined;
+
+  if (!router.isReady || !name) {
+    return (
+      <Layout version="v3">
+        <div className="flex justify-center py-12">
+          <Spinner size={10} />
+        </div>
+      </Layout>
+    );
   }
-  const theorem = getTheorem("v3", context.params.name);
-  if (!theorem) return { notFound: true };
-  return { props: { theorem } };
+
+  return <ClientItemPage version="v3" itemType="theorem" name={name} />;
 };
 
-const Theorem: NextPage<TheoremProps> = ({ theorem }) => {
-  return (
-    <Layout version="v3">
-      <h1 className="text-xl">
-        <span className="text-gray-400">Theorem</span> {theorem.name}
-      </h1>
-      <h4 className="text-sm mt-4">Modification history</h4>
-      <div>
-        <ItemChangeHistory item={theorem} version="v3" />
-      </div>
-    </Layout>
-  );
-};
-
-export default Theorem;
+export default TheoremPage;

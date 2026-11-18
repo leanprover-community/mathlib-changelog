@@ -1,39 +1,31 @@
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
-import { ItemChangeHistory } from "../../../components/ItemChangeHistory";
+import { useRouter } from "next/router";
+import ClientItemPage from "../../../components/ClientItemPage";
 import Layout from "../../../components/Layout";
-import { getInductive } from "../../../data/database";
-import { ChangelogItemData } from "../../../data/extractDataFromChangelog";
+import Spinner from "../../../components/Spinner";
 
 export const getStaticPaths: GetStaticPaths = () => ({
   paths: [],
-  fallback: "blocking",
+  fallback: false,
 });
 
-interface InductiveProps {
-  inductive: ChangelogItemData;
-}
+export const getStaticProps: GetStaticProps = () => ({ props: {} });
 
-export const getStaticProps: GetStaticProps<InductiveProps> = (context) => {
-  if (!context.params?.name || Array.isArray(context.params.name)) {
-    return { notFound: true };
+const InductivePage: NextPage = () => {
+  const router = useRouter();
+  const name = router.query.name as string | undefined;
+
+  if (!router.isReady || !name) {
+    return (
+      <Layout version="v4">
+        <div className="flex justify-center py-12">
+          <Spinner size={10} />
+        </div>
+      </Layout>
+    );
   }
-  const inductive = getInductive("v4", context.params.name);
-  if (!inductive) return { notFound: true };
-  return { props: { inductive } };
+
+  return <ClientItemPage version="v4" itemType="inductive" name={name} />;
 };
 
-const Inductive: NextPage<InductiveProps> = ({ inductive }) => {
-  return (
-    <Layout version="v4">
-      <h1 className="text-xl">
-        <span className="text-gray-400">Inductive</span> {inductive.name}
-      </h1>
-      <h4 className="text-sm mt-4">Modification history</h4>
-      <div>
-        <ItemChangeHistory item={inductive} version="v4" />
-      </div>
-    </Layout>
-  );
-};
-
-export default Inductive;
+export default InductivePage;
