@@ -1,3 +1,1173 @@
+2026-11-21 15:54:27 a495318
+
+feat(RCLike): add `Continuous.re` and similar (#34419)
+This PR adds dot notation for `re`, `im`, `conj` and `ofReal` for `Continuous`, `LipschitzWith` and `Memℓp`.
+Given `hf : Continuous f` it allows to use `hf.re` to express `Continuous (fun x ↦ (f x).re)`, similarly to the usual `hf.add hg`.
+I also can add the same features for `Summable` but I am not sure where to place them, suggestions are appreciated!
+
+ESTIMATED CHANGES
+Modified Mathlib/Analysis/Normed/Group/Uniform.lean
++ theorem LipschitzOnWith.nnNorm'
++ theorem LipschitzOnWith.norm'
++ theorem LipschitzWith.nnNorm'
++ theorem LipschitzWith.norm'
+Modified Mathlib/Analysis/Normed/Lp/lpSpace.lean
+- theorem Memℓp.bddAbove
++ theorem Memℓp.conj_iff
++/- theorem Memℓp.const_mul
+- theorem Memℓp.finite_dsupport
++ theorem Memℓp.im
+- theorem Memℓp.neg
++/- theorem Memℓp.neg_iff
++ theorem Memℓp.ofReal_iff
++ theorem Memℓp.re
+- theorem Memℓp.summable
+- theorem memℓp_infty
+- theorem memℓp_zero
+Modified Mathlib/Analysis/RCLike/Basic.lean
++ theorem Continuous.conj
++ theorem Continuous.im
++ theorem Continuous.normSq
++ theorem Continuous.ofReal
++ theorem Continuous.re
++ theorem ContinuousAt.conj
++ theorem ContinuousAt.im
++ theorem ContinuousAt.normSq
++ theorem ContinuousAt.ofReal
++ theorem ContinuousAt.re
++ theorem ContinuousOn.conj
++ theorem ContinuousOn.im
++ theorem ContinuousOn.normSq
++ theorem ContinuousOn.ofReal
++ theorem ContinuousOn.re
++ theorem ContinuousWithinAt.conj
++ theorem ContinuousWithinAt.im
++ theorem ContinuousWithinAt.normSq
++ theorem ContinuousWithinAt.ofReal
++ theorem ContinuousWithinAt.re
++ theorem Filter.Tendsto.conj
++ theorem Filter.Tendsto.im
++ theorem Filter.Tendsto.normSq
++ theorem Filter.Tendsto.ofReal'
++ theorem Filter.Tendsto.re
++ theorem LipschitzOnWith.conj
++ theorem LipschitzOnWith.im
++ theorem LipschitzOnWith.ofReal
++ theorem LipschitzOnWith.re
++ theorem LipschitzWith.conj
++ theorem LipschitzWith.im
++ theorem LipschitzWith.ofReal
++ theorem LipschitzWith.re
+- theorem RCLike.lipschitzWith_im
+- theorem RCLike.lipschitzWith_ofReal
++ theorem RCLike.lipschitzWith_one_conj
++ theorem RCLike.lipschitzWith_one_im
++ theorem RCLike.lipschitzWith_one_ofReal
++ theorem RCLike.lipschitzWith_one_re
+- theorem RCLike.lipschitzWith_re
++/- theorem RCLike.normSq_to_real
+Modified Mathlib/Analysis/RCLike/BoundedContinuous.lean
+
+Modified Mathlib/MeasureTheory/Measure/FiniteMeasure.lean
+
+Modified Mathlib/MeasureTheory/Measure/FiniteMeasureExt.lean
+
+
+
+
+2026-11-21 09:55:38 c47f9ad
+
+chore: make 639 `public import`s private where nothing downstream needs them (#46228)
+This PR turns 639 `public import A` lines into plain `import A`. No imports are added anywhere else.
+### The idea, in plain words
+In a `module` file `B`:
+* `public import A` means: `B` uses `A`, **and** every file that imports `B` also gets `A`.
+* `import A` means: `B` uses `A`, but keeps it to itself.
+We switch `public import A` to `import A` in `B` when both of these hold:
+1. `B` does not need `A` in anything it exports: theorem statements, the types of definitions, and the bodies of exposed definitions only use things `B` can see without `A`. Typically `A` is only used inside proofs.
+2. No file that imports `B` (directly or indirectly) relies on getting `A` through `B`: every such file that uses something from `A` already imports it some other way.
+Because of (2), nothing else has to change: this PR only edits the import lines of the files whose imports become private.
+### Example
+`Mathlib/Data/Fin/Basic.lean` had `public import Mathlib.Data.Int.DivMod`, but it only uses the `Int.emod` lemmas inside proofs, and every file downstream of `Fin.Basic` that uses `Int.DivMod` already reaches it another way. So it becomes `import Mathlib.Data.Int.DivMod`, and about 6,500 modules that import `Fin.Basic` no longer load `Int.DivMod` through it.
+### How the candidates were chosen
+This is the same idea as #43918 (which found such imports by trial builds). Here the candidates come from the compiled `.olean` files, using the analysis `lake shake` already does (which modules each declaration's statement and proof depend on, split into public and private uses), with one addition: proofs nested inside exposed definitions count as public, since Lean elaborates them in the public scope. Since making one import private can make another one costly, the candidates are accepted one at a time, each re-checked against those already accepted.
+Skipped on purpose:
+* `module -- shake: keep-all` files and deprecated-module shims, whose job is to re-export;
+* imports marked `shake: keep` (except the ones only needed for `example`s);
+* imports that would hide, downstream, a module that registers options, aesop rule sets, simp attributes or `positivity` extensions;
+* files using `backward.privateInPublic`;
+* a handful of imports whose demotion broke `deriving` or `@[simps!]` in a full build.
+Overall, the total number of modules loaded across all Mathlib files (the sum of the import closures) goes down by about 1%, and 7,194 of 8,726 modules load fewer files.
+### Other changes
+* `Mathlib/Combinatorics/SimpleGraph/Extremal/Turan.lean`: `grw [Nat.mod_le]` now closes its goal, so the `exact` after it is removed.
+As with #43918, this is a semantic change for downstream projects: something that used to arrive through `B` may now need an explicit import.
+Checked with `lake build Mathlib Archive Counterexamples` and `lake test`.
+Benchmark (`!bench`, against `master`): `build//instructions` **−95.4G (−0.09%)**. The largest single change is `Mathlib.Condensed.Discrete.Colimit` (−31%); there are two small (about +1G, low-significance) per-module regressions. For comparison, #43918 measured −0.12%.
+This is the first of a stack of three PRs, ordered from most to least conservative.
+### Use of AI
+This PR was prepared with Claude Code (Claude Opus). It wrote the analysis tooling (a small Lean program built on `lake shake`'s dependency computation, plus Python scripts that pick the imports and edit the headers), ran the builds that found and removed the bad candidates, and drafted this description. All edits to `Mathlib/` are produced mechanically by those scripts. The hand fix listed above is the only non-header change.
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/AddConstMap/Basic.lean
+
+Modified Mathlib/Algebra/Algebra/Basic.lean
+
+Modified Mathlib/Algebra/Azumaya/Matrix.lean
+
+Modified Mathlib/Algebra/BigOperators/Group/List/Basic.lean
+
+Modified Mathlib/Algebra/BigOperators/Group/List/Lemmas.lean
+
+Modified Mathlib/Algebra/BigOperators/Pi.lean
+
+Modified Mathlib/Algebra/BigOperators/Ring/List.lean
+
+Modified Mathlib/Algebra/Category/AlgCat/FilteredColimits.lean
+
+Modified Mathlib/Algebra/Category/CommAlgCat/Basic.lean
+
+Modified Mathlib/Algebra/Category/FGModuleCat/Basic.lean
+
+Modified Mathlib/Algebra/Category/FGModuleCat/Colimits.lean
+
+Modified Mathlib/Algebra/Category/FGModuleCat/Limits.lean
+
+Modified Mathlib/Algebra/Category/Grp/Injective.lean
+
+Modified Mathlib/Algebra/Category/ModuleCat/Basic.lean
+
+Modified Mathlib/Algebra/Category/ModuleCat/Stalk.lean
+
+Modified Mathlib/Algebra/Category/Ring/FilteredColimits.lean
+
+Modified Mathlib/Algebra/Category/Ring/FilteredColimitsLocal.lean
+
+Modified Mathlib/Algebra/Category/Semigrp/Basic.lean
+
+Modified Mathlib/Algebra/CharP/Synonym.lean
+
+Modified Mathlib/Algebra/ContinuedFractions/Computation/ApproximationCorollaries.lean
+
+Modified Mathlib/Algebra/DirectSum/Ring.lean
+
+Modified Mathlib/Algebra/Divisibility/Hom.lean
+
+Modified Mathlib/Algebra/Field/Periodic.lean
+
+Modified Mathlib/Algebra/FreeMonoid/UniqueProds.lean
+
+Modified Mathlib/Algebra/Group/Commute/Hom.lean
+
+Modified Mathlib/Algebra/Group/Finsupp.lean
+
+Modified Mathlib/Algebra/Group/Hom/Defs.lean
+
+Modified Mathlib/Algebra/Group/Hom/Instances.lean
+
+Modified Mathlib/Algebra/Group/Int/Units.lean
+
+Modified Mathlib/Algebra/Group/Opposite.lean
+
+Modified Mathlib/Algebra/Group/Pi/Basic.lean
+
+Modified Mathlib/Algebra/Group/Pi/Lemmas.lean
+
+Modified Mathlib/Algebra/Group/Pointwise/Finset/SelfInv.lean
+
+Modified Mathlib/Algebra/Group/Semiconj/Basic.lean
+
+Modified Mathlib/Algebra/Group/Subgroup/Defs.lean
+
+Modified Mathlib/Algebra/Group/Subgroup/Finite.lean
+
+Modified Mathlib/Algebra/Group/Subgroup/MulOpposite.lean
+
+Modified Mathlib/Algebra/Group/Subgroup/Pointwise.lean
+
+Modified Mathlib/Algebra/Group/Submonoid/MulOpposite.lean
+
+Modified Mathlib/Algebra/Group/UniqueProds/Basic.lean
+
+Modified Mathlib/Algebra/GroupWithZero/Action/Pointwise/Set.lean
+
+Modified Mathlib/Algebra/GroupWithZero/FunLike.lean
+
+Modified Mathlib/Algebra/GroupWithZero/Units/Fintype.lean
+
+Modified Mathlib/Algebra/Homology/BifunctorAssociator.lean
+
+Modified Mathlib/Algebra/Homology/CochainComplexMinus.lean
+
+Modified Mathlib/Algebra/Homology/CochainComplexPlus.lean
+
+Modified Mathlib/Algebra/Homology/DerivedCategory/Ext/Linear.lean
+
+Modified Mathlib/Algebra/Homology/GrothendieckAbelian.lean
+
+Modified Mathlib/Algebra/Homology/HomotopyCategory/HomComplex.lean
+
+Modified Mathlib/Algebra/Homology/HomotopyCategory/HomComplexShift.lean
+
+Modified Mathlib/Algebra/Homology/ShortComplex/HomologicalComplex.lean
+
+Modified Mathlib/Algebra/Homology/ShortComplex/HomologyCofork.lean
+
+Modified Mathlib/Algebra/Module/Equiv/Defs.lean
+
+Modified Mathlib/Algebra/Module/FinitePresentation.lean
+
+Modified Mathlib/Algebra/Module/FunLike.lean
+
+Modified Mathlib/Algebra/Module/LinearMap/Basic.lean
+
+Modified Mathlib/Algebra/Module/LinearMap/End.lean
+
+Modified Mathlib/Algebra/Module/LinearMap/Polynomial.lean
+
+Modified Mathlib/Algebra/Module/Pi.lean
+
+Modified Mathlib/Algebra/Module/ZLattice/Basic.lean
+
+Modified Mathlib/Algebra/MonoidAlgebra/Degree.lean
+
+Modified Mathlib/Algebra/MvPolynomial/NoZeroDivisors.lean
+
+Modified Mathlib/Algebra/Notation/Pi/Defs.lean
+
+Modified Mathlib/Algebra/Order/Antidiag/Pi.lean
+
+Modified Mathlib/Algebra/Order/Archimedean/Real/Basic.lean
+
+Modified Mathlib/Algebra/Order/BigOperators/Group/Finset.lean
+
+Modified Mathlib/Algebra/Order/CauSeq/Basic.lean
+
+Modified Mathlib/Algebra/Order/Field/Basic.lean
+
+Modified Mathlib/Algebra/Order/Floor/Ring.lean
+
+Modified Mathlib/Algebra/Order/Floor/Semifield.lean
+
+Modified Mathlib/Algebra/Order/Group/Cyclic.lean
+
+Modified Mathlib/Algebra/Order/Group/Indicator.lean
+
+Modified Mathlib/Algebra/Order/Group/Pointwise/Interval.lean
+
+Modified Mathlib/Algebra/Order/Group/Unbundled/Int.lean
+
+Modified Mathlib/Algebra/Order/GroupWithZero/Associated.lean
+
+Modified Mathlib/Algebra/Order/Hom/Basic.lean
+
+Modified Mathlib/Algebra/Order/Hom/TypeTags.lean
+
+Modified Mathlib/Algebra/Order/Interval/Set/Instances.lean
+
+Modified Mathlib/Algebra/Order/Module/Defs.lean
+
+Modified Mathlib/Algebra/Order/Module/PositiveLinearMap.lean
+
+Modified Mathlib/Algebra/Order/Nonneg/Field.lean
+
+Modified Mathlib/Algebra/Order/Ring/Abs.lean
+
+Modified Mathlib/Algebra/Order/Ring/Archimedean.lean
+
+Modified Mathlib/Algebra/Order/Ring/Int.lean
+
+Modified Mathlib/Algebra/Order/Star/Conjugate.lean
+
+Modified Mathlib/Algebra/Order/Star/Orthogonal.lean
+
+Modified Mathlib/Algebra/Polynomial/Basic.lean
+
+Modified Mathlib/Algebra/Polynomial/CoeffList.lean
+
+Modified Mathlib/Algebra/Polynomial/Derivative.lean
+
+Modified Mathlib/Algebra/Polynomial/Eval/Degree.lean
+
+Modified Mathlib/Algebra/Polynomial/FieldDivision.lean
+
+Modified Mathlib/Algebra/Polynomial/HasseDeriv.lean
+
+Modified Mathlib/Algebra/Polynomial/OfFn.lean
+
+Modified Mathlib/Algebra/QuadraticAlgebra/Basic.lean
+
+Modified Mathlib/Algebra/QuadraticAlgebra/Rat.lean
+
+Modified Mathlib/Algebra/Ring/Basic.lean
+
+Modified Mathlib/Algebra/Ring/Commute.lean
+
+Modified Mathlib/Algebra/Ring/Divisibility/Basic.lean
+
+Modified Mathlib/Algebra/Ring/Equiv.lean
+
+Modified Mathlib/Algebra/Ring/Idempotent.lean
+
+Modified Mathlib/Algebra/Ring/Pi.lean
+
+Modified Mathlib/Algebra/Ring/Regular.lean
+
+Modified Mathlib/Algebra/Ring/Semiconj.lean
+
+Modified Mathlib/Algebra/Squarefree/Basic.lean
+
+Modified Mathlib/Algebra/Star/Orthogonal.lean
+
+Modified Mathlib/AlgebraicGeometry/Morphisms/Finite.lean
+
+Modified Mathlib/AlgebraicGeometry/Morphisms/FiniteType.lean
+
+Modified Mathlib/AlgebraicGeometry/Morphisms/Flat.lean
+
+Modified Mathlib/AlgebraicGeometry/Morphisms/FormallyUnramified.lean
+
+Modified Mathlib/AlgebraicGeometry/Morphisms/Smooth.lean
+
+Modified Mathlib/AlgebraicGeometry/OpenImmersion.lean
+
+Modified Mathlib/AlgebraicGeometry/PullbackCarrier.lean
+
+Modified Mathlib/AlgebraicGeometry/ResidueField.lean
+
+Modified Mathlib/AlgebraicTopology/SimplicialSet/FundamentalGroupoid/Basic.lean
+
+Modified Mathlib/AlgebraicTopology/SimplicialSet/NerveAdjunction.lean
+
+Modified Mathlib/AlgebraicTopology/SimplicialSet/Skeleton.lean
+
+Modified Mathlib/Analysis/Asymptotics/Theta.lean
+
+Modified Mathlib/Analysis/BoxIntegral/Basic.lean
+
+Modified Mathlib/Analysis/CStarAlgebra/Basic.lean
+
+Modified Mathlib/Analysis/CStarAlgebra/GelfandDuality.lean
+
+Modified Mathlib/Analysis/CStarAlgebra/PositiveLinearMap.lean
+
+Modified Mathlib/Analysis/Calculus/FDeriv/ContinuousAlternatingMap.lean
+
+Modified Mathlib/Analysis/Calculus/LocalExtr/Rolle.lean
+
+Modified Mathlib/Analysis/Calculus/ParametricCircleIntegral.lean
+
+Modified Mathlib/Analysis/Calculus/ParametricIntegral.lean
+
+Modified Mathlib/Analysis/Calculus/ParametricIntervalIntegral.lean
+
+Modified Mathlib/Analysis/Complex/AbsMax.lean
+
+Modified Mathlib/Analysis/Complex/Exponential.lean
+
+Modified Mathlib/Analysis/Complex/Liouville.lean
+
+Modified Mathlib/Analysis/Complex/Polynomial/Basic.lean
+
+Modified Mathlib/Analysis/Complex/UpperHalfPlane/Manifold.lean
+
+Modified Mathlib/Analysis/Complex/ValueDistribution/FirstMainTheorem.lean
+
+Modified Mathlib/Analysis/Convex/StrictConvexSpace.lean
+
+Modified Mathlib/Analysis/Convex/Topology.lean
+
+Modified Mathlib/Analysis/Distribution/AEEqOfIntegralContDiff.lean
+
+Modified Mathlib/Analysis/Fourier/AddCircle.lean
+
+Modified Mathlib/Analysis/FunctionalSpaces/SobolevInequality.lean
+
+Modified Mathlib/Analysis/InnerProductSpace/Abs.lean
+
+Modified Mathlib/Analysis/InnerProductSpace/GramMatrix.lean
+
+Modified Mathlib/Analysis/InnerProductSpace/PiL2.lean
+
+Modified Mathlib/Analysis/InnerProductSpace/Positive.lean
+
+Modified Mathlib/Analysis/InnerProductSpace/Projection/Reflection.lean
+
+Modified Mathlib/Analysis/InnerProductSpace/Spectrum.lean
+
+Modified Mathlib/Analysis/InnerProductSpace/TwoDim.lean
+
+Modified Mathlib/Analysis/LocallyConvex/Asymptotics.lean
+
+Modified Mathlib/Analysis/LocallyConvex/HahnBanach.lean
+
+Modified Mathlib/Analysis/LocallyConvex/SeparatingDual.lean
+
+Modified Mathlib/Analysis/LocallyConvex/Separation.lean
+
+Modified Mathlib/Analysis/Matrix/Hermitian.lean
+
+Modified Mathlib/Analysis/Normed/Algebra/Exponential.lean
+
+Modified Mathlib/Analysis/Normed/Algebra/GelfandRadius.lean
+
+Modified Mathlib/Analysis/Normed/Algebra/MatrixExponential.lean
+
+Modified Mathlib/Analysis/Normed/Field/WithAbs.lean
+
+Modified Mathlib/Analysis/Normed/Group/Seminorm.lean
+
+Modified Mathlib/Analysis/Normed/Module/Multilinear/Basic.lean
+
+Modified Mathlib/Analysis/Normed/Module/Normalize.lean
+
+Modified Mathlib/Analysis/Normed/Operator/Banach.lean
+
+Modified Mathlib/Analysis/Normed/Operator/ContinuousLinearMap.lean
+
+Modified Mathlib/Analysis/Normed/Operator/LinearIsometry.lean
+
+Modified Mathlib/Analysis/Normed/Order/Hom/Basic.lean
+
+Modified Mathlib/Analysis/Normed/Ring/Finite.lean
+
+Modified Mathlib/Analysis/Normed/Ring/WithAbs.lean
+
+Modified Mathlib/Analysis/Normed/Unbundled/IsPowMulTrivial.lean
+
+Modified Mathlib/Analysis/Normed/Unbundled/IsPowMulUnique.lean
+
+Modified Mathlib/Analysis/Polynomial/Basic.lean
+
+Modified Mathlib/Analysis/Polynomial/SignRight.lean
+
+Modified Mathlib/Analysis/Real/Pi/Chudnovsky.lean
+
+Modified Mathlib/Analysis/SpecialFunctions/Exp.lean
+
+Modified Mathlib/Analysis/SpecialFunctions/Exponential.lean
+
+Modified Mathlib/Analysis/SpecialFunctions/Log/Sum.lean
+
+Modified Mathlib/Analysis/SpecialFunctions/Trigonometric/Angle.lean
+
+Modified Mathlib/Analysis/SpecificLimits/Normed.lean
+
+Modified Mathlib/Basic/Complex/Basic.lean
+
+Modified Mathlib/Basic/Denumerable.lean
+
+Modified Mathlib/Basic/Finite/Sigma.lean
+
+Modified Mathlib/Basic/NNReal/Basic.lean
+
+Modified Mathlib/Basic/Nontrivial/Basic.lean
+
+Modified Mathlib/Basic/PEquiv.lean
+
+Modified Mathlib/CategoryTheory/Abelian/Basic.lean
+
+Modified Mathlib/CategoryTheory/Abelian/GrothendieckCategory/ModuleEmbedding/GabrielPopescu.lean
+
+Modified Mathlib/CategoryTheory/Abelian/SerreClass/Basic.lean
+
+Modified Mathlib/CategoryTheory/Abelian/Subcategory.lean
+
+Modified Mathlib/CategoryTheory/Abelian/TorsionTheory/Basic.lean
+
+Modified Mathlib/CategoryTheory/Adhesive/Basic.lean
+
+Modified Mathlib/CategoryTheory/Bicategory/Kan/HasKan.lean
+
+Modified Mathlib/CategoryTheory/Distributive/Monoidal.lean
+
+Modified Mathlib/CategoryTheory/Filtered/Basic.lean
+
+Modified Mathlib/CategoryTheory/Filtered/Final.lean
+
+Modified Mathlib/CategoryTheory/Functor/CurryingFour.lean
+
+Modified Mathlib/CategoryTheory/Functor/KanExtension/DenseAtYoneda.lean
+
+Modified Mathlib/CategoryTheory/Functor/KanExtension/RestrictedYoneda.lean
+
+Modified Mathlib/CategoryTheory/Functor/TwoSquare.lean
+
+Modified Mathlib/CategoryTheory/Galois/FullSubcategory.lean
+
+Modified Mathlib/CategoryTheory/Inserter/Basic.lean
+
+Modified Mathlib/CategoryTheory/Inserter/Limits.lean
+
+Modified Mathlib/CategoryTheory/Limits/ConcreteCategory/Basic.lean
+
+Modified Mathlib/CategoryTheory/Limits/ConcreteCategory/WithAlgebraicStructures.lean
+
+Modified Mathlib/CategoryTheory/Limits/FilteredColimitCommutesFiniteLimit.lean
+
+Modified Mathlib/CategoryTheory/Limits/FilteredColimitCommutesProduct.lean
+
+Modified Mathlib/CategoryTheory/Limits/Final/Connected.lean
+
+Modified Mathlib/CategoryTheory/Limits/Indization/IndObject.lean
+
+Modified Mathlib/CategoryTheory/Limits/MorphismProperty.lean
+
+Modified Mathlib/CategoryTheory/Limits/Preserves/FunctorCategory.lean
+
+Modified Mathlib/CategoryTheory/Limits/Shapes/FiniteLimits.lean
+
+Modified Mathlib/CategoryTheory/Limits/Shapes/ZeroMorphisms.lean
+
+Modified Mathlib/CategoryTheory/Limits/Sifted.lean
+
+Modified Mathlib/CategoryTheory/Linear/Basic.lean
+
+Modified Mathlib/CategoryTheory/Linear/FunctorCategory.lean
+
+Modified Mathlib/CategoryTheory/Linear/LinearFunctor.lean
+
+Modified Mathlib/CategoryTheory/Localization/DerivabilityStructure/Product.lean
+
+Modified Mathlib/CategoryTheory/Monoidal/Cartesian/Mon.lean
+
+Modified Mathlib/CategoryTheory/MorphismProperty/Limits.lean
+
+Modified Mathlib/CategoryTheory/ObjectProperty/EpiMono.lean
+
+Modified Mathlib/CategoryTheory/ObjectProperty/Extensions.lean
+
+Modified Mathlib/CategoryTheory/ObjectProperty/FunctorCategory/ExactColimits.lean
+
+Modified Mathlib/CategoryTheory/ObjectProperty/FunctorCategory/PreservesLimits.lean
+
+Modified Mathlib/CategoryTheory/ObjectProperty/OrthogonalLimits.lean
+
+Modified Mathlib/CategoryTheory/ObjectProperty/Subobject.lean
+
+Modified Mathlib/CategoryTheory/Preadditive/Biproducts.lean
+
+Modified Mathlib/CategoryTheory/Preadditive/FunctorCategory.lean
+
+Modified Mathlib/CategoryTheory/Preadditive/HomOrthogonal.lean
+
+Modified Mathlib/CategoryTheory/Preadditive/Yoneda/Basic.lean
+
+Modified Mathlib/CategoryTheory/Presentable/Dense.lean
+
+Modified Mathlib/CategoryTheory/Presentable/Presheaf.lean
+
+Modified Mathlib/CategoryTheory/Sites/Continuous.lean
+
+Modified Mathlib/CategoryTheory/Sites/Equivalence.lean
+
+Modified Mathlib/CategoryTheory/Sites/LocallySurjective.lean
+
+Modified Mathlib/CategoryTheory/Sites/Precoverage.lean
+
+Modified Mathlib/CategoryTheory/Subobject/Basic.lean
+
+Modified Mathlib/CategoryTheory/Subobject/Classifier/Defs.lean
+
+Modified Mathlib/CategoryTheory/Triangulated/Subcategory.lean
+
+Modified Mathlib/Combinatorics/Quiver/Path/Decomposition.lean
+
+Modified Mathlib/Combinatorics/Quiver/Subquiver.lean
+
+Modified Mathlib/Combinatorics/SimpleGraph/Basic.lean
+
+Modified Mathlib/Combinatorics/SimpleGraph/Coloring/Constructions.lean
+
+Modified Mathlib/Combinatorics/SimpleGraph/Dart.lean
+
+Modified Mathlib/Combinatorics/SimpleGraph/Extremal/Turan.lean
+
+Modified Mathlib/Combinatorics/SimpleGraph/Finite.lean
+
+Modified Mathlib/Combinatorics/SimpleGraph/Maps.lean
+
+Modified Mathlib/Combinatorics/SimpleGraph/Regularity/Uniform.lean
+
+Modified Mathlib/Control/Monad/Cont.lean
+
+Modified Mathlib/Data/DFinsupp/Module.lean
+
+Modified Mathlib/Data/ENat/Pow.lean
+
+Modified Mathlib/Data/EReal/BigOperators.lean
+
+Modified Mathlib/Data/Fin/Basic.lean
+
+Modified Mathlib/Data/Finset/Density.lean
+
+Modified Mathlib/Data/Finset/Pairwise.lean
+
+Modified Mathlib/Data/Finset/Sort.lean
+
+Modified Mathlib/Data/Fintype/Basic.lean
+
+Modified Mathlib/Data/Fintype/CardEmbedding.lean
+
+Modified Mathlib/Data/Fintype/Sum.lean
+
+Modified Mathlib/Data/Int/CharZero.lean
+
+Modified Mathlib/Data/Int/GCD.lean
+
+Modified Mathlib/Data/List/Chain.lean
+
+Modified Mathlib/Data/List/Dedup.lean
+
+Modified Mathlib/Data/List/Pairwise.lean
+
+Modified Mathlib/Data/List/Perm/Lattice.lean
+
+Modified Mathlib/Data/List/Sigma.lean
+
+Modified Mathlib/Data/Matrix/Basic.lean
+
+Modified Mathlib/Data/Matrix/Diagonal.lean
+
+Modified Mathlib/Data/Multiset/Filter.lean
+
+Modified Mathlib/Data/NNRat/Floor.lean
+
+Modified Mathlib/Data/Nat/Basic.lean
+
+Modified Mathlib/Data/Nat/Cast/Basic.lean
+
+Modified Mathlib/Data/Nat/Digits/Lemmas.lean
+
+Modified Mathlib/Data/Nat/Factors.lean
+
+Modified Mathlib/Data/Nat/Pairing.lean
+
+Modified Mathlib/Data/Nat/Prime/Basic.lean
+
+Modified Mathlib/Data/Nat/Prime/Defs.lean
+
+Modified Mathlib/Data/Nat/Totient.lean
+
+Modified Mathlib/Data/PNat/Basic.lean
+
+Modified Mathlib/Data/Prod/TProd.lean
+
+Modified Mathlib/Data/Rat/Cast/Defs.lean
+
+Modified Mathlib/Data/Rat/Lemmas.lean
+
+Modified Mathlib/Data/Rat/Squarefree.lean
+
+Modified Mathlib/Data/Set/Enumerate.lean
+
+Modified Mathlib/Data/Set/Finite/Lemmas.lean
+
+Modified Mathlib/Data/Set/Operations.lean
+
+Modified Mathlib/Data/Set/Prod.lean
+
+Modified Mathlib/Data/String/Basic.lean
+
+Modified Mathlib/Data/Vector/Basic.lean
+
+Modified Mathlib/Data/ZMod/Defs.lean
+
+Modified Mathlib/Dynamics/BirkhoffSum/NormedSpace.lean
+
+Modified Mathlib/Dynamics/Ergodic/EmpiricalMeasure.lean
+
+Modified Mathlib/Dynamics/Flow.lean
+
+Modified Mathlib/Dynamics/PeriodicPts/Lemmas.lean
+
+Modified Mathlib/FieldTheory/Extension.lean
+
+Modified Mathlib/FieldTheory/Finite/Valuation.lean
+
+Modified Mathlib/FieldTheory/Galois/Sylow.lean
+
+Modified Mathlib/FieldTheory/IntermediateField/Adjoin/Algebra.lean
+
+Modified Mathlib/FieldTheory/IntermediateField/Adjoin/Basic.lean
+
+Modified Mathlib/FieldTheory/IntermediateField/Basic.lean
+
+Modified Mathlib/FieldTheory/IsAlgClosed/Basic.lean
+
+Modified Mathlib/FieldTheory/SeparableDegree.lean
+
+Modified Mathlib/FieldTheory/SeparablyGenerated.lean
+
+Modified Mathlib/Geometry/Euclidean/Angle/Bisector.lean
+
+Modified Mathlib/Geometry/Euclidean/Angle/Incenter.lean
+
+Modified Mathlib/Geometry/Euclidean/Projection.lean
+
+Modified Mathlib/Geometry/Euclidean/Volume/Measure.lean
+
+Modified Mathlib/Geometry/Manifold/Sheaf/Smooth.lean
+
+Modified Mathlib/Geometry/Manifold/VectorBundle/ContinuousAlternatingMap.lean
+
+Modified Mathlib/Geometry/RingedSpace/Basic.lean
+
+Modified Mathlib/GroupTheory/FreeGroup/Center.lean
+
+Modified Mathlib/GroupTheory/GroupAction/Basic.lean
+
+Modified Mathlib/GroupTheory/GroupAction/Embedding.lean
+
+Modified Mathlib/GroupTheory/Index.lean
+
+Modified Mathlib/GroupTheory/Nilpotent.lean
+
+Modified Mathlib/GroupTheory/OrderOfElement.lean
+
+Modified Mathlib/GroupTheory/Perm/Cycle/Basic.lean
+
+Modified Mathlib/GroupTheory/Perm/Cycle/Type.lean
+
+Modified Mathlib/GroupTheory/Perm/Finite.lean
+
+Modified Mathlib/GroupTheory/Solvable.lean
+
+Modified Mathlib/GroupTheory/SpecificGroups/Cyclic.lean
+
+Modified Mathlib/GroupTheory/SpecificGroups/Cyclic/Basic.lean
+
+Modified Mathlib/LinearAlgebra/AffineSpace/AffineMap.lean
+
+Modified Mathlib/LinearAlgebra/AffineSpace/Basis.lean
+
+Modified Mathlib/LinearAlgebra/AffineSpace/FiniteDimensional.lean
+
+Modified Mathlib/LinearAlgebra/AffineSpace/Homogenization.lean
+
+Modified Mathlib/LinearAlgebra/AffineSpace/Ordered.lean
+
+Modified Mathlib/LinearAlgebra/Alternating/Basic.lean
+
+Modified Mathlib/LinearAlgebra/Basis/VectorSpace.lean
+
+Modified Mathlib/LinearAlgebra/Countable.lean
+
+Modified Mathlib/LinearAlgebra/Determinant.lean
+
+Modified Mathlib/LinearAlgebra/Dimension/Free.lean
+
+Modified Mathlib/LinearAlgebra/Dimension/Localization.lean
+
+Modified Mathlib/LinearAlgebra/Dual/Lemmas.lean
+
+Modified Mathlib/LinearAlgebra/Eigenspace/Zero.lean
+
+Modified Mathlib/LinearAlgebra/ExteriorPower/HodgeStar.lean
+
+Modified Mathlib/LinearAlgebra/FreeModule/Finite/CardQuotient.lean
+
+Modified Mathlib/LinearAlgebra/LinearIndependent/Basic.lean
+
+Modified Mathlib/LinearAlgebra/Matrix/Basis.lean
+
+Modified Mathlib/LinearAlgebra/Matrix/Cartan/Realisation.lean
+
+Modified Mathlib/LinearAlgebra/Matrix/Charpoly/Coeff.lean
+
+Modified Mathlib/LinearAlgebra/Matrix/Defs.lean
+
+Modified Mathlib/LinearAlgebra/Matrix/DotProduct.lean
+
+Modified Mathlib/LinearAlgebra/Matrix/Echelon/Basic.lean
+
+Modified Mathlib/LinearAlgebra/Matrix/InvariantBasisNumber.lean
+
+Modified Mathlib/LinearAlgebra/Matrix/PosDef.lean
+
+Modified Mathlib/LinearAlgebra/Matrix/Rank.lean
+
+Modified Mathlib/LinearAlgebra/Matrix/ToLinearEquiv.lean
+
+Modified Mathlib/LinearAlgebra/Multilinear/Basic.lean
+
+Modified Mathlib/LinearAlgebra/Prod.lean
+
+Modified Mathlib/LinearAlgebra/QuadraticForm/Basic.lean
+
+Modified Mathlib/LinearAlgebra/Quotient/Basic.lean
+
+Modified Mathlib/LinearAlgebra/RootSystem/CartanMatrix.lean
+
+Modified Mathlib/LinearAlgebra/RootSystem/GeckConstruction/Basis.lean
+
+Modified Mathlib/LinearAlgebra/Span/TensorProduct.lean
+
+Modified Mathlib/LinearAlgebra/Unimodular.lean
+
+Modified Mathlib/LinearAlgebra/UnitaryGroup.lean
+
+Modified Mathlib/LinearAlgebra/Vandermonde.lean
+
+Modified Mathlib/MeasureTheory/Constructions/ClosedCompactCylinders.lean
+
+Modified Mathlib/MeasureTheory/Constructions/KolmogorovExtension.lean
+
+Modified Mathlib/MeasureTheory/Constructions/Polish/Basic.lean
+
+Modified Mathlib/MeasureTheory/Function/AEEqOfIntegral.lean
+
+Modified Mathlib/MeasureTheory/Function/AbsolutelyContinuous.lean
+
+Modified Mathlib/MeasureTheory/Group/Measure.lean
+
+Modified Mathlib/MeasureTheory/Integral/Bochner/ContinuousLinearMap.lean
+
+Modified Mathlib/MeasureTheory/Integral/Bochner/Set.lean
+
+Modified Mathlib/MeasureTheory/Integral/DivergenceTheorem.lean
+
+Modified Mathlib/MeasureTheory/Integral/IntervalIntegral/FundThmCalculus.lean
+
+Modified Mathlib/MeasureTheory/Integral/IntervalIntegral/Periodic.lean
+
+Modified Mathlib/MeasureTheory/MeasurableSpace/Basic.lean
+
+Modified Mathlib/MeasureTheory/Measure/Haar/Basic.lean
+
+Modified Mathlib/MeasureTheory/Measure/Lebesgue/Basic.lean
+
+Modified Mathlib/MeasureTheory/Measure/Stieltjes.lean
+
+Modified Mathlib/MeasureTheory/OuterMeasure/Induced.lean
+
+Modified Mathlib/NumberTheory/Cyclotomic/PrimitiveRoots.lean
+
+Modified Mathlib/NumberTheory/Divisors.lean
+
+Modified Mathlib/NumberTheory/GaussSum.lean
+
+Modified Mathlib/NumberTheory/LSeries/WeakPNT.lean
+
+Modified Mathlib/NumberTheory/LegendreSymbol/AddCharacter.lean
+
+Modified Mathlib/NumberTheory/LegendreSymbol/ZModChar.lean
+
+Modified Mathlib/NumberTheory/ModularForms/Discriminant.lean
+
+Modified Mathlib/NumberTheory/ModularForms/OrderAtInfty.lean
+
+Modified Mathlib/NumberTheory/NumberField/CanonicalEmbedding/Basic.lean
+
+Modified Mathlib/NumberTheory/NumberField/CanonicalEmbedding/FundamentalCone.lean
+
+Modified Mathlib/NumberTheory/NumberField/Cyclotomic/Basic.lean
+
+Modified Mathlib/NumberTheory/NumberField/DirichletDensity.lean
+
+Modified Mathlib/NumberTheory/NumberField/HeckeLFunction.lean
+
+Modified Mathlib/NumberTheory/NumberField/Units/Basic.lean
+
+Modified Mathlib/NumberTheory/Padics/Measure/AmiceTransform.lean
+
+Modified Mathlib/NumberTheory/Padics/Measure/Monoid.lean
+
+Modified Mathlib/NumberTheory/Real/Irrational.lean
+
+Modified Mathlib/NumberTheory/SiegelsLemma.lean
+
+Modified Mathlib/NumberTheory/Zsqrtd/Basic.lean
+
+Modified Mathlib/Order/Atoms.lean
+
+Modified Mathlib/Order/Basic.lean
+
+Modified Mathlib/Order/Bounds/OrderIso.lean
+
+Modified Mathlib/Order/Cofinal.lean
+
+Modified Mathlib/Order/CompactlyGenerated/Basic.lean
+
+Modified Mathlib/Order/ConditionallyCompleteLattice/Defs.lean
+
+Modified Mathlib/Order/ConditionallyCompletePartialOrder/Defs.lean
+
+Modified Mathlib/Order/Filter/AtTopBot/Finset.lean
+
+Modified Mathlib/Order/Filter/Defs.lean
+
+Modified Mathlib/Order/Filter/Germ/Basic.lean
+
+Modified Mathlib/Order/Filter/Subsingleton.lean
+
+Modified Mathlib/Order/Interval/Set/OrdConnected.lean
+
+Modified Mathlib/Order/Interval/Set/OrderIso.lean
+
+Modified Mathlib/Order/JordanHolder.lean
+
+Modified Mathlib/Order/LiminfLimsup.lean
+
+Modified Mathlib/Order/Setoid/Basic.lean
+
+Modified Mathlib/Order/SuccPred/LinearLocallyFinite.lean
+
+Modified Mathlib/Order/UpperLower/Basic.lean
+
+Modified Mathlib/Order/UpperLower/Relative.lean
+
+Modified Mathlib/Order/WithBot.lean
+
+Modified Mathlib/Probability/Distributions/Geometric.lean
+
+Modified Mathlib/Probability/Distributions/Poisson/Basic.lean
+
+Modified Mathlib/Probability/Distributions/Poisson/PoissonLimitThm.lean
+
+Modified Mathlib/Probability/Kernel/Deterministic.lean
+
+Modified Mathlib/RepresentationTheory/AlgebraRepresentation/Basic.lean
+
+Modified Mathlib/RepresentationTheory/FDRep.lean
+
+Modified Mathlib/RingTheory/AdicCompletion/AsTensorProduct.lean
+
+Modified Mathlib/RingTheory/AdicCompletion/Functoriality.lean
+
+Modified Mathlib/RingTheory/Adjoin/Dimension.lean
+
+Modified Mathlib/RingTheory/Algebraic/Basic.lean
+
+Modified Mathlib/RingTheory/Algebraic/Denominator.lean
+
+Modified Mathlib/RingTheory/Artinian/Module.lean
+
+Modified Mathlib/RingTheory/Binomial.lean
+
+Modified Mathlib/RingTheory/DedekindDomain/Ideal/Basic.lean
+
+Modified Mathlib/RingTheory/DedekindDomain/Ideal/Lemmas.lean
+
+Modified Mathlib/RingTheory/Depth/Basic.lean
+
+Modified Mathlib/RingTheory/Derivation/Basic.lean
+
+Modified Mathlib/RingTheory/Etale/Pi.lean
+
+Modified Mathlib/RingTheory/Extension/Basic.lean
+
+Modified Mathlib/RingTheory/Extension/Generators.lean
+
+Modified Mathlib/RingTheory/Extension/Presentation/Basic.lean
+
+Modified Mathlib/RingTheory/FinitePresentation.lean
+
+Modified Mathlib/RingTheory/Finiteness/Defs.lean
+
+Modified Mathlib/RingTheory/Finiteness/FinitePresentationLocal.lean
+
+Modified Mathlib/RingTheory/Flat/Basic.lean
+
+Modified Mathlib/RingTheory/Flat/FaithfullyFlat/Algebra.lean
+
+Modified Mathlib/RingTheory/FractionalIdeal/Basic.lean
+
+Modified Mathlib/RingTheory/Ideal/Norm/AbsNorm.lean
+
+Modified Mathlib/RingTheory/Invariant/Basic.lean
+
+Modified Mathlib/RingTheory/Jacobson/Ring.lean
+
+Modified Mathlib/RingTheory/Kaehler/Basic.lean
+
+Modified Mathlib/RingTheory/LocalProperties/Submodule.lean
+
+Modified Mathlib/RingTheory/LocalRing/ResidueField/Ideal.lean
+
+Modified Mathlib/RingTheory/Localization/Algebra.lean
+
+Modified Mathlib/RingTheory/Localization/AtPrime/Basic.lean
+
+Modified Mathlib/RingTheory/Localization/Finiteness.lean
+
+Modified Mathlib/RingTheory/Localization/Ideal.lean
+
+Modified Mathlib/RingTheory/Localization/LocalizationLocalization.lean
+
+Modified Mathlib/RingTheory/Localization/NumDen.lean
+
+Modified Mathlib/RingTheory/Localization/Submodule.lean
+
+Modified Mathlib/RingTheory/MvPolynomial/DeterminantalIdeal.lean
+
+Modified Mathlib/RingTheory/MvPolynomial/Groebner.lean
+
+Modified Mathlib/RingTheory/Nakayama.lean
+
+Modified Mathlib/RingTheory/Nilpotent/Basic.lean
+
+Modified Mathlib/RingTheory/Noetherian/Orzech.lean
+
+Modified Mathlib/RingTheory/Norm/Basic.lean
+
+Modified Mathlib/RingTheory/Nullstellensatz.lean
+
+Modified Mathlib/RingTheory/Polynomial/Basic.lean
+
+Modified Mathlib/RingTheory/Polynomial/Cyclotomic/Eval.lean
+
+Modified Mathlib/RingTheory/QuadraticAlgebra.lean
+
+Modified Mathlib/RingTheory/QuasiFinite/Basic.lean
+
+Modified Mathlib/RingTheory/Radical/Basic.lean
+
+Modified Mathlib/RingTheory/RingHom/FiniteType.lean
+
+Modified Mathlib/RingTheory/RingHom/Locally.lean
+
+Modified Mathlib/RingTheory/RingHom/Smooth.lean
+
+Modified Mathlib/RingTheory/SimpleModule/Basic.lean
+
+Modified Mathlib/RingTheory/SimpleModule/IsAlgClosed.lean
+
+Modified Mathlib/RingTheory/SimpleRing/Basic.lean
+
+Modified Mathlib/RingTheory/Smooth/Basic.lean
+
+Modified Mathlib/RingTheory/Smooth/Fiber.lean
+
+Modified Mathlib/RingTheory/Smooth/Flat.lean
+
+Modified Mathlib/RingTheory/Smooth/NoetherianDescent.lean
+
+Modified Mathlib/RingTheory/Smooth/StandardSmoothOfFree.lean
+
+Modified Mathlib/RingTheory/Spectrum/Prime/FreeLocus.lean
+
+Modified Mathlib/RingTheory/Spectrum/Prime/Polynomial.lean
+
+Modified Mathlib/RingTheory/TensorProduct/Finite.lean
+
+Modified Mathlib/RingTheory/UniqueFactorizationDomain/Defs.lean
+
+Modified Mathlib/RingTheory/Unramified/Finite.lean
+
+Modified Mathlib/RingTheory/Valuation/Basic.lean
+
+Modified Mathlib/RingTheory/Valuation/Discrete/Basic.lean
+
+Modified Mathlib/RingTheory/Valuation/PrimeMultiplicity.lean
+
+Modified Mathlib/RingTheory/ZMod/LocalRing.lean
+
+Modified Mathlib/SetTheory/Cardinal/Defs.lean
+
+Modified Mathlib/SetTheory/Cardinal/DirectLimit.lean
+
+Modified Mathlib/SetTheory/Cardinal/SchroederBernstein.lean
+
+Modified Mathlib/Topology/Algebra/InfiniteSum/Basic.lean
+
+Modified Mathlib/Topology/Algebra/InfiniteSum/ENNReal.lean
+
+Modified Mathlib/Topology/Algebra/InfiniteSum/Order.lean
+
+Modified Mathlib/Topology/Algebra/Module/ContinuousLinearMap/Basic.lean
+
+Modified Mathlib/Topology/Algebra/Module/Equiv/Pi.lean
+
+Modified Mathlib/Topology/Algebra/Module/FiniteDimension.lean
+
+Modified Mathlib/Topology/Algebra/Module/FiniteDimensionBilinear.lean
+
+Modified Mathlib/Topology/Algebra/Module/ModuleTopology.lean
+
+Modified Mathlib/Topology/Algebra/Module/Multilinear/Topology.lean
+
+Modified Mathlib/Topology/Algebra/Module/Spaces/UniformConvergenceCLM.lean
+
+Modified Mathlib/Topology/Algebra/Monoid.lean
+
+Modified Mathlib/Topology/Algebra/Order/Archimedean.lean
+
+Modified Mathlib/Topology/Algebra/Order/Floor.lean
+
+Modified Mathlib/Topology/Algebra/Order/Polynomial.lean
+
+Modified Mathlib/Topology/Algebra/Polynomial.lean
+
+Modified Mathlib/Topology/Algebra/Ring/Compact.lean
+
+Modified Mathlib/Topology/Algebra/SeparationQuotient/Section.lean
+
+Modified Mathlib/Topology/Algebra/Star.lean
+
+Modified Mathlib/Topology/Algebra/UniformFaithfulSMul.lean
+
+Modified Mathlib/Topology/Algebra/Valued/ValuedField.lean
+
+Modified Mathlib/Topology/Algebra/Valued/WithVal.lean
+
+Modified Mathlib/Topology/Baire/Absorbent.lean
+
+Modified Mathlib/Topology/Category/Sequential.lean
+
+Modified Mathlib/Topology/Compactification/StoneCech.lean
+
+Modified Mathlib/Topology/Connected/TotallyDisconnected.lean
+
+Modified Mathlib/Topology/Constructions.lean
+
+Modified Mathlib/Topology/EMetricSpace/Basic.lean
+
+Modified Mathlib/Topology/EMetricSpace/BoundedVariation.lean
+
+Modified Mathlib/Topology/EMetricSpace/Pi.lean
+
+Modified Mathlib/Topology/Germ.lean
+
+Modified Mathlib/Topology/Homeomorph/Lemmas.lean
+
+Modified Mathlib/Topology/Inseparable.lean
+
+Modified Mathlib/Topology/Instances/Discrete.lean
+
+Modified Mathlib/Topology/Instances/Matrix.lean
+
+Modified Mathlib/Topology/Instances/Real/Lemmas.lean
+
+Modified Mathlib/Topology/LocallyConstant/Algebra.lean
+
+Modified Mathlib/Topology/MetricSpace/Contracting.lean
+
+Modified Mathlib/Topology/MetricSpace/Dilation.lean
+
+Modified Mathlib/Topology/MetricSpace/Perfect.lean
+
+Modified Mathlib/Topology/MetricSpace/Polish.lean
+
+Modified Mathlib/Topology/MetricSpace/Pseudo/Basic.lean
+
+Modified Mathlib/Topology/Order/Rolle.lean
+
+Modified Mathlib/Topology/Separation/Regular.lean
+
+Modified Mathlib/Topology/Sheaves/Abelian.lean
+
+Modified Mathlib/Topology/Sheaves/Stalks.lean
+
+Modified Mathlib/Topology/UniformSpace/CompactConvergence.lean
+
+Modified Mathlib/Topology/UniformSpace/Uniformizable.lean
+
+Modified Mathlib/Topology/UrysohnsLemma.lean
+
+
+
+
 2026-11-20 20:43:45 3eae40f
 
 chore: adapt to leanprover-community/batteries#2073 (#46252)
