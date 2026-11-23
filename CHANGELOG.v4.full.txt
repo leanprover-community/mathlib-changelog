@@ -1,3 +1,210 @@
+2026-11-23 03:26:19 90e6eec
+
+chore(CategoryTheory/Preadditive/Basic): use `to_dual` (#46269)
+This PR uses `to_dual` for preadditive categories.
+- It also cleans up some of the `variable`/`section` handling
+
+ESTIMATED CHANGES
+Modified Mathlib/CategoryTheory/Preadditive/Basic.lean
++/- def CategoryTheory.End.addEquiv
++/- theorem CategoryTheory.End.sum_asHom
+- theorem CategoryTheory.Preadditive.IsIso.comp_right_eq_zero
+- def CategoryTheory.Preadditive.coforkOfCokernelCofork
+- theorem CategoryTheory.Preadditive.coforkOfCokernelCofork_π
+- def CategoryTheory.Preadditive.cokernelCoforkOfCofork
+- theorem CategoryTheory.Preadditive.cokernelCoforkOfCofork_ofπ
+- theorem CategoryTheory.Preadditive.cokernelCoforkOfCofork_π
+- theorem CategoryTheory.Preadditive.comp_neg
+- theorem CategoryTheory.Preadditive.comp_nsmul
+- theorem CategoryTheory.Preadditive.comp_sub
+- theorem CategoryTheory.Preadditive.comp_sum
+- theorem CategoryTheory.Preadditive.comp_zsmul
+- theorem CategoryTheory.Preadditive.epi_iff_cancel_zero
+- theorem CategoryTheory.Preadditive.epi_iff_isZero_cokernel'
+- theorem CategoryTheory.Preadditive.epi_iff_isZero_cokernel
+- theorem CategoryTheory.Preadditive.epi_of_cancel_zero
+- theorem CategoryTheory.Preadditive.epi_of_cokernel_iso_zero
+- theorem CategoryTheory.Preadditive.epi_of_cokernel_zero
+- theorem CategoryTheory.Preadditive.epi_of_isZero_cokernel'
+- theorem CategoryTheory.Preadditive.epi_of_isZero_cokernel
+- theorem CategoryTheory.Preadditive.hasCoequalizer_of_hasCokernel
+- theorem CategoryTheory.Preadditive.hasCoequalizers_of_hasCokernels
+- theorem CategoryTheory.Preadditive.hasCokernel_of_hasCoequalizer
+- def CategoryTheory.Preadditive.isColimitCoforkOfCokernelCofork
+- theorem CategoryTheory.Preadditive.isColimitCoforkOfCokernelCofork_desc
+- def CategoryTheory.Preadditive.isColimitCokernelCoforkOfCofork
+- theorem CategoryTheory.Preadditive.neg_iso_inv
+- def CategoryTheory.Preadditive.rightComp
+
+
+
+2026-11-23 03:13:30 7514e05
+
+chore(CategoryTheory/Limits/Preserves/Finite): use `to_dual` (#46300)
+Use `to_dual` for declarations about finite limits/products.
+- 2 instances ended up with a different name. These need not be deprecated as they are instances.
+
+ESTIMATED CHANGES
+Modified Mathlib/CategoryTheory/Limits/Preserves/Finite.lean
+- theorem CategoryTheory.Limits.PreservesColimitsOfSize.preservesFiniteColimits
+- theorem CategoryTheory.Limits.ReflectsColimitsOfSize.reflectsFiniteColimits
+- theorem CategoryTheory.Limits.preservesFiniteColimits_of_natIso
+- theorem CategoryTheory.Limits.preservesFiniteColimits_of_preservesFiniteColimitsOfSize
+- theorem CategoryTheory.Limits.preservesFiniteColimits_of_reflects_of_preserves
+- theorem CategoryTheory.Limits.preservesFiniteCoproducts_of_reflects_of_preserves
+Modified Mathlib/CategoryTheory/Limits/Shapes/FiniteProducts.lean
+- theorem CategoryTheory.Limits.hasFiniteCoproducts_of_hasCoproducts
+
+
+
+2026-11-23 03:13:27 3e11793
+
+chore(CategoryTheory/Abelian/Images): use `to_dual` (#46271)
+This PR uses `to_dual` on `Abelian.image`.
+
+ESTIMATED CHANGES
+Modified Mathlib/CategoryTheory/Abelian/Images.lean
+- def CategoryTheory.Abelian.coimageImageComparison'
+Modified Mathlib/CategoryTheory/Limits/Preserves/Shapes/AbelianImages.lean
+- theorem CategoryTheory.Abelian.PreservesCoimage.factorThruCoimage_iso_hom
+- theorem CategoryTheory.Abelian.PreservesCoimage.factorThruCoimage_iso_inv
+- def CategoryTheory.Abelian.PreservesCoimage.iso
+- theorem CategoryTheory.Abelian.PreservesCoimage.iso_hom_π
+- theorem CategoryTheory.Abelian.PreservesCoimage.iso_inv_π
+Modified Mathlib/CategoryTheory/Limits/Shapes/Kernels.lean
+
+
+
+
+2026-11-23 02:17:05 add4fb6
+
+chore: remove unnecessary set_option lines (#46367)
+I removed 83 unnecessary `set_option` line(s) across 39 file(s).
+
+ESTIMATED CHANGES
+Modified Archive/Wiedijk100Theorems/Konigsberg.lean
+
+Modified Mathlib/AlgebraicTopology/DoldKan/Homotopies.lean
+
+Modified Mathlib/AlgebraicTopology/ModelCategory/LeftHomotopy.lean
+
+Modified Mathlib/AlgebraicTopology/ModelCategory/PathObject.lean
+
+Modified Mathlib/AlgebraicTopology/ModelCategory/RightHomotopy.lean
+
+Modified Mathlib/Analysis/CStarAlgebra/Spectrum.lean
+
+Modified Mathlib/Basic/Sign/Defs.lean
+
+Modified Mathlib/CategoryTheory/Abelian/CommSq.lean
+
+Modified Mathlib/CategoryTheory/Abelian/DiagramLemmas/Four.lean
+
+Modified Mathlib/CategoryTheory/Abelian/Injective/Extend.lean
+
+Modified Mathlib/CategoryTheory/Abelian/Injective/Resolution.lean
+
+Modified Mathlib/CategoryTheory/Abelian/LeftDerived.lean
+
+Modified Mathlib/CategoryTheory/Abelian/Projective/Extend.lean
+
+Modified Mathlib/CategoryTheory/Abelian/Projective/Resolution.lean
+
+Modified Mathlib/CategoryTheory/Abelian/RightDerived.lean
+
+Modified Mathlib/CategoryTheory/Functor/OfSequence.lean
+
+Modified Mathlib/CategoryTheory/GradedObject/Bifunctor.lean
+
+Modified Mathlib/CategoryTheory/GradedObject/Unitor.lean
+
+Modified Mathlib/CategoryTheory/GuitartExact/Quotient.lean
+
+Modified Mathlib/CategoryTheory/Limits/Preserves/Shapes/Biproducts.lean
+
+Modified Mathlib/CategoryTheory/Limits/Shapes/BinaryBiproducts.lean
+
+Modified Mathlib/CategoryTheory/Localization/SmallShiftedHom.lean
+
+Modified Mathlib/CategoryTheory/Localization/Triangulated.lean
+
+Modified Mathlib/CategoryTheory/Monoidal/Discrete.lean
+
+Modified Mathlib/CategoryTheory/Preadditive/Biproducts.lean
+
+Modified Mathlib/CategoryTheory/Preadditive/Injective/Resolution.lean
+
+Modified Mathlib/CategoryTheory/Preadditive/Projective/Resolution.lean
+
+Modified Mathlib/CategoryTheory/Shift/InducedShiftSequence.lean
+
+Modified Mathlib/CategoryTheory/Shift/Opposite.lean
+
+Modified Mathlib/CategoryTheory/Shift/Pullback.lean
+
+Modified Mathlib/CategoryTheory/Shift/ShiftedHomOpposite.lean
+
+Modified Mathlib/Computability/TuringMachine/ToPartrec.lean
+
+Modified Mathlib/Data/TypeVec.lean
+
+Modified Mathlib/NumberTheory/NumberField/Cyclotomic/Ideal.lean
+
+Modified Mathlib/RepresentationTheory/Homological/FiniteCyclic.lean
+
+Modified Mathlib/RepresentationTheory/Homological/TateCohomology/Basic.lean
+
+Modified Mathlib/RingTheory/Etale/Weakly.lean
+
+Modified Mathlib/RingTheory/LocalRing/ResidueField/Fiber.lean
+
+Modified MathlibTest/Tactic/Inclusion/Sqrt.lean
+
+
+
+
+2026-11-23 01:55:17 3ee314d
+
+chore: remove the `coe` attribute from `AlgHom.ofClass` and `AlgEquiv.ofClass` (#46353)
+This is a leftover from the coercions that were removed for #31365.
+
+ESTIMATED CHANGES
+Modified Mathlib/Algebra/Algebra/Equiv.lean
+
+Modified Mathlib/Algebra/Algebra/Hom.lean
+
+
+
+
+2026-11-22 21:15:27 7dde1da
+
+doc(Translate): improve some documentation (#46294)
+This PR improves some documentation of `to_dual`/`to_additive` around some things that came up recently.
+
+ESTIMATED CHANGES
+Modified Mathlib/Tactic/Translate/Core.lean
+
+Modified Mathlib/Tactic/Translate/ToAdditive.lean
+
+Modified Mathlib/Tactic/Translate/ToDual.lean
+
+Modified MathlibTest/Attribute/ToAdditive/Basic.lean
+
+Modified MathlibTest/Attribute/ToDual.lean
+
+
+
+
+2026-11-22 12:53:55 6ebcce3
+
+doc: fix doc of RiemannHypothesis (#46338)
+
+ESTIMATED CHANGES
+Modified Mathlib/NumberTheory/LSeries/RiemannZeta.lean
+
+
+
+
 2026-11-21 15:54:27 a495318
 
 feat(RCLike): add `Continuous.re` and similar (#34419)
