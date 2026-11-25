@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import classNames from "classnames";
 import Autosuggest from "react-autosuggest";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import Layout from "../../components/Layout";
 import Spinner from "../../components/Spinner";
 import { loadAndPopulateSearch, searchForQuery } from "../../data/search";
@@ -19,9 +19,12 @@ const Home: NextPage = () => {
   const [isNavigating, setIsNavigating] = useState(false);
   const router = useRouter();
   const hasQuery = query.trim() !== "";
-  const { data, isLoading } = useQuery(query, async () => {
-    if (!hasQuery) return [];
-    return searchForQuery(query, "v3");
+  const { data, isLoading } = useQuery({
+    queryKey: ["search", "v3", query],
+    queryFn: async () => {
+      if (!hasQuery) return [];
+      return searchForQuery(query, "v3");
+    },
   });
 
   return (

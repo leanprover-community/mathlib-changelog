@@ -1,4 +1,4 @@
-import { CodeIcon, MinusIcon, PlusIcon } from "@heroicons/react/solid";
+import { CodeBracketIcon, MinusIcon, PlusIcon } from "@heroicons/react/20/solid";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Link from "next/link";
 import Layout from "../../../components/Layout";
@@ -42,7 +42,7 @@ const getLabel = (changeType: ChangeType) => {
   }
   return (
     <span className="text-sm text-blue-400">
-      <CodeIcon className="w-4 h-4 inline" /> modified
+      <CodeBracketIcon className="w-4 h-4 inline" /> modified
     </span>
   );
 };

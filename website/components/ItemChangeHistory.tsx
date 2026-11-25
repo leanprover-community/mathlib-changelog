@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { FC } from "react";
 import { ChangelogItemData } from "../data/extractDataFromChangelog";
-import { PlusIcon, MinusIcon, CodeIcon } from "@heroicons/react/solid";
+import { PlusIcon, MinusIcon, CodeBracketIcon } from "@heroicons/react/20/solid";
 import { ChangeType, LeanVersion } from "../data/types";
 import formatTimestamp from "../util/formatTimestamp";
 import { uniqBy } from "lodash";
@@ -29,7 +29,7 @@ const getLabel = (changeType: ChangeType) => {
   }
   return (
     <span className="text-sm text-blue-600">
-      <CodeIcon className="w-4 h-4 inline" /> Modified
+      <CodeBracketIcon className="w-4 h-4 inline" /> Modified
     </span>
   );
 };
