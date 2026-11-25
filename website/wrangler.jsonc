@@ -1,0 +1,28 @@
+// Cloudflare Worker for the site, built with OpenNext (`yarn cf:build`).
+// See https://opennext.js.org/cloudflare
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "mathlib-changelog",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-11-23",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    {
+      // Self-reference used by OpenNext; must match the Worker name above.
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "mathlib-changelog"
+    }
+  ],
+  "vars": {
+    // Commit and item pages read pre-built chunks from the static assets,
+    // since the Worker has no filesystem (see data/changelogStore.ts).
+    "CHANGELOG_DATA_SOURCE": "assets"
+  },
+  "observability": {
+    "enabled": true
+  }
+}

@@ -1,7 +1,7 @@
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { ItemChangeHistory } from "../../../components/ItemChangeHistory";
 import Layout from "../../../components/Layout";
-import { getStructure } from "../../../data/database";
+import { getItem } from "../../../data/changelogStore";
 import { ChangelogItemData } from "../../../data/extractDataFromChangelog";
 
 export const getStaticPaths: GetStaticPaths = () => ({
@@ -13,11 +13,13 @@ interface StructureProps {
   structure: ChangelogItemData;
 }
 
-export const getStaticProps: GetStaticProps<StructureProps> = (context) => {
+export const getStaticProps: GetStaticProps<StructureProps> = async (
+  context
+) => {
   if (!context.params?.name || Array.isArray(context.params.name)) {
     return { notFound: true };
   }
-  const structure = getStructure("v3", context.params.name);
+  const structure = await getItem("v3", "structure", context.params.name);
   if (!structure) return { notFound: true };
   return { props: { structure } };
 };

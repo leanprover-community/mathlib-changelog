@@ -9,7 +9,7 @@ import {
   extractTheoremsData,
 } from "./extractDataFromChangelog";
 import loadRawCommitData from "./loadRawCommitData";
-import { ChangelogData, CommitData, LeanVersion } from "./types";
+import { ChangelogData, CommitData, ItemType, LeanVersion } from "./types";
 
 /**
  * Data lookup methods
@@ -69,7 +69,9 @@ const getItemsLookupTable: (version: LeanVersion) => ItemsLookupTable = memoize(
 interface CommitsLookupTable {
   [sha: string]: CommitData;
 }
-const getCommitsLookupTable: (version: LeanVersion) => CommitsLookupTable =
+export const getCommitsLookupTable: (
+  version: LeanVersion
+) => CommitsLookupTable =
   memoize((version: LeanVersion) => {
     const commits = getCommits(version);
     return {
@@ -78,20 +80,17 @@ const getCommitsLookupTable: (version: LeanVersion) => CommitsLookupTable =
     };
   });
 
-export const getTheorem = (version: LeanVersion, name: string) =>
-  get(getItemsLookupTable(version), ["theorem", name]);
+export const getItem = (
+  version: LeanVersion,
+  type: ItemType,
+  name: string
+): ChangelogItemData | undefined =>
+  get(getItemsLookupTable(version), [type, name]);
 
-export const getDef = (version: LeanVersion, name: string) =>
-  get(getItemsLookupTable(version), ["def", name]);
-
-export const getStructure = (version: LeanVersion, name: string) =>
-  get(getItemsLookupTable(version), ["structure", name]);
-
-export const getInductive = (version: LeanVersion, name: string) =>
-  get(getItemsLookupTable(version), ["inductive", name]);
-
-export const getCommit = (version: LeanVersion, sha: string) =>
-  getCommitsLookupTable(version)[sha];
+export const getCommit = (
+  version: LeanVersion,
+  sha: string
+): CommitData | undefined => getCommitsLookupTable(version)[sha];
 
 export const getCommitPages = (version: LeanVersion) => {
   const allCommits = getCommits(version);

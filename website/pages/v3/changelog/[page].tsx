@@ -11,9 +11,13 @@ import summarizeHeadline from "../../../util/summarizeHeadline";
 
 const PER_PAGE = 50;
 
+// Every page is prerendered at build time, so serving them never needs the
+// full changelog (which isn't available at request time on Cloudflare).
 export const getStaticPaths: GetStaticPaths = () => ({
-  paths: [],
-  fallback: "blocking",
+  paths: getCommitPages("v3").map((_, i) => ({
+    params: { page: String(i + 1) },
+  })),
+  fallback: false,
 });
 
 interface CommitSummary {
