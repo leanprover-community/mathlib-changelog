@@ -38,3 +38,7 @@ jobs:
         working-directory: ./website
       - run: yarn build
         working-directory: ./website
+      # Build for Cloudflare Workers too (OpenNext), so changes that break
+      # either deploy target fail here.
+      - run: yarn cf:build
+        working-directory: ./website

@@ -1,7 +1,7 @@
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { ItemChangeHistory } from "../../../components/ItemChangeHistory";
 import Layout from "../../../components/Layout";
-import { getTheorem } from "../../../data/database";
+import { getItem } from "../../../data/changelogStore";
 import { ChangelogItemData } from "../../../data/extractDataFromChangelog";
 
 export const getStaticPaths: GetStaticPaths = () => ({
@@ -13,11 +13,11 @@ interface TheoremProps {
   theorem: ChangelogItemData;
 }
 
-export const getStaticProps: GetStaticProps<TheoremProps> = (context) => {
+export const getStaticProps: GetStaticProps<TheoremProps> = async (context) => {
   if (!context.params?.name || Array.isArray(context.params.name)) {
     return { notFound: true };
   }
-  const theorem = getTheorem("v3", context.params.name);
+  const theorem = await getItem("v3", "theorem", context.params.name);
   if (!theorem) return { notFound: true };
   return { props: { theorem } };
 };
